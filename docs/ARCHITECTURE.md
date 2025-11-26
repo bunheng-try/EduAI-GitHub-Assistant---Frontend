@@ -67,6 +67,7 @@ All feature modules live under:
 - Theme provider
 
 ## 4. MVVM Layer Interactions
+
 ### Model Layer (`api/`, `types/`)
 Contains:
 - API services
@@ -75,22 +76,23 @@ Contains:
 - Domain models
 
 ### ViewModel Layer (`hooks/`)
-Responsible for:
-- Business logic
-- UI logic
-- Calling APIs
-- Managing server state via React Query
-- Handling form interactions
-- Data transformation
+- Responsible for:
+    - Business logic
+    - UI logic
+    - Calling APIs
+    - Managing server state via React Query
+    - Handling form interactions
+    - Data transformation
 
 ### View Layer (`pages/`, `components/`)
-Responsibilities:
-- UI rendering only
-- No logic
-- No data fetching
-- No transformations
+- Responsibilities:
+    - UI rendering only
+    - No logic
+    - No data fetching
+    - No transformations
 
 ## 5. Frontend Data Flow Example
+
 ```
 User enters login →
 LoginPage (View)
@@ -107,9 +109,11 @@ UI rerenders with authenticated state
 ```
 
 ## 6. State Management
-Local State `useState`, `useReducer`
-Form fields
-UI toggles
+
+- Local State  `useState`, `useReducer`
+- Form fields
+- UI toggles
+
 Global State (Zustand)
 
 Authentication session
