@@ -4,17 +4,18 @@ Date: November 17, 2025
 ## 1. Frontend Framework
 
 The frontend is built using React, Vite, and TypeScript, which provides:
-Fast development with Vite’s HMR
-Strong TypeScript support
-Flexible and scalable folder architecture
-Clear separation of Model, ViewModel, and View
-Lightweight and high performance
-Architecture Style
-Feature-Based MVVM Architecture
-Each feature functions as a self-contained module
-Views contain no business logic
-ViewModels (hooks) manage logic & state
-Models store types, schemas, and API calls
+- Fast development with Vite’s HMR
+- Strong TypeScript support
+- Flexible and scalable folder architecture
+- Clear separation of Model, ViewModel, and View
+- Lightweight and high performance
+- Architecture Style
+- Feature-Based MVVM Architecture
+- Each feature functions as a self-contained module
+- Views contain no business logic
+- ViewModels (hooks) manage logic & state
+- Models store types, schemas, and API calls
+
 ---
 ## 2. Tech Stack
 - **Framework** : React
