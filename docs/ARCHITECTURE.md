@@ -28,20 +28,20 @@ The frontend is built using React, Vite, and TypeScript, which provides:
 ## 3. Core Frontend Modules
 All feature modules live under:
 `src/features/`
-### 3.1 Authentication Module (auth/)
+### 3.1 Authentication Module ( `auth/` )
 - Login page + components
-- ViewModel logic (useLoginViewModel)
+- ViewModel logic ( `useLoginViewModel` )
 - Zustand auth state
 - API services for login
 - Type definitions
 
-### 3.2 Dashboard Module (dashboard/)
+### 3.2 Dashboard Module ( `dashboard/` )
 - Dashboard pages
 - Dashboard components
 - API services
 - ViewModel hooks for data fetching & UI logic
 
-### 3.3 Shared UI Module (shared/ui/)
+### 3.3 Shared UI Module ( `shared/ui/` )
 - Reusable UI components:
 - Button
 - Input
@@ -50,32 +50,32 @@ All feature modules live under:
 - Spinner
 - Layout container
 
-### 3.4 Shared Utilities (shared/utils, shared/hooks)
+### 3.4 Shared Utilities ( `shared/utils` , `shared/hooks` )
 - Utility hooks
 - Reusable helpers
 - Global types
 - App-wide constants
 
-### 3.5 Application Routing (app/routes/)
+### 3.5 Application Routing ( `app/routes/` )
 - Modular routing per feature
 - Public & protected routes
 - Organized route structure
 
-### 3.6 Global Providers (app/providers/)
+### 3.6 Global Providers ( `app/providers/` )
 - React Query provider
 - Zustand provider
 - Theme provider
 
 ## 4. MVVM Layer Interactions
 
-### Model Layer (`api/`, `types/`)
+### Model Layer ( `api/` ,  `types/` )
 Contains:
 - API services
 - Schema definitions
 - TypeScript interfaces
 - Domain models
 
-### ViewModel Layer (`hooks/`)
+### ViewModel Layer ( `hooks/` )
 - Responsible for:
     - Business logic
     - UI logic
@@ -84,7 +84,7 @@ Contains:
     - Handling form interactions
     - Data transformation
 
-### View Layer (`pages/`, `components/`)
+### View Layer ( `pages/` ,  `components/` )
 - Responsibilities:
     - UI rendering only
     - No logic
