@@ -1,94 +1,55 @@
-Architecture Overview
-
+# Architecture Overview
 Date: November 17, 2025
 
-1. Frontend Framework
-
+## 1. Frontend Framework
 The frontend is built using React, Vite, and TypeScript, which provides:
-
 Fast development with Vite’s HMR
-
 Strong TypeScript support
-
 Flexible and scalable folder architecture
-
 Clear separation of Model, ViewModel, and View
-
 Lightweight and high performance
-
 Architecture Style
-
 Feature-Based MVVM Architecture
-
 Each feature functions as a self-contained module
-
 Views contain no business logic
-
 ViewModels (hooks) manage logic & state
-
 Models store types, schemas, and API calls
-
-2. Tech Stack
-
-Framework: React
-
-Build Tool: Vite
-
-Language: TypeScript
-
-Routing: React Router v6
-
-Global State: Zustand
-
-Server State: React Query
-
-Package Manager: pnpm
-
-3. Core Frontend Modules
-
+---
+## 2. Tech Stack
+- **Framework** : React
+- **Build Tool** : Vite
+- **Language** : TypeScript
+- **Routing** : React Router v6
+- **Global State** : Zustand
+- **Server State** : React Query
+- **Package Manager** : pnpm
+---
+## 3. Core Frontend Modules
 All feature modules live under:
+`src/features/`
+### 3.1 Authentication Module (auth/)
+- Login page + components
+- ViewModel logic (useLoginViewModel)
+- Zustand auth state
+- API services for login
+- Type definitions
+---
+### 3.2 Dashboard Module (dashboard/)
+- Dashboard pages
+- Dashboard components
+- API services
+- ViewModel hooks for data fetching & UI logic
 
-src/features/
+### 3.3 Shared UI Module (shared/ui/)
+- Reusable UI components:
+- Button
+- Input
+- Card
+- Modal
+- Spinner
+- Layout container
 
-3.1 Authentication Module (auth/)
-
-Login page + components
-
-ViewModel logic (useLoginViewModel)
-
-Zustand auth state
-
-API services for login
-
-Type definitions
-
-3.2 Dashboard Module (dashboard/)
-
-Dashboard pages
-
-Dashboard components
-
-API services
-
-ViewModel hooks for data fetching & UI logic
-
-3.3 Shared UI Module (shared/ui/)
-
-Reusable UI components:
-
-Button
-
-Input
-
-Card
-
-Modal
-
-Spinner
-
-Layout container
-
-3.4 Shared Utilities (shared/utils, shared/hooks)
+### 3.4 Shared Utilities (shared/utils, shared/hooks)
 
 Utility hooks
 
