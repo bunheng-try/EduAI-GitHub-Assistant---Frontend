@@ -2,6 +2,7 @@
 Date: November 17, 2025
 
 ## 1. Frontend Framework
+
 The frontend is built using React, Vite, and TypeScript, which provides:
 Fast development with Vite’s HMR
 Strong TypeScript support
