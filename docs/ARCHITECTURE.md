@@ -16,7 +16,6 @@ The frontend is built using React, Vite, and TypeScript, which provides:
 - ViewModels (hooks) manage logic & state
 - Models store types, schemas, and API calls
 
----
 ## 2. Tech Stack
 - **Framework** : React
 - **Build Tool** : Vite
@@ -25,7 +24,7 @@ The frontend is built using React, Vite, and TypeScript, which provides:
 - **Global State** : Zustand
 - **Server State** : React Query
 - **Package Manager** : pnpm
----
+
 ## 3. Core Frontend Modules
 All feature modules live under:
 `src/features/`
@@ -35,7 +34,7 @@ All feature modules live under:
 - Zustand auth state
 - API services for login
 - Type definitions
----
+
 ### 3.2 Dashboard Module (dashboard/)
 - Dashboard pages
 - Dashboard components
@@ -52,73 +51,47 @@ All feature modules live under:
 - Layout container
 
 ### 3.4 Shared Utilities (shared/utils, shared/hooks)
+- Utility hooks
+- Reusable helpers
+- Global types
+- App-wide constants
 
-Utility hooks
+### 3.5 Application Routing (app/routes/)
+- Modular routing per feature
+- Public & protected routes
+- Organized route structure
 
-Reusable helpers
+### 3.6 Global Providers (app/providers/)
+- React Query provider
+- Zustand provider
+- Theme provider
 
-Global types
-
-App-wide constants
-
-3.5 Application Routing (app/routes/)
-
-Modular routing per feature
-
-Public & protected routes
-
-Organized route structure
-
-3.6 Global Providers (app/providers/)
-
-React Query provider
-
-Zustand provider
-
-Theme provider
-
-4. MVVM Layer Interactions
-Model Layer (api/, types/)
-
+## 4. MVVM Layer Interactions
+### Model Layer (`api/`, `types/`)
 Contains:
+- API services
+- Schema definitions
+- TypeScript interfaces
+- Domain models
 
-API services
-
-Schema definitions
-
-TypeScript interfaces
-
-Domain models
-
-ViewModel Layer (hooks/)
-
+### ViewModel Layer (`hooks/`)
 Responsible for:
+- Business logic
+- UI logic
+- Calling APIs
+- Managing server state via React Query
+- Handling form interactions
+- Data transformation
 
-Business logic
-
-UI logic
-
-Calling APIs
-
-Managing server state via React Query
-
-Handling form interactions
-
-Data transformation
-
-View Layer (pages/, components/)
-
+### View Layer (`pages/`, `components/`)
 Responsibilities:
+- UI rendering only
+- No logic
+- No data fetching
+- No transformations
 
-UI rendering only
-
-No logic
-
-No data fetching
-
-No transformations
-
-5. Frontend Data Flow Example
+## 5. Frontend Data Flow Example
+```
 User enters login →
 LoginPage (View)
     ↓
@@ -131,16 +104,12 @@ React Query processes the request
 Zustand updates the user session
     ↓
 UI rerenders with authenticated state
+```
 
-6. State Management
-Local State
-
-useState, useReducer
-
+## 6. State Management
+Local State `useState`, `useReducer`
 Form fields
-
 UI toggles
-
 Global State (Zustand)
 
 Authentication session
