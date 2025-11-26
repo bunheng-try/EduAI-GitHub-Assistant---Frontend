@@ -13,7 +13,6 @@ The codebase is designed for scalability and clean separation of concerns, allow
 - React Router v6
 - Zustand
 - React Query
-- pnpm
 ---
 
 ## 📦 Installation
