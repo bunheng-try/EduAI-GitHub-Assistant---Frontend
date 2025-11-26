@@ -1,3 +1,18 @@
 # EduAI GitHub Assistant - Frontend
 
-This is the frontend for the EduAI Web Coding Assessment platform, built with React, Vite, and TypeScript following a Feature-Based MVVM Architecture.
+EduAI GitHub Assistant – Frontend
+This repository contains the full frontend system for the EGA (EduAI GitHub Assistant) platform.
+It is built with React, Vite, and TypeScript and follows a Feature-Based MVVM architecture.
+The project includes modular routing, a shared UI library, global state management, and strongly typed API integrations.
+
+The codebase is designed for scalability and clean separation of concerns, allowing each feature to function as an independent module.
+🚀 Tech Stack
+React + Vite
+TypeScript
+React Router v6
+Zustand (Global State)
+React Query (Server State)
+Feature-Based Architecture (MVVM)
+📦 Installation
+Install dependencies:
+pnpm install
