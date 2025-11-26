@@ -42,7 +42,7 @@ cp .env.example .env
 See `docs/ORGANIZATION.md` for a full explanation of the frontend folders, feature modules, MVVM layers, and shared resources.
 
 ## 🧩 **Architecture Overview**
-See `docs/ARCHITECTURE.md` for the complete frontend architecture, including:
+See [`docs/ARCHITECTURE.md`](https://github.com/bunheng-try/EduAI-GitHub-Assistant---Frontend/blob/main/docs/ORGANIZATION.md) for the complete frontend architecture, including:
 - Feature-Based module structure  
 - MVVM pattern explanation  
 - Routing flow (React Router v6)  
