@@ -1,0 +1,2 @@
+# EduAI GitHub Assistant - Frontend
+
