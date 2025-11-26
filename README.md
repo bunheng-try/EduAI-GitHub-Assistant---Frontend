@@ -41,7 +41,7 @@ cp .env.example .env
 ## 🧱 **Project Structure**
 See `docs/ORGANIZATION.md` for a full explanation of the frontend folders, feature modules, MVVM layers, and shared resources.
 
-🧩 **Architecture Overview**
+## 🧩 **Architecture Overview**
 See `docs/ARCHITECTURE.md` for the complete frontend architecture, including:
 - Feature-Based module structure  
 - MVVM pattern explanation  
