@@ -20,3 +20,22 @@ The codebase is designed for scalability and clean separation of concerns, allow
 Install dependencies:
 ```sh
 pnpm install
+```
+Run the Developer server:
+```sh
+pnpm dev
+```
+Build for production:
+```sh
+pnpm build
+```
+Preview production build:
+```sh
+pnpm preview
+```
+🔐 Environment Variables
+Create a .env file from the example:
+```sh
+cp .env.example .env
+```
+
