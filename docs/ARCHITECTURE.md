@@ -17,13 +17,13 @@ The frontend is built using React, Vite, and TypeScript, which provides:
 - Models store types, schemas, and API calls
 
 ## 2. Tech Stack
-- **Framework** : React
-- **Build Tool** : Vite
-- **Language** : TypeScript
-- **Routing** : React Router v6
-- **Global State** : Zustand
-- **Server State** : React Query
-- **Package Manager** : pnpm
+- **Framework**: React
+- **Build Tool**: Vite
+- **Language**: TypeScript
+- **Routing**: React Router v6
+- **Global State**: Zustand
+- **Server State**: React Query
+- **Package Manager**: pnpm
 
 ## 3. Core Frontend Modules
 All feature modules live under:
@@ -69,11 +69,11 @@ All feature modules live under:
 ## 4. MVVM Layer Interactions
 
 ### Model Layer ( `api/` ,  `types/` )
-Contains:
-- API services
-- Schema definitions
-- TypeScript interfaces
-- Domain models
+- Contains:
+    - API services
+    - Schema definitions
+    - TypeScript interfaces
+    - Domain models
 
 ### ViewModel Layer ( `hooks/` )
 - Responsible for:
@@ -110,56 +110,36 @@ UI rerenders with authenticated state
 
 ## 6. State Management
 
-- Local State  `useState`, `useReducer`
-- Form fields
-- UI toggles
+- **Local State**  `useState`, `useReducer`
+- **Global State** (Zustand)
+    - Authentication session
+    - Theme
+    - App-wide flags
 
-Global State (Zustand)
+- **Server State** (React Query)
+    - Data fetching
+    - Cache
+    - Background refreshing
+    - Retry logic
+    - Error handling
 
-Authentication session
+## 7. Error Handling
+### UI Errors
+- Managed inside ViewModel hooks
+- Shown through the View layer
+### Network Errors (React Query)
+- onError callbacks
+- Automatic retries
+- Error boundaries
+### Validation Errors
+- Controlled in ViewModel
+- Typed schemas prevent invalid input
 
-Theme
-
-App-wide flags
-
-Server State (React Query)
-
-Data fetching
-
-Cache
-
-Background refreshing
-
-Retry logic
-
-Error handling
-
-7. Error Handling
-UI Errors
-
-Managed inside ViewModel hooks
-
-Shown through the View layer
-
-Network Errors (React Query)
-
-onError callbacks
-
-Automatic retries
-
-Error boundaries
-
-Validation Errors
-
-Controlled in ViewModel
-
-Typed schemas prevent invalid input
-
-8. Summary of Frontend Architecture
-Layer	Description
-View	Pages & components, UI-only
-ViewModel	Business + UI logic (hooks)
-Model	API, types, schemas
-Shared UI	Reusable UI toolkit
-Routing	Modular routing per feature
-State	Local, global, and server state layers
+## 8. Summary of Frontend Architecture
+- Layer	Description
+- View	Pages & components, UI-only
+- ViewModel	Business + UI logic (hooks)
+- Model	API, types, schemas
+- Shared UI	Reusable UI toolkit
+- Routing	Modular routing per feature
+- State	Local, global, and server state layers
