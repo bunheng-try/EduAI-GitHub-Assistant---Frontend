@@ -6,13 +6,17 @@ It is built with React, Vite, and TypeScript and follows a Feature-Based MVVM ar
 The project includes modular routing, a shared UI library, global state management, and strongly typed API integrations.
 
 The codebase is designed for scalability and clean separation of concerns, allowing each feature to function as an independent module.
-🚀 Tech Stack
-React + Vite
-TypeScript
-React Router v6
-Zustand (Global State)
-React Query (Server State)
-Feature-Based Architecture (MVVM)
-📦 Installation
+## 🚀 Tech Stack
+- React
+- Vite
+- TypeScript
+- React Router v6
+- Zustand
+- React Query
+- pnpm
+---
+
+## 📦 Installation
 Install dependencies:
+```sh
 pnpm install
