@@ -1,8 +1,8 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ChallengeLayout from "../layout/ChallengeLayout";
 import MainLayout from "../layout/MainLayout";
-import NonSelected from "@/pages/NonSelected";
-import Assignment from "@/pages/Assignment";
+import NonSelected from "@/features/assignment/pages/NonSelected";
+import Assignment from "@/features/assignment/pages/Assignment";
 import Challenge from "@/features/challenge/components/Challenge";
 
 const router = createBrowserRouter([
