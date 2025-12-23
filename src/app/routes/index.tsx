@@ -5,6 +5,8 @@ import NonSelected from "@/features/assignment/pages/NonSelected";
 import Assignment from "@/features/assignment/pages/Assignment";
 import Challenge from "@/features/challenge/components/Challenge";
 import { ShowroomLayout } from "@/showroom/ShowroomLayout";
+import { ButtonsShowroom } from "@/showroom/routes/design/buttons.page";
+import EditorShowroom from "@/showroom/routes/features/codeEditor/Editor.page";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +31,8 @@ const router = createBrowserRouter([
     children: [
       // add path to the showroom
       // Example:
-      // { path: "design/buttons", element: <ButtonsShowroom /> },
+      { path: "design/buttons", element: <ButtonsShowroom /> },
+      { path: "features/code-editor", element: <EditorShowroom />},
       // { path: "design/dialogs", element: <DialogsShowroom /> },
       // { path: "layout/app-shell", element: <AppShellShowroom /> },
       // { path: "features/assignment-card", element: <AssignmentCardShowroom /> },
