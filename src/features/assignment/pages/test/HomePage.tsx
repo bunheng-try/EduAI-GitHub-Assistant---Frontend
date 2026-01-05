@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Sidebar from "../../shared/components/test/SideBar";
-import SidebarToggleButton from "../../shared/components/test/SidebarToggleButton";
-import ThemeToggleButton from "../../shared/components/test/ToggleTheme";
+import Sidebar from "../../../../shared/components/test/SideBar";
+import SidebarToggleButton from "../../../../shared/components/test/SidebarToggleButton";
+import ThemeToggleButton from "../../../../shared/components/test/ToggleTheme";
 
 const HomePage: React.FC = () => {
   return (

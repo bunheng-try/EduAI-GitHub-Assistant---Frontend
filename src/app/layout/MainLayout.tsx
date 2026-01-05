@@ -1,7 +1,7 @@
 import React from 'react'
-import LeftBar from '../../features/shell/components/LeftBar'
-import MainBar from '../../features/shell/components/MainBar'
-import MainPanel from '../../features/shell/components/MainPanel'
+import LeftBar from '../../shared/components/appShell/LeftBar'
+import MainBar from '../../shared/components/appShell/MainBar'
+import MainPanel from '../../shared/components/appShell/MainPanel'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/shared/components/ui/resizable'
 
 const MainLayout = () => {
