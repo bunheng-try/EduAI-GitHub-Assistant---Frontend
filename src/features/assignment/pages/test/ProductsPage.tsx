@@ -1,6 +1,6 @@
 import React from "react";
-import Sidebar from "../../shared/components/test/SideBar";
-import SidebarToggleButton from "../../shared/components/test/SidebarToggleButton";
+import Sidebar from "../../../../shared/components/test/SideBar";
+import SidebarToggleButton from "../../../../shared/components/test/SidebarToggleButton";
 import { Link } from "react-router-dom";
 
 const ProductsPage: React.FC = () => {
