@@ -1,4 +1,10 @@
+import { API_BASE_URL } from "@/shared/constansts/api";
 import type { Class } from "@/shared/types/types";
+import axios from "axios";
+
+export const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+});
 
 export const fetchClasses = () =>
   new Promise<Class[]>(resolve =>
@@ -10,3 +16,14 @@ export const fetchClasses = () =>
       ]);
     }, 1000)
   );
+
+export const createClass = async (
+  name: string
+): Promise<Class> => {
+  const res = await apiClient.post<Class>("/classrooms", {
+    name,
+    classCode: name,
+    description: "",
+  });
+  return res.data;
+};
