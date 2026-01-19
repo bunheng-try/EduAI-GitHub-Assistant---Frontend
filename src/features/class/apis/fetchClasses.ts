@@ -22,8 +22,6 @@ export const createClass = async (
 ): Promise<Class> => {
   const res = await apiClient.post<Class>("/classrooms", {
     name,
-    classCode: name,
-    description: "",
   });
   return res.data;
 };
