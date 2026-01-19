@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ChallengeLayout from "../layout/ChallengeLayout";
-import MainLayout from "../layout/MainLayout";
+// import MainLayout from "../layout/MainLayout";
 import NonSelected from "@/features/assignment/pages/NonSelected";
 import Assignment from "@/features/assignment/pages/Assignment";
 import Challenge from "@/features/challenge/components/Challenge";
@@ -11,26 +11,26 @@ import SignInPage from "./auth/SignInPage";
 import SignUpPage from "./auth/SignUpPage";
 
 const router = createBrowserRouter([
+  // {
+  //   path: "/",
+  //   element: <MainLayout />,
+  //   children: [
+  //     { index: true, element: <NonSelected /> },
+  //     { path: '/assignment', element: <Assignment /> },
+  //     // REMOVE auth routes from here
+  //   ],
+  // },
+  // // Add auth routes OUTSIDE MainLayout
+  // {
+  //   path: "/signin",
+  //   element: <SignInPage />,
+  // },
+  // {
+  //   path: "/signup", 
+  //   element: <SignUpPage />,
+  // },
   {
     path: "/",
-    element: <MainLayout />,
-    children: [
-      { index: true, element: <NonSelected /> },
-      { path: '/assignment', element: <Assignment /> },
-      // REMOVE auth routes from here
-    ],
-  },
-  // Add auth routes OUTSIDE MainLayout
-  {
-    path: "/signin",
-    element: <SignInPage />,
-  },
-  {
-    path: "/signup", 
-    element: <SignUpPage />,
-  },
-  {
-    path: "/challenge",
     element: <ChallengeLayout />,
     children: [
       { path: "/challenge/:challengeId", element: <Challenge /> },

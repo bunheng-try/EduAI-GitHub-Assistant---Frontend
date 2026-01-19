@@ -1,22 +1,12 @@
-export interface RunPayload {
-  language: string;
-  code: string;
-}
+export type SupportedLanguage =
+  | "javascript"
+  | "typescript"
+  | "python"
+  | "java";
 
-export interface RunResponse {
-  jobId: string;
-  status: 'queued';
-}
-
-export type JobState =
-  | 'waiting'
-  | 'queued'
-  | 'active'
-  | 'completed'
-  | 'failed';
-
-export interface JobStatusResponse {
-  jobId: string;
-  state: JobState;
-  result: string | null;
+export interface CodeEditorProps {
+  value: string;
+  language: SupportedLanguage;
+  onChange: (code: string) => void;
+  readOnly?: boolean;
 }
