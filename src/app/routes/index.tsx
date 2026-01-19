@@ -7,16 +7,27 @@ import Challenge from "@/features/challenge/components/Challenge";
 import { ShowroomLayout } from "@/showroom/ShowroomLayout";
 import { ButtonsShowroom } from "@/showroom/routes/design/buttons.page";
 import EditorShowroom from "@/showroom/routes/features/codeEditor/Editor.page";
+import SignInPage from "./auth/SignInPage";
+import SignUpPage from "./auth/SignUpPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     children: [
-          { index: true, element: <NonSelected /> }, // nothing selected
-          { path: '/assignment', element: <Assignment /> }, // nothing selected
-
+      { index: true, element: <NonSelected /> },
+      { path: '/assignment', element: <Assignment /> },
+      // REMOVE auth routes from here
     ],
+  },
+  // Add auth routes OUTSIDE MainLayout
+  {
+    path: "/signin",
+    element: <SignInPage />,
+  },
+  {
+    path: "/signup", 
+    element: <SignUpPage />,
   },
   {
     path: "/challenge",
@@ -29,13 +40,8 @@ const router = createBrowserRouter([
     path: "/showroom",
     element: <ShowroomLayout />,
     children: [
-      // add path to the showroom
-      // Example:
       { path: "design/buttons", element: <ButtonsShowroom /> },
       { path: "features/code-editor", element: <EditorShowroom />},
-      // { path: "design/dialogs", element: <DialogsShowroom /> },
-      // { path: "layout/app-shell", element: <AppShellShowroom /> },
-      // { path: "features/assignment-card", element: <AssignmentCardShowroom /> },
     ],
   }
 ]);
