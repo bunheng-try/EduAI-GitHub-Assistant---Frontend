@@ -1,5 +1,5 @@
 import { classroomsStore } from "@/mock_db";
-import type { Classroom } from "../types/Classroom";
+import type { Classroom } from "../types/classroom";
 
 export const getClassrooms = async (): Promise<Classroom[]> => {
   

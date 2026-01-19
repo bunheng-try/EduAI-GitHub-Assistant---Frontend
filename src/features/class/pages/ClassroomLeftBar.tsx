@@ -1,15 +1,17 @@
 import { GraduationCapIcon } from "lucide-react";
 import { ClassroomBadge } from "../components/ClassesBadge";
-import type { Classroom } from "../types/Classroom";
+import type { Classroom } from "../types/classroom";
 import { useClassroomLeftBar } from "../hooks/useClassesQuery";
+import { useNavigate } from "react-router-dom";
+
 
 export const ClassroomLeftBar = () => {
+  const navigate = useNavigate();
   const {
     classrooms,
-    selectedClassroom,
+    selectedClassroomId,
     isLoading,
     isError,
-    onSelectClassroom,
   } = useClassroomLeftBar();
 
   if (isLoading) return <div className="w-20 bg-[#2d3748] h-screen" />;
@@ -26,8 +28,8 @@ export const ClassroomLeftBar = () => {
           <ClassroomBadge
             key={classroom.id}
             classroom={classroom}
-            isActive={selectedClassroom?.id === classroom.id}
-            onClick={onSelectClassroom}
+            isActive={selectedClassroomId === classroom.id}
+            onClick={(id) => navigate(`/classrooms/${id}`)}
           />
         ))}
       </div>
