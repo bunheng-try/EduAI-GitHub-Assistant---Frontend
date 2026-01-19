@@ -1,15 +1,27 @@
-import { classroomsStore } from "@/mock_db";
-import type { Classroom } from "../types/classroom";
+import { API_BASE_URL } from "@/shared/constansts/api";
+import type { Class } from "@/shared/types/types";
+import axios from "axios";
 
-export const getClassrooms = async (): Promise<Classroom[]> => {
-  
-  await new Promise((res) => setTimeout(res, 300));
-  return classroomsStore;
+export const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+});
 
-  const response = await fetch("/api/classrooms");
-  if (!response.ok) {
-    throw new Error("Failed to fetch classrooms");
-  }
+export const fetchClasses = () =>
+  new Promise<Class[]>(resolve =>
+    setTimeout(() => {
+      resolve([
+        { id: 1, name: "Math" },
+        { id: 2, name: "Physics" },
+        { id: 3, name: "Chemistry" },
+      ]);
+    }, 1000)
+  );
 
-  return response.json();
+export const createClass = async (
+  name: string
+): Promise<Class> => {
+  const res = await apiClient.post<Class>("/classrooms", {
+    name,
+  });
+  return res.data;
 };
