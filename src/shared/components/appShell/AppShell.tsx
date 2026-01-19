@@ -5,10 +5,17 @@ import MainBar from '../layout/MainBar'
 import MainPanel from '../layout/MainPanel'
 
 type AppShellProps = {
-  left?: React.ReactNode
+  left?: LeftBarSlots
   main?: React.ReactNode
   panel?: React.ReactNode
 }
+
+type LeftBarSlots = {
+  top?: React.ReactNode
+  content?: React.ReactNode
+  bottom?: React.ReactNode
+}
+
 
 export const AppShell = ({ left, main, panel }: AppShellProps) => {
   return (
@@ -21,9 +28,12 @@ export const AppShell = ({ left, main, panel }: AppShellProps) => {
       <div className="flex flex-1 overflow-hidden">
 
         {/* Left */}
-        <LeftBar>
-          {left}
-        </LeftBar>
+        <LeftBar
+            top={left?.top}
+            content={left?.content}
+            bottom={left?.bottom}
+            />
+
 
         {/* Main */}
         <MainBar>
