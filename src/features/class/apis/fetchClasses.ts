@@ -1,12 +1,15 @@
-import type { Class } from "@/shared/types/types";
+import { classroomsStore } from "@/mock_db";
+import type { Classroom } from "../types/Classroom";
 
-export const fetchClasses = () =>
-  new Promise<Class[]>(resolve =>
-    setTimeout(() => {
-      resolve([
-        { id: 1, name: "Math" },
-        { id: 2, name: "Physics" },
-        { id: 3, name: "Chemistry" },
-      ]);
-    }, 1000)
-  );
+export const getClassrooms = async (): Promise<Classroom[]> => {
+  
+  await new Promise((res) => setTimeout(res, 300));
+  return classroomsStore;
+
+  const response = await fetch("/api/classrooms");
+  if (!response.ok) {
+    throw new Error("Failed to fetch classrooms");
+  }
+
+  return response.json();
+};

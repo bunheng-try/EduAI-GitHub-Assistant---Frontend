@@ -1,5 +1,6 @@
+  import type { Classroom } from "./features/class/types/classroom";
 import type { Assignment } from "./shared/types/types";
-
+import Logo from "@/assets/logo/logo.png";
 export const assignmentsStore: Record<number, Assignment[]> = {
   1: [
     { id: 1, title: "Math Homework 1", classId: 1 },
@@ -17,3 +18,22 @@ export const assignmentsStore: Record<number, Assignment[]> = {
     { id: 3, title: "Civics Assignment", classId: 3 }
   ]
 };
+
+export const classroomsStore: Classroom[] = [
+  { id: "1", name: "C1 - Mobile Development", logo: Logo},
+  { id: "2", name: "C2 - Web Development", logo: Logo },
+  { id: "3", name: "C3 - AI Basic", logo: Logo },
+  { id: "4", name: "C3 - AI Basic", logo: Logo },
+   { id: "1", name: "C1 - Mobile Development", logo: Logo},
+  { id: "2", name: "C2 - Web Development", logo: Logo },
+  { id: "3", name: "C3 - AI Basic", logo: Logo },
+  { id: "4", name: "C3 - AI Basic", logo: Logo },
+   { id: "1", name: "C1 - Mobile Development", logo: Logo},
+  { id: "2", name: "C2 - Web Development", logo: Logo },
+  { id: "3", name: "C3 - AI Basic", logo: Logo },
+  { id: "4", name: "C3 - AI Basic", logo: Logo },
+   { id: "1", name: "C1 - Mobile Development", logo: Logo},
+  { id: "2", name: "C2 - Web Development", logo: Logo },
+  { id: "3", name: "C3 - AI Basic", logo: Logo },
+  { id: "4", name: "C3 - AI Basic", logo: Logo },
+];
