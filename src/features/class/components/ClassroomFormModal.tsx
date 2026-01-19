@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FormDialog } from '@/shared/components/design/dialog';
-import { createClass } from '../apis/fetchClasses';
+import { useCreateClass } from '../hooks/useCreateClass';
+import type { Classroom } from '../types/classroom';
 
 interface ClassroomFormModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCreated: (classroom: Classroom) => void;
 }
 
 const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({
@@ -13,8 +15,9 @@ const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({
 }) => {
   const [classname, setClassName] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
+  const { mutateAsync, isPending } = useCreateClass();
+  
   useEffect(() => {
     if (!open) {
       setClassName('');
@@ -29,22 +32,21 @@ const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({
 
   const handleSubmit = async () => {
     if (!classname.trim()) {
-      setError('Class name cannot be empty');
+      setError("Class name cannot be empty");
       return;
     }
 
-    setLoading(true);
     try {
-      await createClass(classname);
+      await mutateAsync(classname);
       onOpenChange(false);
-      setClassName('');
-      setError(null);
     } catch (err: any) {
-       setError(err.response?.message || "Failed to create class. Please try again.");
-    } finally {
-      setLoading(false);
+      setError(
+        err?.response?.message ||
+        "Failed to create class. Please try again."
+      );
     }
   };
+
 
   return (
     <FormDialog
@@ -52,7 +54,7 @@ const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({
       onOpenChange={onOpenChange}
       title="Create New Class"
       onSubmit={handleSubmit}
-      submitText={loading ? 'Creating...' : 'Create Class'}
+      submitText={isPending ? 'Creating...' : 'Create Class'}
     >
       <div className="py-2 text-sm text-gray-600">
         Make changes to your classes list here. Click save when you're done.
