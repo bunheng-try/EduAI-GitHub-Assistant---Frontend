@@ -1,11 +1,11 @@
 import { useClassroomStore } from "../stores/ClassroomStore";
 import { useQuery } from "@tanstack/react-query";
 import { getClassrooms } from "../apis/fetchClasses";
-import type { Classroom } from "../types/Classroom";
+import type { Classroom } from "../types/classroom";
 
 export const useClassroomMainBar = () => {
     const selectedClassroomId = useClassroomStore(
-        (state) => state.selectedClassroom?.id
+        (state) => state.selectedClassroomId
     );
 
     const { data: classrooms } = useQuery<Classroom[]>({

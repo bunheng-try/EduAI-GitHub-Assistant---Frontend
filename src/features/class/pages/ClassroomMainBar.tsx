@@ -1,4 +1,4 @@
-import { useClassroomMainBar } from "../hooks/useClassmainBar";
+import { useClassroomMainBar } from "../hooks/useClassMainBar";
 
 export const ClassroomMainBar = () => {
   const { selectedClassroom, hasSelection } = useClassroomMainBar();
