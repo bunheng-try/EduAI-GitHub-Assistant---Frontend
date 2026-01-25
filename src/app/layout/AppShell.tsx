@@ -12,22 +12,13 @@ import {
 import { LeftBar } from "./leftBar/LeftBar"
 import { mockClassrooms } from "@/features/class/classroom.mock.data"
 
-
-
-type AppShellProps = {
-  main?: React.ReactNode
-  mainHeader?: React.ReactNode
-  panel?: React.ReactNode
-  panelHeader?: React.ReactNode
-}
-
 export const AppShell = () => {
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden">
       
- \     <TopBar />
+       <TopBar />
 
-\      <div className="flex flex-1 overflow-hidden">
+       <div className="flex flex-1 overflow-hidden">
         
         <LeftBar classrooms={mockClassrooms}/>
 
