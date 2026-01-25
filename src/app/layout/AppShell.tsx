@@ -1,72 +1,55 @@
-import React from 'react'
-import TopBar from '../../shared/components/layout/TopBar'
-import LeftBar from './leftBar/LeftBar'
-import { MainBar } from '../../shared/components/layout/MainBar'
-import MainPanel from '../../shared/components/layout/MainPanel'
+import React from "react"
+
+import TopBar from "../../shared/components/layout/TopBar"
+import { MainBar } from "../../shared/components/layout/MainBar"
+import MainPanel from "../../shared/components/layout/MainPanel"
+
 import {
   ResizablePanel,
   ResizablePanelContainer,
   ResizablePanelDivider,
-} from '../../shared/components/layout/ResizablePanel';
+} from "../../shared/components/layout/ResizablePanel"
+import { LeftBar } from "./leftBar/LeftBar"
+import { mockClassrooms } from "@/features/class/classroom.mock.data"
 
-type LeftBarSlots = {
-  top?: React.ReactNode;
-  content?: React.ReactNode;
-  bottom?: React.ReactNode;
-};
+
 
 type AppShellProps = {
-  left?: LeftBarSlots;
-  main?: React.ReactNode;
-  mainHeader?: React.ReactNode;
-  panel?: React.ReactNode;
-  panelHeader?: React.ReactNode;
-};
+  main?: React.ReactNode
+  mainHeader?: React.ReactNode
+  panel?: React.ReactNode
+  panelHeader?: React.ReactNode
+}
 
-export const AppShell: React.FC<AppShellProps> = ({
-  left,
-  main,
-  mainHeader,
-  panel,
-  panelHeader,
-}) => {
+export const AppShell = () => {
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden">
+    <div className="flex h-screen w-screen flex-col overflow-hidden">
+      
+ \     <TopBar />
 
-      {/* Top Bar */}
-      <TopBar />
+\      <div className="flex flex-1 overflow-hidden">
+        
+        <LeftBar classrooms={mockClassrooms}/>
 
-      {/* Body */}
-      <div className="flex flex-1 overflow-hidden">
-
-        {/* Left Bar — fixed */}
-        <LeftBar
-          top={left?.top}
-          content={left?.content}
-          bottom={left?.bottom}
-        />
-
-        {/* Main + Right (Resizable) */}
-        <ResizablePanelContainer
+        {/* <ResizablePanelContainer
           direction="horizontal"
           className="flex-1"
         >
-
           {/* Main Bar */}
-          <ResizablePanel
+          {/* <ResizablePanel
             defaultSize={40}
             minSize={25}
             maxSize={60}
           >
             <MainBar header={mainHeader}>
-              {main}
-            </MainBar>
+              {main} */}
+            {/* </MainBar>
           </ResizablePanel>
 
-          <ResizablePanelDivider />
+          <ResizablePanelDivider /> */}
 
-          {/* Main Panel / Right */}
-          <ResizablePanel
+          {/* Main Panel */}
+          {/* <ResizablePanel
             defaultSize={60}
             minSize={40}
             maxSize={75}
@@ -75,9 +58,8 @@ export const AppShell: React.FC<AppShellProps> = ({
               {panel}
             </MainPanel>
           </ResizablePanel>
-
-        </ResizablePanelContainer>
+        </ResizablePanelContainer> */}
       </div>
     </div>
-  );
-};
+  )
+}

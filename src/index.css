@@ -1,52 +1,32 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* 
-  Bridge design tokens to shadcn internal variables.
-  DO NOT use these directly in components.
-*/
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-}
-
-/* ======================================================
-  LIGHT THEME (Slack-inspired)
-====================================================== */
 :root {
-  --radius: 0.625rem;
+  --radius: 6px;
 
-  --background: oklch(0.97 0.005 260);
-  --card: oklch(1 0 0);
+  /* Backgrounds */
+  --background: 260 20% 97%;
+  --card: 0 0% 100%;
 
-  --foreground: oklch(0.18 0.01 260);
-  --muted-foreground: oklch(0.55 0.01 260);
+  /* Text */
+  --foreground: 260 10% 15%;
+  --muted-foreground: 260 5% 45%;
 
-  --primary: oklch(0.72 0.18 145);
-  --primary-foreground: oklch(0.15 0 0);
+  /* Brand */
+  --primary: 285 45% 30%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: oklch(0.93 0.01 260);
-  --secondary-foreground: oklch(0.18 0.01 260);
+  /* UI states */
+  --secondary: 260 20% 93%;
+  --secondary-foreground: 260 10% 15%;
 
-  --muted: oklch(0.94 0.01 260);
-  --border: oklch(0.88 0.01 260);
-  --input: oklch(0.88 0.01 260);
-  --ring: oklch(0.72 0.18 145);
+  --muted: 260 20% 94%;
+  --border: 260 15% 88%;
+  --input: 260 15% 88%;
+  --ring: 285 45% 30%;
+
+  --accent: 260 20% 94%;
+  --accent-foreground: 260 10% 15%;
 }
 
 @layer base {
