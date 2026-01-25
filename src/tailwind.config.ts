@@ -1,18 +1,15 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class", ".dark"],
-
-  content: [
-    "./index.html",
-    "./**/*.{ts,tsx}",
-  ],
+  content: ["./index.html", "./**/*.{ts,tsx}"],
 
   theme: {
     extend: {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+
+        card: "hsl(var(--card))",
 
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -29,46 +26,24 @@ const config: Config = {
           foreground: "hsl(var(--muted-foreground))",
         },
 
-        surface: "hsl(var(--card))",
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+
         border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
       },
 
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
 
-      fontSize: {
-        base: ["16px", { lineHeight: "24px" }],
-        h1: ["2.25rem", { lineHeight: "2.5rem", fontWeight: "700" }],
-        h2: ["1.875rem", { lineHeight: "2.25rem", fontWeight: "600" }],
-        h3: ["1.5rem", { lineHeight: "2rem", fontWeight: "600" }],
-        h4: ["1.25rem", { lineHeight: "1.75rem", fontWeight: "500" }],
-      },
-
-      fontWeight: {
-        regular: "400",
-        medium: "500",
-        semibold: "600",
-        bold: "700",
-      },
-
-      spacing: {
-        sm: "8px",
-        md: "16px",
-        lg: "24px",
-        xl: "32px",
-      },
-
-      gap: {
-        sm: "8px",
-        md: "16px",
-        lg: "24px",
-      },
-
       borderRadius: {
-        sm: "var(--radius-sm)",
-        md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
     },
   },
