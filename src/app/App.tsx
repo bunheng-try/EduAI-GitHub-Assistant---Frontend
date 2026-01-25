@@ -1,11 +1,14 @@
 import { QueryProvider } from "./providers/QueryProvider";
+import { ThemeProvider } from "./providers/ThemeProvider";
 import { AppRouter } from "./routes";
 
 function App() {
   return (
-    <QueryProvider>
-      <AppRouter />
-    </QueryProvider>
+    <ThemeProvider defaultTheme="light">
+      <QueryProvider>
+        <AppRouter />
+      </QueryProvider>
+    </ThemeProvider>
   );
 }
 
