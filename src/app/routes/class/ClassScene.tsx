@@ -4,7 +4,7 @@ import CreateClassroomButton from "@/features/class/components/CreateClassroomBu
 import { ClassroomLeftBar } from "@/features/class/pages/ClassroomLeftBar";
 import { ClassroomMainBar } from "@/features/class/pages/ClassroomMainBar";
 import { useClassroomStore } from "@/features/class/stores/ClassroomStore";
-import { AppShell } from "@/shared/components/appShell/AppShell";
+import { AppShell } from "@/app/layout/AppShell";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 

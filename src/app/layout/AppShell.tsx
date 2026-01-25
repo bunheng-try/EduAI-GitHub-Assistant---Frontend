@@ -1,13 +1,13 @@
 import React from 'react'
-import TopBar from '../layout/TopBar'
-import LeftBar from '../layout/LeftBar'
-import { MainBar } from '../layout/MainBar'
-import MainPanel from '../layout/MainPanel'
+import TopBar from '../../shared/components/layout/TopBar'
+import LeftBar from './leftBar/LeftBar'
+import { MainBar } from '../../shared/components/layout/MainBar'
+import MainPanel from '../../shared/components/layout/MainPanel'
 import {
   ResizablePanel,
   ResizablePanelContainer,
   ResizablePanelDivider,
-} from '../layout/ResizablePanel';
+} from '../../shared/components/layout/ResizablePanel';
 
 type LeftBarSlots = {
   top?: React.ReactNode;
