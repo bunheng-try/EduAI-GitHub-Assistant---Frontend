@@ -21,9 +21,9 @@ export const LeftBarButton = React.forwardRef<
       onClick={onClick}
       data-active={active}
       className={cn(
-        "relative flex h-11 w-11 items-center justify-center rounded-md transition-colors",
-        "hover:bg-primary/10",
-        active && "bg-primary"
+        "relative flex h-11 w-11 items-center justify-center rounded-md transition-colors cursor-pointer",
+        "hover:bg-[hsl(var(--primary)/0.2)]",
+        active && "bg-[hsl(var(--primary))] text-green-50"
       )}
     >
       {icon}
