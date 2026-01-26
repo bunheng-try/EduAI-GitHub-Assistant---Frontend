@@ -1,9 +1,9 @@
-import type { Classroom } from "../types/Classroom";
+import type { Classroom } from "../types/classroom";
 
 interface ClassroomBadgeProps {
   classroom: Classroom;
   isActive: boolean,
-  onClick: (classroom: Classroom) => void;
+  onClick: (classroomId: string) => void;
 }
 
 export const ClassroomBadge = ({
@@ -13,7 +13,7 @@ export const ClassroomBadge = ({
 }: ClassroomBadgeProps) => {
   return (
     <button
-      onClick={() => onClick(classroom)}
+      onClick={() => onClick(classroom.id)}
       title={classroom.name}
       aria-pressed={isActive}
       className={`

@@ -1,34 +1,24 @@
 
 import { useQuery } from "@tanstack/react-query";
-import type { Classroom } from "../types/Classroom";
+import type { Classroom } from "../types/classroom";
 import { useClassroomStore } from "../stores/ClassroomStore";
-import { getClassrooms } from "../apis/fetchClasses";
-
+import { fetchClasses } from "../apis/fetchClasses";
 
 export const useClassroomLeftBar = () => {
   const { data, isLoading, isError } = useQuery<Classroom[]>({
     queryKey: ["classrooms"],
-    queryFn: getClassrooms,
+    queryFn: fetchClasses,
   });
 
-  const selectedClassroom = useClassroomStore(
-    (state) => state.selectedClassroom
+  const selectedClassroomId = useClassroomStore(
+    (state) => state.selectedClassroomId
   );
-
-  const setSelectedClassroom = useClassroomStore(
-    (state) => state.setSelectedClassroom
-  );
-
-  const onSelectClassroom = (classroom: Classroom) => {
-    setSelectedClassroom(classroom);
-  };
 
   return {
     classrooms: data ?? [],
-    selectedClassroom,
+    selectedClassroomId,
     isLoading,
     isError,
-    onSelectClassroom,
   };
 };
 
