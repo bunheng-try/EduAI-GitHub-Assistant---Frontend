@@ -3,6 +3,10 @@
 
 :root {
   --radius: 6px;
+  
+  /* danger */
+  --destructive: 0 70% 50%;
+  --destructive-foreground: 0 0% 100%;
 
   /* Backgrounds */
   --background: 260 20% 97%;
