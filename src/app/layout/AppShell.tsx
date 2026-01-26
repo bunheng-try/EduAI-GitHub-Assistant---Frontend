@@ -1,8 +1,6 @@
 import React from "react"
 
 import TopBar from "../../shared/components/layout/TopBar"
-import { MainBar } from "../../shared/components/layout/MainBar"
-import MainPanel from "../../shared/components/layout/MainPanel"
 
 import {
   ResizablePanel,
@@ -11,45 +9,53 @@ import {
 } from "../../shared/components/layout/ResizablePanel"
 import { LeftBar } from "./leftBar/LeftBar"
 import { mockClassrooms } from "@/features/class/classroom.mock.data"
+import MainPanel from "./MainPanel/MainPanel"
 
 export const AppShell = () => {
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden">
       
-       <TopBar />
+       <div className={`
+        h-12
+        w-full
+        flex
+        items-center
+        px-4
+        border-b
+        bg-white
+        shrink-0
+      `}>Top Bar Place Holder</div>
 
        <div className="flex flex-1 overflow-hidden">
         
         <LeftBar classrooms={mockClassrooms}/>
 
-        {/* <ResizablePanelContainer
+        <ResizablePanelContainer
           direction="horizontal"
           className="flex-1"
         >
           {/* Main Bar */}
-          {/* <ResizablePanel
+          <ResizablePanel
             defaultSize={40}
             minSize={25}
             maxSize={60}
           >
-            <MainBar header={mainHeader}>
-              {main} */}
-            {/* </MainBar>
+            <div className="bg-blue-400 h-full">
+              Main Bar Place holder
+            </div>
           </ResizablePanel>
 
-          <ResizablePanelDivider /> */}
+          <ResizablePanelDivider />
 
           {/* Main Panel */}
-          {/* <ResizablePanel
+          <ResizablePanel
             defaultSize={60}
             minSize={40}
             maxSize={75}
           >
-            <MainPanel header={panelHeader}>
-              {panel}
-            </MainPanel>
+            <MainPanel />
           </ResizablePanel>
-        </ResizablePanelContainer> */}
+        </ResizablePanelContainer>
       </div>
     </div>
   )
