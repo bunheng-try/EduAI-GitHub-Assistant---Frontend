@@ -12,20 +12,24 @@
   --foreground: 260 10% 15%;
   --muted-foreground: 260 5% 45%;
 
-  /* Brand */
-  --primary: 285 45% 30%;
+  /* Brand (Slack-like purple) */
+  --primary: 285 45% 32%;
   --primary-foreground: 0 0% 100%;
 
-  /* UI states */
+  /* Surfaces */
   --secondary: 260 20% 93%;
   --secondary-foreground: 260 10% 15%;
 
   --muted: 260 20% 94%;
+  --accent: 260 20% 91%;
+
+  /* Borders */
   --border: 260 15% 88%;
   --input: 260 15% 88%;
-  --ring: 285 45% 30%;
 
-  --accent: 260 20% 94%;
+  /* Focus */
+  --ring: 285 45% 32%;
+
   --accent-foreground: 260 10% 15%;
 }
 
