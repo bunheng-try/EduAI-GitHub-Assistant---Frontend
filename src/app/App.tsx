@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/shared/components/ui/tooltip";
 import { QueryProvider } from "./providers/QueryProvider";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import { AppRouter } from "./routes";
@@ -6,7 +7,9 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light">
       <QueryProvider>
-        <AppRouter />
+        <TooltipProvider delayDuration={200}>
+          <AppRouter />
+        </TooltipProvider>
       </QueryProvider>
     </ThemeProvider>
   );
