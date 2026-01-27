@@ -8,6 +8,7 @@ type LeftBarButtonProps = {
   badge?: number
   tooltip?: string
   onClick?: () => void
+  onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export function LeftBarButton({
@@ -16,11 +17,13 @@ export function LeftBarButton({
   badge,
   tooltip,
   onClick,
+  onContextMenu
 }: LeftBarButtonProps) {
   const Button = (
     <button
       type="button"
       onClick={onClick}
+      onContextMenu={onContextMenu}
       className={cn(
         "relative flex h-11 w-11 items-center justify-center rounded-md transition-colors cursor-pointer",
         !active && "hover:bg-[hsl(var(--accent))]",
