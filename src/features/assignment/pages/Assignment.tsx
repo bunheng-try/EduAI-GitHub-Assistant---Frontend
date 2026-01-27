@@ -1,4 +1,3 @@
-import AssignmentsList from "@/features/assignment/components/AssignmentsList";
 import { Link } from "react-router-dom";
 
 const Assignment = () => {
