@@ -5,15 +5,17 @@ export type Class = {
   name: string;
 };
 
-export type AssignmentStatus = "active" | "inactive";
-
-export interface Assignment {
+export type Section ={
   id: string;
   title: string;
-  dueDate: string;
-  status: AssignmentStatus;
-  totalSubmitted:number
-}
+  assignments: Assignment[];
+};
+
+export type Assignment = {
+  id: string;
+  title: string;
+  // classId: number;
+};
 
 export type Challenge = {
   id: number;
