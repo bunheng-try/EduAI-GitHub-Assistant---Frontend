@@ -1,7 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import ClassroomScene from "./class/ClassScene";
-
 import ChallengeLayout from "../layout/ChallengeLayout";
 import Challenge from "@/features/challenge/components/Challenge";
 
@@ -11,6 +9,7 @@ import EditorShowroom from "@/showroom/routes/features/codeEditor/Editor.page";
 
 import SignInPage from "./auth/SignInPage";
 import SignUpPage from "./auth/SignUpPage";
+import { AppShell } from "../layout/AppShell";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +23,7 @@ const router = createBrowserRouter([
 
   {
     path: "/",
-    element: <ClassroomScene />,
+    element: <AppShell />,
     children: [
       { index: true },
 
