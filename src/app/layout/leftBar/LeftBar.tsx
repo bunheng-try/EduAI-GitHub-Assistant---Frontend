@@ -1,28 +1,31 @@
-import { useState } from "react"
-import {
-  Users,
-  Plus,
-  Library,
-  User,
-  MoreHorizontal,
-} from "lucide-react"
+import { useState } from "react";
+import { Users, Plus, Library, User, MoreHorizontal } from "lucide-react";
 
-
-import type { Classroom } from "@/features/class/classroom.mock.data"
-import { LeftBarButton } from "./LeftBarButton"
+import type { Classroom } from "@/features/class/classroom.mock.data";
+import { LeftBarButton } from "./LeftBarButton";
+import { useContextMenu } from "@/shared/components/context-menu/ContextMenuProvider";
+import { getClassroomContextMenu } from "@/features/class/components/classContextMenu";
 
 type LeftBarProps = {
-  classrooms: Classroom[]
-}
+  classrooms: Classroom[];
+};
 
 export function LeftBar({ classrooms }: LeftBarProps) {
   const [activeGroupId, setActiveGroupId] = useState<string | null>(
-    classrooms[0]?.id ?? null
-  )
+    classrooms[0]?.id ?? null,
+  );
+
+  const { openMenu } = useContextMenu();
+  const deleteClassroom = (id: string) => {
+    alert(`Delete classroom: ${id}`);
+  };
+
+  const archiveClassroom = (id: string) => {
+    alert(`Archive classroom: ${id}`);
+  };
 
   return (
     <aside className="flex h-full w-16 flex-col border-r border-border bg-card">
-
       {/* TOP — GROUPS */}
       <div className="flex flex-col gap-1 px-2 py-2 overflow-y-auto">
         {classrooms.map((group) => (
@@ -32,6 +35,18 @@ export function LeftBar({ classrooms }: LeftBarProps) {
             tooltip={group.name}
             active={activeGroupId === group.id}
             onClick={() => setActiveGroupId(group.id)}
+            onContextMenu={(e) => {
+              e.preventDefault();
+
+              openMenu({
+                x: e.clientX,
+                y: e.clientY,
+                items: getClassroomContextMenu(group.id, {
+                  deleteClassroom,
+                  archiveClassroom,
+                }),
+              });
+            }}
           />
         ))}
       </div>
@@ -65,5 +80,5 @@ export function LeftBar({ classrooms }: LeftBarProps) {
         />
       </div>
     </aside>
-  )
+  );
 }
