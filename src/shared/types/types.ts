@@ -5,10 +5,16 @@ export type Class = {
   name: string;
 };
 
-export type Assignment = {
-  id: number;
+export type Section ={
+  id: string;
   title: string;
-  classId: number;
+  assignments: Assignment[];
+};
+
+export type Assignment = {
+  id: string;
+  title: string;
+  // classId: number;
 };
 
 export type Challenge = {
