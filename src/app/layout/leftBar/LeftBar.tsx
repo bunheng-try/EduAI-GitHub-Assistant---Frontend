@@ -12,6 +12,7 @@ import { LeftBarButton } from "./LeftBarButton"
 import { useContextMenu } from "@/shared/components/context-menu/ContextMenuProvider"
 import { getClassroomContextMenu } from "@/features/class/components/classContextMenu"
 import { AllClassesDialog } from "@/features/class/components/AllClassesDialog"
+import { CreateClassDialog } from "@/features/class/components/CreateClassDialog"
 
 type LeftBarProps = {
   classrooms: Classroom[]
@@ -24,6 +25,7 @@ export function LeftBar({ classrooms }: LeftBarProps) {
     classrooms[0]?.id ?? null
   )
   const [openAll, setOpenAll] = useState(false)
+  const [openCreate, setOpenCreate] = useState(false)
 
   const { openMenu } = useContextMenu()
 
@@ -126,6 +128,7 @@ export function LeftBar({ classrooms }: LeftBarProps) {
           <LeftBarButton
             icon={<Plus className="h-5 w-5" />}
             tooltip="Create class"
+            onClick={() => setOpenCreate(true)}
           />
 
           <LeftBarButton
@@ -145,6 +148,14 @@ export function LeftBar({ classrooms }: LeftBarProps) {
         onOpenChange={setOpenAll}
         classrooms={classrooms}
         onSelect={(id) => setActiveGroupId(id)}
+      />
+      <CreateClassDialog
+        open={openCreate}
+        onClose={() => setOpenCreate(false)}
+        onCreate={(name) => {
+          console.log("CREATE CLASS:", name)
+          // later: call API / store
+        }}
       />
     </>
   )
