@@ -9,10 +9,8 @@ interface MainPanelProps {
 const MainPanel = ({ header, children, emptyState }: MainPanelProps) => {
   return (
     <div className="flex flex-col h-full w-full overflow-hidden">
-      
-
       {header && (
-        <div className="sticky top-0 z-10 border-b bg-white">
+        <div className="sticky top-0 z-10 bg-[hsl(var(--background))] border-b border-[hsl(var(--border))]">
           {header}
         </div>
       )}

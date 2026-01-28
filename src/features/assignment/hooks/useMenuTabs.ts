@@ -1,15 +1,21 @@
-import { useAssignmentTabsStore } from "../stores/assignmentEditorStore";
+import { useSearchParams } from "react-router-dom"
 
-export const useAssignmentTabs = () => {
-  const activeTab = useAssignmentTabsStore((s) => s.activeTab);
-  const setActiveTab = useAssignmentTabsStore((s) => s.setActiveTab);
-  const selectedAssignmentTitle = useAssignmentTabsStore(
-    (s) => s.selectedAssignmentTitle
-  );
+export function useAssignmentTabs() {
+  const [params, setParams] = useSearchParams()
+
+  const activeTab =
+    (params.get("tab") as "challenge" | "settings") ??
+    "challenge"
+
+  const setActiveTab = (tab: "challenge" | "settings") => {
+    setParams((prev) => {
+      prev.set("tab", tab)
+      return prev
+    })
+  }
 
   return {
     activeTab,
     setActiveTab,
-    selectedAssignmentTitle,
-  };
-};
+  }
+}

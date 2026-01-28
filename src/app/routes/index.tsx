@@ -1,6 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import ChallengeLayout from "../layout/ChallengeLayout";
 import Challenge from "@/features/challenge/components/Challenge";
 
 import { ShowroomLayout } from "@/showroom/ShowroomLayout";
@@ -10,40 +9,34 @@ import EditorShowroom from "@/showroom/routes/features/codeEditor/Editor.page";
 import SignInPage from "./auth/SignInPage";
 import SignUpPage from "./auth/SignUpPage";
 import { AppShell } from "../layout/AppShell";
+import MainBarClassrooom from "@/features/classes/components/MainBarClassrooom";
+import AssignmentEditor from "@/features/assignment/pages/AssignmentEditorPage";
+import { ClassroomLayout } from "../layout/ClassroomLayout";
+import { ClassroomHome } from "@/features/classes/components/ClassroomHome";
 
 const router = createBrowserRouter([
-  {
-    path: "/signin",
-    element: <SignInPage />,
-  },
-  {
-    path: "/signup",
-    element: <SignUpPage />,
-  },
+  { path: "/signin", element: <SignInPage /> },
+  { path: "/signup", element: <SignUpPage /> },
 
   {
     path: "/",
     element: <AppShell />,
     children: [
-      { index: true },
-
-      {
-        path: "classrooms",
-        children: [
-          { index: true },
-          { path: ":classId" },
-          { path: ":classId/assignments/:assignmentId" },
-        ],
-      },
-    ],
-  },
-
-  {
-    path: "/challenge",
-    element: <ChallengeLayout />,
-    children: [
-      { path: ":challengeId", element: <Challenge /> },
-    ],
+    {
+      path: "classrooms/:classId",
+      element: <ClassroomLayout />,
+      children: [
+        {
+          index: true,
+          element: <ClassroomHome />
+        },
+        {
+          path: "assignments/:assignmentId",
+          element: <AssignmentEditor />,
+        },
+      ],
+    },
+  ],
   },
 
   {

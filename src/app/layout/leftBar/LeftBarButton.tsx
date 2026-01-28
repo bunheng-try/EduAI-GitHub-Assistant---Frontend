@@ -26,9 +26,9 @@ export function LeftBarButton({
       onContextMenu={onContextMenu}
       className={cn(
         "relative flex shrink-0 h-11 w-11 items-center justify-center rounded-md transition-colors cursor-pointer",
-        !active && "hover:bg-accent",
+        !active && "hover:bg[hsl(var(--accent))]",
         active &&
-          "bg-primary text-primary-foreground"
+          "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
       )}
     >
       {icon}

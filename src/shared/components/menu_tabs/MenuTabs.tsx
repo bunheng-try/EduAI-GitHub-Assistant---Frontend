@@ -15,26 +15,29 @@ const MenuTabs = <T extends string>({
   onChange,
 }: MenuTabsProps<T>) => {
   return (
-    <div className="flex gap-6 border-b">
+    <div className="flex gap-6 mt-4 -mb-px">
       {tabs.map((tab) => {
-        const isActive = tab.key === activeTab;
+        const isActive = tab.key === activeTab
 
         return (
           <button
             key={tab.key}
             onClick={() => onChange(tab.key)}
-            className={`pb-2 text-sm font-medium cursor-pointer ${
-              isActive
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
+            className={`
+              pb-3 text-sm font-medium transition-colors
+              ${isActive
+                ? "border-b-2 border-[hsl(var(--primary))] text-[hsl(var(--foreground))]"
+                : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"}
+            `}
           >
             {tab.label}
           </button>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
+
+
 
 export default MenuTabs;

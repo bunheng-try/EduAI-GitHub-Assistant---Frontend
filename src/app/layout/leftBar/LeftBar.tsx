@@ -6,96 +6,112 @@ import {
   User,
   MoreHorizontal,
 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
-import type { Classroom } from "@/features/class/classroom.mock.data"
 import { LeftBarButton } from "./LeftBarButton"
 import { useContextMenu } from "@/shared/components/context-menu/ContextMenuProvider"
-import { getClassroomContextMenu } from "@/features/class/components/classContextMenu"
-import { AllClassesDialog } from "@/features/class/components/AllClassesDialog"
+import { getClassroomContextMenu } from "@/features/classes/components/classContextMenu"
+import { AllClassesDialog } from "@/features/classes/components/AllClassesDialog"
 import { CreateClassDialog } from "@/features/class/components/CreateClassDialog"
+import { useClassroomRoute } from "@/features/class/hooks/useClassroomRoute"
 
-type LeftBarProps = {
-  classrooms: Classroom[]
-}
+import { classrooms, type Classroom } from "@/shared/types/types"
 
-const BUTTON_HEIGHT = 48 // h-11 + gap
+const BUTTON_HEIGHT = 48
 
-export function LeftBar({ classrooms }: LeftBarProps) {
-  const [activeGroupId, setActiveGroupId] = useState<string | null>(
-    classrooms[0]?.id ?? null
-  )
+export function LeftBar() {
+  const navigate = useNavigate()
+  const { classroomId } = useClassroomRoute()
+  const { openMenu } = useContextMenu()
+
+  /** ---------------------------
+   *  STATE
+   * -------------------------- */
+  const [classes, setClasses] = useState<Classroom[]>(classrooms)
   const [openAll, setOpenAll] = useState(false)
   const [openCreate, setOpenCreate] = useState(false)
 
-  const { openMenu } = useContextMenu()
-
   const listRef = useRef<HTMLDivElement>(null)
-  const [visibleCount, setVisibleCount] = useState(classrooms.length)
+  const [visibleCount, setVisibleCount] = useState(classes.length)
+
+  /** ---------------------------
+   *  ORDER: active always first
+   * -------------------------- */
   const orderedClasses = [
-    ...classrooms.filter(c => c.id === activeGroupId),
-    ...classrooms.filter(c => c.id !== activeGroupId),
+    ...classes.filter((c) => c.id === classroomId),
+    ...classes.filter((c) => c.id !== classroomId),
   ]
 
-
-  // --------------------------
-  // Measure visible buttons
-  // --------------------------
+  /** ---------------------------
+   *  MEASURE HEIGHT
+   * -------------------------- */
   useEffect(() => {
     const el = listRef.current
     if (!el) return
 
     const calculate = () => {
-      const height = el.clientHeight
-      const max = Math.floor(height / BUTTON_HEIGHT)
-
+      const max = Math.floor(el.clientHeight / BUTTON_HEIGHT)
       setVisibleCount(Math.max(max, 0))
     }
 
     calculate()
     window.addEventListener("resize", calculate)
-
     return () => window.removeEventListener("resize", calculate)
-  }, [classrooms])
+  }, [classes])
 
   const visibleClasses = orderedClasses.slice(0, visibleCount)
   const hiddenClasses = orderedClasses.slice(visibleCount)
 
-  // --------------------------
-  // Actions (mock for now)
-  // --------------------------
+  /** ---------------------------
+   *  ACTIONS
+   * -------------------------- */
+  const createClassroom = (name: string) => {
+    const newClass: Classroom = {
+      id: crypto.randomUUID(),
+      name,
+    }
+
+    setClasses((prev) => [newClass, ...prev])
+    navigate(`/classrooms/${newClass.id}`)
+  }
+
   const deleteClassroom = (id: string) => {
-    alert(`Delete classroom: ${id}`)
+    setClasses((prev) => prev.filter((c) => c.id !== id))
+
+    if (classroomId === id) {
+      navigate("/classrooms")
+    }
   }
 
   const archiveClassroom = (id: string) => {
-    alert(`Archive classroom: ${id}`)
+    console.log("archive later:", id)
   }
 
+  /** ---------------------------
+   *  RENDER
+   * -------------------------- */
   return (
     <>
       <aside className="flex h-full w-16 flex-col border-r border-border bg-card">
 
-        {/* ========================
-            TOP — CLASS LIST
-        ======================== */}
+        {/* TOP — CLASSES */}
         <div
           ref={listRef}
           className="flex flex-col gap-1 px-2 py-2 overflow-hidden flex-1"
         >
-          {visibleClasses.map((group) => (
+          {visibleClasses.map((c) => (
             <LeftBarButton
-              key={group.id}
+              key={c.id}
               icon={<Users className="h-5 w-5" />}
-              tooltip={group.name}
-              active={activeGroupId === group.id}
-              onClick={() => setActiveGroupId(group.id)}
+              tooltip={c.name}
+              active={c.id === classroomId}
+              onClick={() => navigate(`/classrooms/${c.id}`)}
               onContextMenu={(e) => {
                 e.preventDefault()
-
                 openMenu({
                   x: e.clientX,
                   y: e.clientY,
-                  items: getClassroomContextMenu(group.id, {
+                  items: getClassroomContextMenu(c.id, {
                     deleteClassroom,
                     archiveClassroom,
                   }),
@@ -105,9 +121,7 @@ export function LeftBar({ classrooms }: LeftBarProps) {
           ))}
         </div>
 
-        {/* ========================
-            MORE BUTTON
-        ======================== */}
+        {/* MORE */}
         {hiddenClasses.length > 0 && (
           <div className="px-2 py-1">
             <LeftBarButton
@@ -118,12 +132,9 @@ export function LeftBar({ classrooms }: LeftBarProps) {
           </div>
         )}
 
-        {/* spacer */}
         <div className="flex-1" />
 
-        {/* ========================
-            BOTTOM ACTIONS
-        ======================== */}
+        {/* BOTTOM */}
         <div className="flex flex-col gap-1 px-2 py-2">
           <LeftBarButton
             icon={<Plus className="h-5 w-5" />}
@@ -134,7 +145,6 @@ export function LeftBar({ classrooms }: LeftBarProps) {
           <LeftBarButton
             icon={<Library className="h-5 w-5" />}
             tooltip="Exercise library"
-            badge={2}
           />
 
           <LeftBarButton
@@ -143,19 +153,20 @@ export function LeftBar({ classrooms }: LeftBarProps) {
           />
         </div>
       </aside>
+
+      {/* ALL CLASSES */}
       <AllClassesDialog
         open={openAll}
         onOpenChange={setOpenAll}
-        classrooms={classrooms}
-        onSelect={(id) => setActiveGroupId(id)}
+        classrooms={classes}
+        onSelect={(id) => navigate(`/classrooms/${id}`)}
       />
+
+      {/* CREATE CLASS */}
       <CreateClassDialog
         open={openCreate}
         onClose={() => setOpenCreate(false)}
-        onCreate={(name) => {
-          console.log("CREATE CLASS:", name)
-          // later: call API / store
-        }}
+        onCreate={createClassroom}
       />
     </>
   )

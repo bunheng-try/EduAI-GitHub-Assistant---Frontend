@@ -1,39 +1,39 @@
 import MenuTabs from "@/shared/components/menu_tabs/MenuTabs";
-import Button from "@/shared/components/ui/button";
-import { useAssignmentTabsStore } from "../hooks/useMenuTabs";
+import { Button } from "@/shared/components/ui/button";
+import { useAssignmentTabs } from "../hooks/useMenuTabs";
 
-const AssignmentHeader = () => {
-  const activeTab = useAssignmentTabsStore((state) => state.activeTab);
-  const setActiveTab = useAssignmentTabsStore((state) => state.setActiveTab);
-  const selectedAssignmentTitle = useAssignmentTabsStore(
-    (state) => state.selectedAssignmentTitle
-  );
+type Props = {
+  title: string
+}
+
+const AssignmentHeader = ({title}: Props) => {
+  const { activeTab, setActiveTab } = useAssignmentTabs()
 
   return (
-    <div className="bg-white px-4 sm:px-6 py-4 border-b">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-        <h2 className="text-lg font-semibold truncate w-full sm:w-auto">
-          {selectedAssignmentTitle ?? "Assignment Editor"}
+    <div className="
+      bg-[hsl(var(--background))]
+      px-6 py-4
+    ">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <h2 className="
+          text-lg font-semibold
+          text-[hsl(var(--foreground))]
+          truncate
+        ">
+          {title}
         </h2>
 
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant="secondary"
-            onClick={() => alert("Changes discarded")}
-          >
+        <div className="flex gap-2">
+          <Button variant="secondary">
             Discard
           </Button>
 
-          <Button
-            variant="primary"
-            onClick={() => alert("Assignment published")}
-          >
+          <Button variant="default">
             Publish
           </Button>
         </div>
       </div>
-      
-      <div className="mt-3 overflow-x-auto">
+
         <MenuTabs
           tabs={[
             { key: "challenge", label: "Challenges" },
@@ -42,8 +42,8 @@ const AssignmentHeader = () => {
           activeTab={activeTab}
           onChange={setActiveTab}
         />
-      </div>
     </div>
+
   );
 };
 

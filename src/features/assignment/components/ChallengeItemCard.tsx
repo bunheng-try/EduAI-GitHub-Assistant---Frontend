@@ -1,6 +1,6 @@
 import { EllipsisVerticalIcon, StarIcon, UserIcon } from "lucide-react";
-import type { Challenge } from "../types/assignment";
 import {ClipboardDocumentListIcon} from "@heroicons/react/24/outline";
+import type { Challenge } from "@/shared/types/types";
 interface Props {
   challenge: Challenge;
 }
