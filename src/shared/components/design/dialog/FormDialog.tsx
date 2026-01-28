@@ -1,22 +1,22 @@
-import * as React from "react"
+import * as React from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogFooter,
   DialogTitle,
-} from "@/shared/components/ui/dialog"
-import { Button } from "@/shared/components/ui/button"
+} from "@/shared/components/ui/dialog";
+import { Button } from "@/shared/components/ui/button";
 
 type FormDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  title: string
-  onSubmit: () => void
-  submitText?: string
-  cancelText?: string
-  children: React.ReactNode
-}
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  onSubmit: () => void;
+  submitText?: string;
+  cancelText?: string;
+  children: React.ReactNode;
+};
 
 export function FormDialog({
   open,
@@ -32,8 +32,8 @@ export function FormDialog({
       <DialogContent>
         <form
           onSubmit={(e) => {
-            e.preventDefault()
-            onSubmit()
+            e.preventDefault();
+            onSubmit();
           }}
         >
           <DialogHeader>
@@ -51,12 +51,10 @@ export function FormDialog({
               {cancelText}
             </Button>
 
-            <Button type="submit">
-              {submitText}
-            </Button>
+            <Button type="submit">{submitText}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
