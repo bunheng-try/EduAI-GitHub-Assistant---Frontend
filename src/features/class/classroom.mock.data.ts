@@ -3,9 +3,7 @@ export type Classroom = {
   name: string
 }
 
-export const mockClassrooms: Classroom[] = [
-  { id: "1", name: "Group 1 - Gen 11" },
-  { id: "2", name: "Group 2 - Gen 12" },
-  { id: "3", name: "Group 3 - Gen 12" },
-  { id: "4", name: "Mobile App Development" },
-]
+export const mockClassrooms: Classroom[] = Array.from({ length: 20 }).map((_, i) => ({
+  id: String(i),
+  name: `Group ${i + 1}`,
+}))
