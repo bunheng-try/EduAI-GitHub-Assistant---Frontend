@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useClassroomActions } from "../hooks/useClassroomAction"
 import { getClassroomContextMenu } from "./classContextMenu"
 import { useClassrooms } from "../hooks/useClassroom"
+import { ConfirmDialog } from "@/shared/components/design/dialog"
+import React from "react"
 
 const MainBarClassroom = () => {
   const navigate = useNavigate()
@@ -14,8 +16,15 @@ const MainBarClassroom = () => {
   const { data: classrooms = [] } = useClassrooms()
 
   const { deleteClassroom, editClassroom } = useClassroomActions()
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false)
+  const [classToDelete, setClassToDelete] = React.useState<string | null>(null)
 
-  // Find current classroom
+  const handleOpenDelete = (id: string) => {
+    setClassToDelete(id)
+    setConfirmDeleteOpen(true)
+  }
+
+
   const classroom = classrooms.find(
     (c) => String(c.id) === classId
   )
@@ -33,7 +42,7 @@ const MainBarClassroom = () => {
       x: e.clientX,
       y: e.clientY,
       items: getClassroomContextMenu(classId, {
-        deleteClassroom,
+        deleteClassroom: handleOpenDelete,
         editClassroom,
       }),
     })
@@ -46,17 +55,38 @@ const MainBarClassroom = () => {
 
 
   return (
-    <MainBar
-      title={classroom?.name ?? "Classroom"}
-      student={34}
-      openSetting={handleSetting}
-      openStudentList={openStudentList}
-      create={handleCreate}
-    >
-      <div className="flex flex-col gap-2">
-        TODO - list Assignemt here
-      </div>
-    </MainBar>
+    <>
+      <MainBar
+        title={classroom?.name ?? "Classroom not found"}
+        student={classroom ? 34 : undefined}
+        openSetting={classroom ? handleSetting : undefined}
+        openStudentList={classroom ? openStudentList : undefined}
+        create={classroom ? handleCreate : undefined}
+      >
+        <div className="flex flex-col gap-2">
+          TODO - list Assignemt here
+        </div>
+      </MainBar>
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        title="Are you sure you want to delete this class?"
+        onConfirm={() => {
+          if (classToDelete) {
+            deleteClassroom(classToDelete)
+            setClassToDelete(null)
+            setConfirmDeleteOpen(false)
+            // optionally navigate away if user is currently in this classroom
+            if (classToDelete === classId) navigate("/classrooms")
+          }
+        }}
+        confirmText="Delete"
+        cancelText="Cancel"
+      >
+        <p>This action cannot be undone.</p>
+      </ConfirmDialog>
+    </>
+
   )
 }
 
