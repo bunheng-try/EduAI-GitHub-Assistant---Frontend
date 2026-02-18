@@ -1,42 +1,42 @@
-// features/auth/apis/auth.api.ts
-import type { AuthFormData, AuthResponse } from "@/shared/types/auth";
+import { httpClient } from "@/app/services/httpClient";
+import { useAuthStore } from "@/app/store/autStore";
+
+
+type User = { id: number; name: string; email: string };
+type AuthResponse = { access_token: string; user: User };
 
 export const authApi = {
-  signIn: async (data: { email: string; password: string }) => {
-    return new Promise<AuthResponse>((resolve, reject) => {
-      setTimeout(() => {
-        if (data.email && data.password) {
-          resolve({
-            token: "mock-jwt-token-12345",
-            user: {
-              id: "user_123",
-              email: data.email,
-              name: data.email.split("@")[0],
-            },
-          });
-        } else {
-          reject(new Error("Invalid credentials"));
-        }
-      }, 1000);
-    });
+  login: async (email: string, password: string) => {
+    try {
+      console.log("Logging in:", { email, password });
+      const data = await httpClient.post<AuthResponse, { email: string; password: string }>(
+        "/auth/login",
+        { email, password }
+      );
+      useAuthStore.getState().setAuth(data.user, data.access_token);
+      return data.user;
+    } catch (err: any) {
+      console.error("Login failed:", err.message);
+      throw err;
+    }
   },
 
-  signUp: async (data: AuthFormData) => {
-    return new Promise<AuthResponse>((resolve, reject) => {
-      setTimeout(() => {
-        if (data.email && data.password && data.name) {
-          resolve({
-            token: "mock-jwt-token-67890",
-            user: {
-              id: `user_${Date.now()}`,
-              email: data.email,
-              name: data.name,
-            },
-          });
-        } else {
-          reject(new Error("Invalid signup data"));
-        }
-      }, 1000);
-    });
+  signup: async (name: string, email: string, password: string) => {
+    try {
+      const data = await httpClient.post<AuthResponse, { name: string; email: string; password: string }>(
+        "/auth/signup",
+        { name, email, password }
+      );
+      useAuthStore.getState().setAuth(data.user, data.access_token);
+      return data.user;
+    } catch (err: any) {
+      console.error("Signup failed:", err.message);
+      throw err;
+    }
+  },
+
+  logout: () => {
+    useAuthStore.getState().clearAuth();
+    window.location.href = "/signin";
   },
 };
