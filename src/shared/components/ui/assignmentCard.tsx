@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {type Assignment } from "@/shared/types/types";
 import { useContextMenu } from "@/shared/components/context-menu/ContextMenuProvider";
 import type { ContextMenuItem } from "../context-menu/types";
@@ -78,7 +77,7 @@ const AssignmentCard = ({
       <div
         onClick={() => onClick(assignment)}
         onContextMenu={handleContextMenu}
-        className={`flex py-4 px-10 cursor-pointer items-center justify-between rounded-lg ${isSelect ? "bg-gray-300" : " hover:bg-gray-100"} `}
+        className={`flex py-4 px-8 cursor-pointer items-center justify-between rounded-lg ${isSelect ? "bg-gray-300" : " hover:bg-gray-100"} `}
       >
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200">

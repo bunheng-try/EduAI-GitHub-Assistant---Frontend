@@ -3,16 +3,14 @@ import AssignmentHeader from "../components/AssignmentHeader";
 import ChallengeTab from "../components/ChallengesTab";
 import { SettingsTab } from "../components/SettingsTab";
 import { useAssignmentTabs } from "../hooks/useMenuTabs";
-import { useParams } from "react-router-dom";
-import { assignments } from "@/shared/types/types";
+import { useClassroomRoute } from "@/features/class/hooks/useClassroomRoute";
+import { useAssignment } from "../hooks/useAssignmentQuery";
+
 
 const AssignmentEditor = () => {
   const { activeTab } = useAssignmentTabs();
-  const { assignmentId } = useParams()
-
-    const assignment = assignments.find(
-      (a) => a.id === assignmentId
-    )
+  const { assignmentId } = useClassroomRoute()
+  const { data: assignment, isLoading } =useAssignment(assignmentId||null)
 
     if (!assignment) {
       return (

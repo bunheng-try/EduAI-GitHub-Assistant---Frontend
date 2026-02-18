@@ -1,27 +1,35 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createAssignment } from "@/features/assignment/apis/mutateAssignments";
-import { fetchAssignments } from "../apis/fetchAssignments";
+import {useQuery } from "@tanstack/react-query";
 import type { Assignment } from "@/shared/types/types";
+import { assignmentsApi } from "../apis/fetchAssignments";
 
-export const useAssignmentQuery = (classId: number) => {
-    return useQuery({
-       queryKey: ["assignments", classId], // Fixed typo and added classId
-       queryFn: () => fetchAssignments(classId), // Call function with parameter
-       enabled: !!classId, // Optional: only fetch when classId is provided
+export const QUERY_KEYS = {
+    ASSIGNMENTS: (classroomId: string) => ["assignments", classroomId] as const,
+    ASSIGMENTID: (assignmentId: string) => ["assignment",assignmentId] as const
+};
+
+
+export const useAssignmentClassrooms = (classroomId: string | null) => {
+    return useQuery<Assignment[], Error>({
+        queryKey: classroomId
+            ? QUERY_KEYS.ASSIGNMENTS(classroomId)
+            : ["assignments", "none"],
+
+        queryFn: () => {
+            if (!classroomId) throw new Error("No classroom selected");
+            return assignmentsApi.getAssignmentByClassId(classroomId);
+        },
     });
-}
+};
 
-export const useCreateAssignment = () => {
-  const queryClient = useQueryClient();
+export const useAssignment = (assignmentId: string | null) => {
+    return useQuery<Assignment, Error>({
+        queryKey: assignmentId
+            ? QUERY_KEYS.ASSIGMENTID(assignmentId)
+            : ["assignment","none"],
 
-  return useMutation({
-    mutationFn: createAssignment,
-    onSuccess: (data) => {
-      queryClient.setQueryData<Assignment[]>(
-      ["assignments", data.classId],
-      (old = []) => [...old, data]
-    );
-
-    },
-  });
+        queryFn: () => {
+            if (!assignmentId) throw new Error("No classroom selected");
+            return assignmentsApi.getAssignmentById(assignmentId);
+        },
+    });
 };
