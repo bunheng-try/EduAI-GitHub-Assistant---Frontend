@@ -8,11 +8,13 @@ import { useClassrooms } from "@/features/classes/hooks/useClassroom"
 import { useClassroomRoute } from "@/features/class/hooks/useClassroomRoute"
 import { LeftBarClasses } from "@/features/classes/components/LeftBarClasses"
 import { useClassroomActions } from "@/features/classes/hooks/useClassroomAction"
+import { LeftBarClassesSkeleton } from "@/features/classes/components/LeftBarClassesSkeleton"
+import { LeftBarClassesError } from "@/features/classes/components/LeftBarClassesError"
 
 export function LeftBar() {
   const navigate = useNavigate()
   const { classroomId } = useClassroomRoute()
-  const { data: classes = [] } = useClassrooms()
+  const { data: classes = [], isLoading, isError, refetch } = useClassrooms()
   const [openCreate, setOpenCreate] = useState(false)
   const { createClassroom, deleteClassroom, editClassroom } = useClassroomActions();
 
@@ -20,12 +22,25 @@ export function LeftBar() {
   return (
     <>
       <aside className="flex h-full w-16 flex-col border-r border-border bg-card">
-        <LeftBarClasses
-          classes={classes}
-          selectedClassroomId={classroomId}
-          onDelete={deleteClassroom}
-          onEdit={editClassroom}
-        />
+        {classes.length === 0 && (
+          <div className="flex flex-col items-center justify-center flex-1 px-2 py-4 text-center text-sm text-[hsl(var(--muted-foreground))]">
+            <p>No classes available</p>
+          </div>
+        )}
+        
+        {isLoading ? (
+          <LeftBarClassesSkeleton />
+        )
+        : isError ? (
+          <LeftBarClassesError onRetry={refetch} />
+        ) : (
+          <LeftBarClasses
+            classes={classes}
+            selectedClassroomId={classroomId}
+            onDelete={deleteClassroom}
+            onEdit={editClassroom}
+          />
+        )}
 
         <div className="flex-1" />
 
