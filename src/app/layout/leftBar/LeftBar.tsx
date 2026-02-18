@@ -10,6 +10,7 @@ import { LeftBarClasses } from "@/features/classes/components/LeftBarClasses"
 import { useClassroomActions } from "@/features/classes/hooks/useClassroomAction"
 import { LeftBarClassesSkeleton } from "@/features/classes/components/LeftBarClassesSkeleton"
 import { LeftBarClassesError } from "@/features/classes/components/LeftBarClassesError"
+import { ConfirmDialog } from "@/shared/components/design/dialog"
 
 export function LeftBar() {
   const navigate = useNavigate()
@@ -17,7 +18,13 @@ export function LeftBar() {
   const { data: classes = [], isLoading, isError, refetch } = useClassrooms()
   const [openCreate, setOpenCreate] = useState(false)
   const { createClassroom, deleteClassroom, editClassroom } = useClassroomActions();
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
+  const [classToDelete, setClassToDelete] = useState<string | null>(null)
 
+  const handleOpenDelete = (id: string) => {
+    setClassToDelete(id)
+    setConfirmDeleteOpen(true)
+  }
 
   return (
     <>
@@ -27,7 +34,7 @@ export function LeftBar() {
             <p>No classes available</p>
           </div>
         )}
-        
+
         {isLoading ? (
           <LeftBarClassesSkeleton />
         )
@@ -37,7 +44,7 @@ export function LeftBar() {
           <LeftBarClasses
             classes={classes}
             selectedClassroomId={classroomId}
-            onDelete={deleteClassroom}
+            onDelete={handleOpenDelete}
             onEdit={editClassroom}
           />
         )}
@@ -53,6 +60,22 @@ export function LeftBar() {
       </aside>
 
       <CreateClassDialog open={openCreate} onClose={() => setOpenCreate(false)} onCreate={createClassroom} />
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        title="Are you sure you want to delete this class?"
+        onConfirm={() => {
+          if (classToDelete) {
+            deleteClassroom(classToDelete)
+            setClassToDelete(null)
+            setConfirmDeleteOpen(false)
+          }
+        }}
+        confirmText="Delete"
+        cancelText="Cancel"
+      >
+        <p>This action cannot be undone.</p>
+      </ConfirmDialog>
     </>
   )
 }

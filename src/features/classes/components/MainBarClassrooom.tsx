@@ -76,8 +76,6 @@ const MainBarClassroom = () => {
             deleteClassroom(classToDelete)
             setClassToDelete(null)
             setConfirmDeleteOpen(false)
-            // optionally navigate away if user is currently in this classroom
-            if (classToDelete === classId) navigate("/classrooms")
           }
         }}
         confirmText="Delete"
