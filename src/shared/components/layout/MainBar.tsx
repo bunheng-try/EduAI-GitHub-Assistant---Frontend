@@ -1,5 +1,5 @@
 import React from "react"
-import { Users, Settings, Plus } from "lucide-react"
+import { GraduationCap, Settings, Plus } from "lucide-react"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/shared/components/ui/tooltip"
 import { Button } from "../ui/button"
 
@@ -21,73 +21,78 @@ export const MainBar: React.FC<MainBarProps> = ({
   create,
 }) => {
   return (
-    <div className="flex flex-col h-full w-full rounded-tl-2xl bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
+    <div className="flex flex-col h-full w-full rounded-tl-2xl bg-[hsl(var(--background))] text-[hsl(var(--foreground))] border-r border-gray-300">
 
       {/* Header */}
-      <div className="mx-12 py-8 pb-14 sticky top-0 shrink-0 border-b border-[hsl(var(--border))] bg-[hsl(var(--background))] z-10">
-        <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-6 mx-12 py-8  sticky top-0 shrink-0 border-b border-[hsl(var(--border))] bg-[hsl(var(--background))] z-10">
+        <div className="">
+          <div className="flex items-center justify-between">
 
-          {/* Title */}
-          <div className="text-3xl font-bold tracking-tight">
-            {title}
+            {/* Title */}
+            <div className="text-3xl font-bold tracking-tight">
+              {title}
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-2">
+
+              {/* Settings */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={openSetting}
+                  >
+                    <Settings className="h-6 w-6" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8}>
+                  Settings
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Create */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={create}
+                  >
+                    <Plus className="h-7 w-7" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8}>
+                  Create Assignment
+                </TooltipContent>
+              </Tooltip>
+
+            </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-
-            {/* Settings */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={openSetting}
-                >
-                  <Settings className="h-6 w-6" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={8}>
-                Settings
-              </TooltipContent>
-            </Tooltip>
-
-            {/* Create */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={create}
-                >
-                  <Plus className="h-7 w-7" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={8}>
-                Create Assignment
-              </TooltipContent>
-            </Tooltip>
-
+          {/* Students */}
+          <div
+            
+            className="
+              mt-2  text-sm
+              text-[hsl(var(--muted-foreground))] transition
+            "
+          >
+            <span>{student} Students</span>
           </div>
         </div>
-
-        {/* Students */}
-        <div
-          onClick={openStudentList}
-          className="
-            mt-2 flex items-center gap-2 text-sm
-            text-[hsl(var(--muted-foreground))]
-            hover:text-[hsl(var(--foreground))]
-            cursor-pointer transition
-          "
+        <div 
+        onClick={openStudentList}
+        className="flex items-center gap-2 cursor-pointer"
         >
-          <Users className="h-4 w-4" />
-          <span>{student} Students</span>
+          <GraduationCap  size={18}/>
+          Student
         </div>
       </div>
-
       {/* Content */}
       <div
-        className="flex-1 overflow-y-auto py-4"
+        className="flex-1 overflow-y-auto py-4 mx-12"
         style={{
           msOverflowStyle: "none",
           scrollbarWidth: "none",
