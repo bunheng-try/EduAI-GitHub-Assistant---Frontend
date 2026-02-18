@@ -1,15 +1,17 @@
 import { MainBar } from "@/shared/components/layout/MainBar";
 import { useClassroomRoute } from "@/features/class/hooks/useClassroomRoute";
-import { useAssignmentClassrooms } from "@/features/assignment/hooks/useAssignmentQuery";
+import { useAssignmentClassrooms, useCreateAssignment } from "@/features/assignment/hooks/useAssignmentQuery";
 import AssignmentCard from "@/shared/components/ui/assignmentCard";
 import { useNavigate } from "react-router-dom";
 import { useSelectedClassroom } from "../hooks/useClassroom";
+import type {  AssignmentDto } from "@/shared/types/types";
 
 
 const MainBarClassroom = () => {
   const navigate =useNavigate();
   const { classroomId,assignmentId } = useClassroomRoute();
   const { data: classroom} = useSelectedClassroom(classroomId);
+  const { mutate: createAssignment} = useCreateAssignment(classroomId);
 
 
   const { data: assignments = [], isLoading } =
@@ -23,6 +25,23 @@ const MainBarClassroom = () => {
 
   const handleCreate = () => {
     // TODO - Create Assignment
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // add 1 day
+    tomorrow.setHours(23, 59, 0, 0);
+
+    if(classroomId==null) return;
+
+    const newAssignmentPayload:AssignmentDto = {
+      title: "New Assignment",
+      classroomId: Number(classroomId),
+      dueAt: tomorrow.toISOString(),
+      description:"",
+      position:0
+    };
+
+    createAssignment(newAssignmentPayload);
+
   };
 
   return (

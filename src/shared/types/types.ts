@@ -9,11 +9,19 @@ export type Assignment = {
   id: string;
   classroomId: string;
   title: string;
-  status: "draft" | "published" | "closed" | "active";
-  dueDate?: string;
+  isPublished:boolean,
+  dueAt?: string;
   points?: number;
   description?: string;
   totalSubmitted: number;
+}
+
+export type AssignmentDto={
+  classroomId: number;
+  title: string;
+  dueAt: string;
+  description: string;
+  position?:number
 }
 
 export interface Challenge {
@@ -32,7 +40,7 @@ export type Submission = {
   id: string
   studentName: string
   submittedAt: string
-  status: 'pending' | 'graded' | 'late'
+  isPublished: 'pending' | 'graded' | 'late'
   score?: number | null
 }
 
@@ -51,8 +59,8 @@ export const assignments: Assignment[] = [
     id: "a1",
     classroomId: "c1",
     title: "JavaScript Fundamentals",
-    status: "active",
-    dueDate: "2026-01-20T23:59:00Z",
+    isPublished: true,
+    dueAt: "2026-01-20T23:59:00Z",
     description: "Master variables, functions, loops, and DOM basics.",
     totalSubmitted: 18,
   },
@@ -60,16 +68,16 @@ export const assignments: Assignment[] = [
     id: "a2",
     classroomId: "c1",
     title: "To-Do List App",
-    status: "active",
-    dueDate: "2026-01-25T23:59:00Z",
+    isPublished: true,
+    dueAt: "2026-01-25T23:59:00Z",
     totalSubmitted: 15,
   },
   {
     id: "a3",
     classroomId: "c1",
     title: "Midterm Mini Project",
-    status: "draft",
-    dueDate: "2026-02-10T23:59:00Z",
+    isPublished: false,
+    dueAt: "2026-02-10T23:59:00Z",
     points: 300,
     description: "Create a small full-stack project (frontend + backend).",
     totalSubmitted: 0,
@@ -79,16 +87,16 @@ export const assignments: Assignment[] = [
     id: "a4",
     classroomId: "c2",
     title: "Algorithm Practice",
-    status: "active",
-    dueDate: "2026-01-22T23:59:00Z",
+    isPublished: false,
+    dueAt: "2026-01-22T23:59:00Z",
     totalSubmitted: 25,
   },
   {
     id: "a5",
     classroomId: "c2",
     title: "Sorting & Searching",
-    status: "active",
-    dueDate: "2026-01-2823:59:00Z",
+    isPublished: false,
+    dueAt: "2026-01-2823:59:00Z",
     totalSubmitted: 21,
   },
 
@@ -96,7 +104,7 @@ export const assignments: Assignment[] = [
     id: "a6",
     classroomId: "c3",
     title: "ICT Basics Quiz",
-    status: "closed",
+    isPublished: false,
     totalSubmitted: 30,
   },
 
@@ -104,15 +112,15 @@ export const assignments: Assignment[] = [
     id: "a7",
     classroomId: "c4",
     title: "HTML & CSS Layout",
-    status: "active",
-    dueDate: "2026-02-05T23:59:00Z",
+    isPublished: false,
+    dueAt: "2026-02-05T23:59:00Z",
     totalSubmitted: 12,
   },
   {
     id: "a8",
     classroomId: "c4",
     title: "Responsive Website",
-    status: "draft",
+    isPublished: false,
     totalSubmitted: 0,
   },
 
@@ -120,8 +128,8 @@ export const assignments: Assignment[] = [
     id: "a9",
     classroomId: "c5",
     title: "Flutter UI Practice",
-    status: "active",
-    dueDate: "2026-02-05T23:59:00Z",
+    isPublished: false,
+    dueAt: "2026-02-05T23:59:00Z",
     totalSubmitted: 9,
   },
 ]
@@ -245,26 +253,26 @@ export const mockSubmissions: Submission[] = [
     id: "s1",
     studentName: "Sotheara Saraoun",
     submittedAt: "2026-01-19T09:35:00Z",
-    status: "graded",
+    isPublished: "graded",
     score: 95,
   },
   {
     id: "s2",
     studentName: "Deny Sokun",
     submittedAt: "2026-01-19T11:00:00Z",
-    status: "graded",
+    isPublished: "graded",
     score: 88,
   },
   {
     id: "s3",
     studentName: "Sotheara Saraoun",
     submittedAt: "2026-01-20T14:15:00Z",
-    status: "pending",
+    isPublished: "pending",
   },
   {
     id: "s4",
     studentName: "Deny Sokun",
     submittedAt: "2026-01-20T16:45:00Z",
-    status: "pending",
+    isPublished: "pending",
   },
 ]

@@ -16,7 +16,7 @@ const parseDateTime = (iso?: string) => {
 
 export const useAssignmentSettings = (assignment: Assignment) => {
   const { date: initDate, time: initTime } = parseDateTime(
-    assignment.dueDate
+    assignment.dueAt
   );
 
   const [dueDate, setDueDate] = useState(initDate);
@@ -29,7 +29,7 @@ export const useAssignmentSettings = (assignment: Assignment) => {
   );
 
   useEffect(() => {
-    const { date, time } = parseDateTime(assignment.dueDate);
+    const { date, time } = parseDateTime(assignment.dueAt);
 
     setDueDate(date);
     setTimeDue(time || DEFAULT_TIME);
@@ -44,7 +44,7 @@ export const useAssignmentSettings = (assignment: Assignment) => {
       dueDate:
         dueDate && timeDue
           ? `${dueDate}T${timeDue}:00`
-          : assignment.dueDate,
+          : assignment.dueAt,
       points: points ? Number(points) : assignment.points,
       description: description || assignment.description,
     };
@@ -53,7 +53,7 @@ export const useAssignmentSettings = (assignment: Assignment) => {
   };
 
   const handleCancel = () => {
-    const { date, time } = parseDateTime(assignment.dueDate);
+    const { date, time } = parseDateTime(assignment.dueAt);
 
     setDueDate(date);
     setTimeDue(time || DEFAULT_TIME);

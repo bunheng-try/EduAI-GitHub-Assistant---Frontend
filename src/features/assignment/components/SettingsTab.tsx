@@ -42,7 +42,7 @@ export const SettingsTab = ({ assignment, isEditing, onEditChange, onAssignmentU
     onEditChange(false);
   };
 
-  const displayDue = dueDate ? new Date(`${dueDate}T${timeDue || "23:59"}:00`) : null;
+  const displayDue = assignment.dueAt ? new Date(`${assignment.dueAt}`) : null;
 
   if (!isEditing) {
     return (
@@ -66,7 +66,7 @@ export const SettingsTab = ({ assignment, isEditing, onEditChange, onAssignmentU
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Status</span>
-            <span className="capitalize">{assignment.status}</span>
+            <span className="capitalize">{assignment.isPublished?"Published":"Not Publish"}</span>
           </div>
         </div>
 

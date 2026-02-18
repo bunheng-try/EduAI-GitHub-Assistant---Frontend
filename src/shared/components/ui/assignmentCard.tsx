@@ -89,7 +89,7 @@ const AssignmentCard = ({
               {assignment.title}
             </p>
             <p className="text-sm text-gray-500">
-              Due {assignment.dueDate ? formatDate(assignment.dueDate) : "No date"}
+              Due {assignment.dueAt ? formatDate(assignment.dueAt) : "No date"}
             </p>
           </div>
         </div>
@@ -97,12 +97,12 @@ const AssignmentCard = ({
         <div className="w-20 flex items-center flex-col gap-2 text-sm capitalize text-gray-500">
         
         <button
-            className={`w-full rounded-full py-1 px-2 ${assignment.status === "active"?'bg-green-50 text-green-600':'bg-white text-gray-800'}`}
+            className={`w-full rounded-full py-1 px-2 ${assignment.isPublished?'bg-green-50 text-green-600':'bg-white text-gray-800'}`}
         >
-            {assignment.status==="active"?"Published":"Draft"}
+            {assignment.isPublished?"Published":"Draft"}
         </button>
-          {assignment.status === "active"
-            ?`${assignment.totalSubmitted}/${totalStudent}`
+          {assignment.isPublished 
+            ?`${10}/${totalStudent}`
             :"Inactive"
             }
         </div>

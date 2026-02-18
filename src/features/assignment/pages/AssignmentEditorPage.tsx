@@ -5,78 +5,53 @@ import ChallengeTab from "../components/ChallengesTab";
 import { SettingsTab } from "../components/SettingsTab";
 import { SubmissionsTab } from "../components/SubmissionTab";
 import { useAssignmentTabs } from "../hooks/useMenuTabs";
-import { useParams } from "react-router-dom";
-import { assignments, mockSubmissions } from "@/shared/types/types";
 import type { Assignment } from "@/shared/types/types";
 import { useClassroomRoute } from "@/features/class/hooks/useClassroomRoute";
 import { useAssignment } from "../hooks/useAssignmentQuery";
-
+import {mockSubmissions } from "@/shared/types/types";
 
 const AssignmentEditor = () => {
   const { activeTab } = useAssignmentTabs();
-  const { assignmentId } = useParams<{ assignmentId: string }>();
-
-  const [currentAssignment, setCurrentAssignment] = useState<Assignment | null>(null);
+  const { assignmentId } = useClassroomRoute();
+  const { data: assignment, isLoading } = useAssignment(assignmentId || null);
 
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    const found = assignments.find((a) => a.id === assignmentId);
-    setCurrentAssignment(found ?? null);
-    setIsEditing(false);
-  }, [assignmentId]);
 
-  if (!assignmentId || !currentAssignment) {
-    return (
-      <div className="p-6 text-muted-foreground">
-        Select an assignment
-      </div>
-    );
+  if (isLoading) {
+    return <div className="p-6 text-muted-foreground">Loading assignment...</div>;
+  }
+
+  if (!assignmentId || !assignment) {
+    return <div className="p-6 text-muted-foreground">Select an assignment</div>;
   }
 
   const handleAssignmentUpdate = (updated: Partial<Assignment>) => {
-    setCurrentAssignment((prev) => {
-      if (!prev) return null;
-      return { ...prev, ...updated };
-    });
+    
   };
 
   const handleDelete = () => {
-    const index = assignments.findIndex((a) => a.id === assignmentId);
-    if (index !== -1) {
-      assignments.splice(index, 1);
-  const { assignmentId } = useClassroomRoute()
-  const { data: assignment, isLoading } =useAssignment(assignmentId||null)
-
-    if (!assignment) {
-      return (
-        <div className="p-6 text-muted-foreground">
-          Select an assignment
-        </div>
-      )
-    }
-    setCurrentAssignment(null);
-    console.log("Assignment deleted and removed from list");
+    // Ideally call a mutation to delete the assignment here
+    
   };
 
   return (
     <MainPanel
-      header={<AssignmentHeader
-        assignment={currentAssignment}
-        isEditing={isEditing}
-      />}
+      header={<AssignmentHeader assignment={assignment} isEditing={isEditing} />}
       emptyState={<div className="p-6 text-gray-400">No content</div>}
     >
       <div className="flex-1 overflow-auto">
         {activeTab === "challenge" && <ChallengeTab assignmentId={assignmentId} />}
-        {activeTab === "settings" && <SettingsTab
-          assignment={currentAssignment}
-          isEditing={isEditing}
-          onEditChange={setIsEditing}
-          onAssignmentUpdate={handleAssignmentUpdate}
-          onDelete={handleDelete}
-        />}
-        {activeTab === "submission" && <SubmissionsTab submissions={mockSubmissions} />}
+        {activeTab === "settings" && (
+          <SettingsTab
+            assignment={assignment}
+            isEditing={isEditing}
+            onEditChange={setIsEditing}
+            onAssignmentUpdate={handleAssignmentUpdate}
+            onDelete={handleDelete}
+          />
+        )}
+        {activeTab === "submission" && <SubmissionsTab submissions={mockSubmissions ?? []} />}
       </div>
     </MainPanel>
   );

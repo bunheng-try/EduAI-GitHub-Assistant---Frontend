@@ -4,6 +4,7 @@ import { useAssignmentTabs } from "../hooks/useMenuTabs";
 import type { Assignment } from "@/shared/types/types";
 import type { JSX } from "react";
 import { CodeIcon, MoreVerticalIcon, PencilIcon, SettingsIcon, UsersIcon } from "lucide-react";
+import { usePublishAssignment } from "../hooks/useAssignmentQuery";
 
 type Props = {
   assignment: Assignment;
@@ -12,14 +13,15 @@ type Props = {
 
 const AssignmentHeader = ({ assignment, isEditing }: Props) => {
   const { activeTab, setActiveTab } = useAssignmentTabs();
+  const { mutate: publishAssignment } = usePublishAssignment();
 
   if (!assignment) {
     return <div className="p-4 text-red-600">Assignment data missing</div>;
   }
 
-  const showPublishedUI = (assignment.status === "published" || assignment.status === "active") && !isEditing;
+  const showPublishedUI = (assignment.isPublished) && !isEditing;
 
-  const handlePublish = () => console.log("Assignment published");
+  const handlePublish = () => publishAssignment(assignment.id);
   const handleUnpublish = () => console.log("Assignment unpublished");
   const handleDiscard = () => console.log("Assignment discarded");
   const handleEditTitle = () => console.log("Edit title clicked");
