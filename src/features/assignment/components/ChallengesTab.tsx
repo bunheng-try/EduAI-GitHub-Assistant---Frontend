@@ -12,6 +12,7 @@ const LIBRARY_MOCK: Challenge[] = [
   { id: 'L3', title: 'N-Queens', level: 'High', score: '50', language: 'Java', topic: 'Backtracking', description: 'Solve the classical N-Queens problem.', author: 'Admin', date: new Date() },
 ];
 
+
 const ChallengeTab = () => {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [libraryOpen, setLibraryOpen] = useState(false);
