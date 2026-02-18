@@ -19,20 +19,19 @@ export function LeftBarButton({
   onClick,
   onContextMenu
 }: LeftBarButtonProps) {
-  const Button = (
+  const button = (
     <button
       type="button"
       onClick={onClick}
       onContextMenu={onContextMenu}
       className={cn(
         "relative flex shrink-0 h-11 w-11 items-center justify-center rounded-md transition-colors cursor-pointer",
-        !active && "hover:bg[hsl(var(--accent))]",
+        !active && "hover:bg-[hsl(var(--accent))]",
         active &&
-          "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
+        "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
       )}
     >
       {icon}
-
       {badge && (
         <span className="absolute top-1 right-1 min-w-4 h-4 rounded-full bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] text-[10px] flex items-center justify-center">
           {badge}
@@ -41,14 +40,12 @@ export function LeftBarButton({
     </button>
   )
 
-  if (!tooltip) return Button
+  if (!tooltip) return button
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>{Button}</TooltipTrigger>
-      <TooltipContent side="right">
-        {tooltip}
-      </TooltipContent>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent side="right">{tooltip}</TooltipContent>
     </Tooltip>
   )
 }

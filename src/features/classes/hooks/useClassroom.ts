@@ -4,7 +4,7 @@ import { classroomApi, type Classroom } from "../apis/classroom.api";
 
 export const QUERY_KEYS = {
     CLASSROOMS: ["classrooms"] as const,
-    CLASSROOM_DETAIL: (id: number) => ["classroom", id] as const,
+    CLASSROOM_DETAIL: (id: string) => ["classroom", id] as const,
 };
 
 // --- QUERIES ---
@@ -16,7 +16,7 @@ export const useClassrooms = () => {
     });
 };
 
-export const useSelectedClassroom = (classroomId: number | null) => {
+export const useSelectedClassroom = (classroomId: string | null) => {
     return useQuery<Classroom, Error>({
         queryKey: classroomId ? QUERY_KEYS.CLASSROOM_DETAIL(classroomId) : ["classroom", "none"],
         queryFn: () => {
@@ -47,7 +47,7 @@ export const useUpdateClassroom = () => {
     return useMutation<
         Classroom,
         Error,
-        { id: number; data: { name?: string; description?: string } }
+        { id: string; data: { name?: string; description?: string } }
     >({
         mutationFn: ({ id, data }) => classroomApi.update(id, data),
         onSuccess: (updatedClassroom, { id }) => {
@@ -60,7 +60,7 @@ export const useUpdateClassroom = () => {
 export const useDeleteClassroom = () => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, number>({
+    return useMutation<void, Error, string>({
         mutationFn: (id) => classroomApi.delete(id),
         onSuccess: (_, id) => {
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CLASSROOMS });

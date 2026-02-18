@@ -4,16 +4,16 @@ import type { ContextMenuItem } from "@/shared/components/context-menu/types"
 export function getClassroomContextMenu(
   classroomId: string,
   actions: {
+    editClassroom?: (id: string) => void
     deleteClassroom?: (id: string) => void
-    archiveClassroom?: (id: string) => void
   }
 ): ContextMenuItem[] {
   return [
     {
       type: "item",
-      label: "Archive class",
+      label: "edit class",
       icon: <Archive className="h-4 w-4" />,
-      onClick: () => actions.archiveClassroom?.(classroomId),
+      onClick: () => actions.editClassroom?.(classroomId),
     },
     {
       type: "separator",

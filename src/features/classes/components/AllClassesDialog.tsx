@@ -1,59 +1,103 @@
-import * as React from "react"
+import { useState } from "react"
 import { Users } from "lucide-react"
-
-import type { Classroom } from "@/features/class/classroom.mock.data"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/components/ui/dialog"
+import type { Classroom } from "@/shared/types/types"
+import { CustomDialog } from "@/shared/components/design/dialog/CustomDialog"
 import { cn } from "@/lib/utils"
 
 type AllClassesDialogProps = {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onClose: () => void
   classrooms: Classroom[]
+  selectedClassroomId?: string
   onSelect: (id: string) => void
 }
 
 export function AllClassesDialog({
   open,
-  onOpenChange,
+  onClose,
   classrooms,
+  selectedClassroomId,
   onSelect,
 }: AllClassesDialogProps) {
+  const [search, setSearch] = useState("")
+
+  const filteredClasses = classrooms.filter((cls) =>
+    cls.name.toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm p-0">
-        <DialogHeader className="px-4 py-3 border-b border-border">
-          <DialogTitle>All classes</DialogTitle>
-        </DialogHeader>
+    <CustomDialog
+      open={open}
+      onCancel={onClose}
+      title="All Classes"
+      bodyContent={
+        <div className="flex flex-col gap-2">
+          {/* Search input */}
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search classes..."
+            className="
+              h-10 rounded-md px-3
+              border border-border
+              bg-background
+              text-foreground
+              outline-none
+              focus:ring-2 focus:ring-ring
+            "
+          />
 
-        <div className="max-h-[420px] overflow-y-auto">
-          {classrooms.map((cls) => (
-            <button
-              key={cls.id}
-              onClick={() => {
-                onSelect(cls.id)
-                onOpenChange(false)
-              }}
-              className={cn(
-                "flex w-full items-center gap-3 px-4 py-2 text-left transition-colors",
-                "hover:bg-[hsl(var(--accent))]"
-              )}
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[hsl(var(--secondary))]">
-                <Users className="h-4 w-4" />
+          <div className="max-h-[420px] overflow-y-auto mt-2">
+            {filteredClasses.length > 0 ? (
+              filteredClasses.map((cls) => {
+                const isSelected = String(cls.id) === selectedClassroomId
+                return (
+                  <button
+                    key={cls.id}
+                    onClick={() => {
+                      onSelect(String(cls.id))
+                      onClose()
+                    }}
+                    className={cn(
+                      "flex w-full items-center gap-3 px-4 py-2 text-left rounded-md transition-colors",
+                      isSelected
+                        ? "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
+                        : "hover:bg-[hsl(var(--accent))] text-[hsl(var(--foreground))]",
+                      "focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary))] focus:ring-offset-1"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "flex h-8 w-8 items-center justify-center rounded-md",
+                        isSelected
+                          ? "bg-[hsl(var(--primary-foreground))] text-[hsl(var(--primary))]"
+                          : "bg-[hsl(var(--secondary))] text-[hsl(var(--foreground))]"
+                      )}
+                    >
+                      <Users className="h-4 w-4" />
+                    </div>
+
+                    <span className="truncate text-sm font-medium">
+                      {cls.name}
+                    </span>
+                  </button>
+                )
+              })
+            ) : (
+              <div className="p-4 text-center text-sm text-[hsl(var(--muted-foreground))]">
+                No classes found
               </div>
-
-              <span className="truncate text-sm">
-                {cls.name}
-              </span>
-            </button>
-          ))}
+            )}
+          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      }
+      actionButtons={[
+        {
+          label: "Close",
+          variant: "ghost",
+          onClick: onClose,
+        },
+      ]}
+    />
   )
 }
