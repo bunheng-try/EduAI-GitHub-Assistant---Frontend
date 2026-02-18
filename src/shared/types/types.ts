@@ -6,12 +6,14 @@ export type Classroom = {
 }
 
 export type Assignment = {
-  id: string
-  classroomId: string
-  title: string
-  status: string
-  dueDate?: string
-  totalSubmitted: number
+  id: string;
+  classroomId: string;
+  title: string;
+  status: "draft" | "published" | "closed" | "active";
+  dueDate?: string;
+  points?: number;
+  description?: string;
+  totalSubmitted: number;
 }
 
 export interface Challenge {
@@ -26,6 +28,13 @@ export interface Challenge {
   level: "Easy" | "Medium" | "Hard" | "High"; 
 }
 
+export type Submission = {
+  id: string
+  studentName: string
+  submittedAt: string
+  status: 'pending' | 'graded' | 'late'
+  score?: number | null
+}
 
 export const classrooms: Classroom[] = [
   { id: "c1", name: "Gen 11 - Software Engineering" },
@@ -43,7 +52,8 @@ export const assignments: Assignment[] = [
     classroomId: "c1",
     title: "JavaScript Fundamentals",
     status: "active",
-    dueDate: "2026-01-20",
+    dueDate: "2026-01-20T23:59:00Z",
+    description: "Master variables, functions, loops, and DOM basics.",
     totalSubmitted: 18,
   },
   {
@@ -51,7 +61,7 @@ export const assignments: Assignment[] = [
     classroomId: "c1",
     title: "To-Do List App",
     status: "active",
-    dueDate: "2026-01-25",
+    dueDate: "2026-01-25T23:59:00Z",
     totalSubmitted: 15,
   },
   {
@@ -59,6 +69,9 @@ export const assignments: Assignment[] = [
     classroomId: "c1",
     title: "Midterm Mini Project",
     status: "draft",
+    dueDate: "2026-02-10T23:59:00Z",
+    points: 300,
+    description: "Create a small full-stack project (frontend + backend).",
     totalSubmitted: 0,
   },
 
@@ -67,7 +80,7 @@ export const assignments: Assignment[] = [
     classroomId: "c2",
     title: "Algorithm Practice",
     status: "active",
-    dueDate: "2026-01-22",
+    dueDate: "2026-01-22T23:59:00Z",
     totalSubmitted: 25,
   },
   {
@@ -75,7 +88,7 @@ export const assignments: Assignment[] = [
     classroomId: "c2",
     title: "Sorting & Searching",
     status: "active",
-    dueDate: "2026-01-28",
+    dueDate: "2026-01-2823:59:00Z",
     totalSubmitted: 21,
   },
 
@@ -92,7 +105,7 @@ export const assignments: Assignment[] = [
     classroomId: "c4",
     title: "HTML & CSS Layout",
     status: "active",
-    dueDate: "2026-02-02",
+    dueDate: "2026-02-05T23:59:00Z",
     totalSubmitted: 12,
   },
   {
@@ -108,7 +121,7 @@ export const assignments: Assignment[] = [
     classroomId: "c5",
     title: "Flutter UI Practice",
     status: "active",
-    dueDate: "2026-02-05",
+    dueDate: "2026-02-05T23:59:00Z",
     totalSubmitted: 9,
   },
 ]
@@ -148,7 +161,7 @@ export const challenges: Challenge[] = [
     title: "Create Task Model",
     description: "Design task structure and states.",
     author: "Ms. Lina",
-    date: new Date("2026-01-15"),
+    date: new Date("2026-01-20T23:59:00Z"),
   },
   {
     id: "ch5",
@@ -166,6 +179,10 @@ export const challenges: Challenge[] = [
     author: "Ms. Lina",
     date: new Date("2026-01-17"),
   },
+
+  // a3 - draft 
+  { id: "ch13", assignmentId: "a3", title: "Project Planning", description: "Define project scope and wireframes.", author: "You", date: new Date("2026-01-25") },
+  { id: "ch14", assignmentId: "a3", title: "Frontend Setup", description: "Initialize React + Tailwind project.", author: "You", date: new Date("2026-01-26") },
 
   // a4 — Algorithm Practice
   {
@@ -219,5 +236,35 @@ export const challenges: Challenge[] = [
     description: "Implement page navigation.",
     author: "Mr. Chan",
     date: new Date("2026-01-24"),
+  },
+]
+
+
+export const mockSubmissions: Submission[] = [
+  {
+    id: "s1",
+    studentName: "Sotheara Saraoun",
+    submittedAt: "2026-01-19T09:35:00Z",
+    status: "graded",
+    score: 95,
+  },
+  {
+    id: "s2",
+    studentName: "Deny Sokun",
+    submittedAt: "2026-01-19T11:00:00Z",
+    status: "graded",
+    score: 88,
+  },
+  {
+    id: "s3",
+    studentName: "Sotheara Saraoun",
+    submittedAt: "2026-01-20T14:15:00Z",
+    status: "pending",
+  },
+  {
+    id: "s4",
+    studentName: "Deny Sokun",
+    submittedAt: "2026-01-20T16:45:00Z",
+    status: "pending",
   },
 ]
