@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 export type Classroom = {
   id: string
   name: string
@@ -15,13 +16,16 @@ export type Assignment = {
   totalSubmitted: number;
 }
 
-export type Challenge = {
+export interface Challenge {
   id: string;
-  assignmentId: string;
   title: string;
-  description?: string;
+  description?: string; 
   author: string;
   date: Date;
+  score: ReactNode;
+  language: ReactNode;
+  topic: ReactNode;
+  level: "Easy" | "Medium" | "Hard" | "High"; 
 }
 
 export type Submission = {
