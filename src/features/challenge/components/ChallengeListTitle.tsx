@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Trash2 } from "lucide-react";
-import type { LibraryChallenge } from "../../types/challenge";
+import type { LibraryChallenge } from "../types/challenge";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { ContextMenu } from "@/shared/components/context-menu/ContextMenu";

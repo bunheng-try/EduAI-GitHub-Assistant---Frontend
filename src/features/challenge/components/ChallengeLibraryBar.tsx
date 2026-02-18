@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { Plus, MoreVertical } from "lucide-react";
-import { useChallengeStore } from "../../stores/challengeStore";
+import { useChallengeStore } from "../stores/challengeStore";
 import { ChallengeListTitle } from "./ChallengeListTitle";
 import { ChallengeEmptyState } from "./ChallengeEmptyState";
 import { Input } from "@/shared/components/ui/input";
