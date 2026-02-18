@@ -70,6 +70,7 @@ export function LeftBarClasses({ classes, selectedClassroomId, onDelete, onEdit 
                     <LeftBarButton
                         icon={<MoreHorizontal className="h-5 w-5" />}
                         tooltip={`${hiddenClasses.length} more classes`}
+                        badge={hiddenClasses.length}
                         onClick={() => setOpenAll(true)}
                     />
                 </div>
