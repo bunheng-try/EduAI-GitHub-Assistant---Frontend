@@ -9,6 +9,7 @@ export const AddNewChallengeModal = ({ isOpen, onClose, onAdd }: any) => {
 
   if (!isOpen) return null;
 
+  
   const handleCreate = () => {
     if (!form.title || !form.topic) return alert("Please fill all fields");
     onAdd({

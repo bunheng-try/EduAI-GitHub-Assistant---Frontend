@@ -9,7 +9,7 @@ const sections: Section[] = [
       { id: "a1", title: "Introduction Quiz" },
       { id: "a2", title: "Setup Environment" },
     ],
-  },
+  }, 
   {
     id: "week-2",
     title: "WEEK 2 – UI & LAYOUT FUNDAMENTALS",

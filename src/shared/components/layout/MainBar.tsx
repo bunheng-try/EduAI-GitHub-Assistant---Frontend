@@ -1,5 +1,5 @@
 import React from "react"
-import { Users, Settings, Plus } from "lucide-react"
+import { GraduationCap, Settings, Plus } from "lucide-react"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/shared/components/ui/tooltip"
 import { Button } from "../ui/button"
 
@@ -21,10 +21,10 @@ export const MainBar: React.FC<MainBarProps> = ({
   create,
 }) => {
   return (
-    <div className="flex flex-col h-full w-full bg-[hsl(var(--background))] text-[hsl(var(--foreground))] rounded-tl-2xl">
+    <div className="flex flex-col px-8 h-full w-full bg-[hsl(var(--background))] text-[hsl(var(--foreground))] rounded-tl-2xl border-r ">
 
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-[hsl(var(--background))] border-b border-[hsl(var(--border))] px-8 py-6 flex flex-col">
+      <div className="sticky top-0 z-10 bg-[hsl(var(--background))] border-b border-[hsl(var(--border))]  py-6 flex flex-col">
         {/* Top row: title + actions */}
         <div className="flex items-center justify-between">
           <h1 className="text-xl sm:text-3xl font-bold tracking-tight text-[hsl(var(--foreground))] truncate">
@@ -73,16 +73,15 @@ export const MainBar: React.FC<MainBarProps> = ({
               cursor-pointer transition-colors duration-200
             "
           >
-            <Users className="h-4 w-4" />
+            <GraduationCap className="h-4 w-4" />
             <span className="truncate">{student} Students</span>
           </div>
         )}
       </div>
-
       {/* Content */}
       <div
         className="
-          flex-1 overflow-y-auto px-4 py-4
+          flex-1 overflow-y-auto py-4
           scrollbar-none
         "
       >

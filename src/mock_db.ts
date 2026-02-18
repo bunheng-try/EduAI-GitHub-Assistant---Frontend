@@ -1,22 +1,98 @@
-  import type { Classroom } from "./features/class/types/classroom";
+import type { Classroom } from "./features/class/types/classroom";
 import type { Assignment } from "./shared/types/types";
 import Logo from "@/assets/logo/logo.png";
-export const assignmentsStore: Record<number, Assignment[]> = {
-  1: [
-    { id: 1, title: "Math Homework 1", classId: 1 },
-    { id: 2, title: "Math Project", classId: 1 },
-    { id: 3, title: "Math Quiz 1", classId: 1 }
+
+export const assignmentsStore: Record<string, Assignment[]> = {
+  "1": [
+    {
+      id: "a1",
+      classroomId: "1",
+      title: "First Coding Assignment",
+      status: "published",
+      dueDate: "2026-01-21T23:59:00Z",
+      points: 100,
+      description: "Implement a simple React counter app with state management.",
+      totalSubmitted: 18,
+    },
+    {
+      id: "a2",
+      classroomId: "1",
+      title: "First Project",
+      status: "published",
+      dueDate: "2026-01-30T23:59:00Z",
+      points: 200,
+      description: "Build a mobile-friendly to-do list with local storage.",
+      totalSubmitted: 15,
+    },
+    {
+      id: "a3",
+      classroomId: "1",
+      title: "Quiz",
+      status: "draft",
+      dueDate: "2026-01-31T23:59:00Z",
+      points: 50,
+      description: "Multiple-choice quiz on React fundamentals.",
+      totalSubmitted: 0,
+    },
   ],
-  2: [
-    { id: 1, title: "Science Lab Report", classId: 2 },
-    { id: 2, title: "Physics Assignment", classId: 2 },
-    { id: 3, title: "Chemistry Quiz", classId: 2 }
+  "2": [
+    {
+      id: "b1",
+      classroomId: "2",
+      title: "Responsive Layout Challenge",
+      status: "published",
+      dueDate: "2026-02-05T23:59:00Z",
+      points: 120,
+      description: "Create a responsive portfolio page using Tailwind CSS.",
+      totalSubmitted: 22,
+    },
+    {
+      id: "b2",
+      classroomId: "2",
+      title: "API Integration Project",
+      status: "draft",
+      dueDate: "2026-02-10T23:59:00Z",
+      points: 180,
+      description: "Fetch data from a public API and display it in React.",
+      totalSubmitted: 0,
+    },
   ],
-  3: [
-    { id: 1, title: "History Essay", classId: 3 },
-    { id: 2, title: "Geography Project", classId: 3 },
-    { id: 3, title: "Civics Assignment", classId: 3 }
-  ]
+  "3": [
+    {
+      id: "c1",
+      classroomId: "3",
+      title: "Basic Neural Network",
+      status: "published",
+      dueDate: "2026-02-15T23:59:00Z",
+      points: 150,
+      description: "Implement a simple perceptron in Python.",
+      totalSubmitted: 12,
+    },
+  ],
+  "4": [
+    {
+      id: "d1",
+      classroomId: "4",
+      title: "Data Cleaning Assignment",
+      status: "draft",
+      dueDate: "2026-02-20T23:59:00Z",
+      points: 90,
+      description: "Clean a messy dataset using Pandas.",
+      totalSubmitted: 0,
+    },
+  ],
+  "5": [
+    {
+      id: "e1",
+      classroomId: "5",
+      title: "User Flow Diagram",
+      status: "published",
+      dueDate: "2026-02-25T23:59:00Z",
+      points: 80,
+      description: "Create user flow for a mobile app onboarding.",
+      totalSubmitted: 9,
+    },
+  ],
 };
 
 export const classroomsStore: Classroom[] = [
