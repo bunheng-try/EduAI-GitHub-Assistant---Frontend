@@ -1,10 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { useClassrooms, useDeleteClassroom } from "./useClassroom"
+import { useClassrooms, useCreateClassroom, useDeleteClassroom, useUpdateClassroom } from "./useClassroom"
 
 export function useClassroomActions() {
     const navigate = useNavigate()
     const { data: classrooms = [] } = useClassrooms()
     const deleteMutation = useDeleteClassroom()
+    const createMutation = useCreateClassroom()
+    const updateMutation = useUpdateClassroom()
     const { classId } = useParams()
 
     const deleteClassroom = (id: string) => {
@@ -25,12 +27,21 @@ export function useClassroomActions() {
         })
     }
 
-    const editClassroom = (id: string) => {
-        
+    const editClassroom = async (id: string, newName: string) => {
+        try {
+            await updateMutation.mutateAsync({ id, data: { name: newName } });
+        } catch (error) {
+            console.error("Edit classroom failed:", error)
+        }
     }
 
-    const createClassroom = (name: string) => {
-        
+    const createClassroom = async (name: string) => {
+        try {
+            const newClass = await createMutation.mutateAsync({ name })
+            navigate(`/classrooms/${newClass.id}`)
+        } catch (error) {
+            console.error("Create classroom failed:", error)
+        }
     }
 
     return {

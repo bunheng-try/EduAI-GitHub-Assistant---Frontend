@@ -6,7 +6,8 @@ import { useClassroomActions } from "../hooks/useClassroomAction"
 import { getClassroomContextMenu } from "./classContextMenu"
 import { useClassrooms } from "../hooks/useClassroom"
 import { ConfirmDialog } from "@/shared/components/design/dialog"
-import React from "react"
+import React, { useState } from "react"
+import { EditClassDialog } from "./EditClassDialog"
 
 const MainBarClassroom = () => {
   const navigate = useNavigate()
@@ -18,6 +19,31 @@ const MainBarClassroom = () => {
   const { deleteClassroom, editClassroom } = useClassroomActions()
   const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false)
   const [classToDelete, setClassToDelete] = React.useState<string | null>(null)
+  
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selectedClass, setSelectedClass] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  const handleEdit = (classroomId: string) => {
+    const cls = classrooms.find((c) => String(c.id) === classroomId);
+    if (!cls) return;
+    setSelectedClass({ id: classroomId, name: cls.name });
+    setOpenEdit(true);
+  };
+  const handleSetting = (e: React.MouseEvent) => {
+    if (!classId) return;
+
+    openMenu({
+      x: e.clientX,
+      y: e.clientY,
+      items: getClassroomContextMenu(classId, {
+        deleteClassroom: handleOpenDelete,
+        editClassroom: handleEdit,
+      }),
+    });
+  };
 
   const handleOpenDelete = (id: string) => {
     setClassToDelete(id)
@@ -35,20 +61,6 @@ const MainBarClassroom = () => {
     console.log("open student list")
   }
 
-  const handleSetting = (e: React.MouseEvent) => {
-    if (!classId) return
-
-    openMenu({
-      x: e.clientX,
-      y: e.clientY,
-      items: getClassroomContextMenu(classId, {
-        deleteClassroom: handleOpenDelete,
-        editClassroom,
-      }),
-    })
-  }
-
-
   const handleCreate = (): void => {
     // TODO - Create Assignement
   }
@@ -63,9 +75,7 @@ const MainBarClassroom = () => {
         openStudentList={classroom ? openStudentList : undefined}
         create={classroom ? handleCreate : undefined}
       >
-        <div className="flex flex-col gap-2">
-          TODO - list Assignemt here
-        </div>
+        <div className="flex flex-col gap-2">TODO - list Assignemt here</div>
       </MainBar>
       <ConfirmDialog
         open={confirmDeleteOpen}
@@ -73,9 +83,9 @@ const MainBarClassroom = () => {
         title="Are you sure you want to delete this class?"
         onConfirm={() => {
           if (classToDelete) {
-            deleteClassroom(classToDelete)
-            setClassToDelete(null)
-            setConfirmDeleteOpen(false)
+            deleteClassroom(classToDelete);
+            setClassToDelete(null);
+            setConfirmDeleteOpen(false);
           }
         }}
         confirmText="Delete"
@@ -83,9 +93,17 @@ const MainBarClassroom = () => {
       >
         <p>This action cannot be undone.</p>
       </ConfirmDialog>
+      <EditClassDialog
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        initialName={selectedClass?.name || ""}
+        onConfirm={(newName) => {
+          if (!selectedClass) return;
+          editClassroom(selectedClass.id, newName);
+        }}
+      />
     </>
-
-  )
+  );
 }
 
 export default MainBarClassroom
