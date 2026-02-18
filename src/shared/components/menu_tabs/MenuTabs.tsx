@@ -1,6 +1,7 @@
 export interface TabItem<T extends string> {
   key: T;
   label: string;
+  icon?: React.ReactNode;
 }
 
 interface MenuTabsProps<T extends string> {
@@ -24,12 +25,14 @@ const MenuTabs = <T extends string>({
             key={tab.key}
             onClick={() => onChange(tab.key)}
             className={`
+              flex items-center gap-2
               pb-3 text-sm font-medium transition-colors
               ${isActive
                 ? "border-b-2 border-[hsl(var(--primary))] text-[hsl(var(--foreground))]"
                 : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"}
             `}
           >
+            {tab.icon}
             {tab.label}
           </button>
         )
