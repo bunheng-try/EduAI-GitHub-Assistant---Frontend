@@ -1,47 +1,115 @@
-// TestCaseTab.tsx - Test case tab content
+import { useState } from "react";
 
-import React from 'react'
-import type { MockChallenge } from './challengesData'
-
-interface TestCaseTabProps {
-  challenge: MockChallenge
+interface TestCase {
+  id: string;
+  input: string;
+  output: string;
 }
 
-const TestCaseTab: React.FC<TestCaseTabProps> = ({ challenge }) => {
-  return (
-    <div className="tab-content-area">
-      <h3 className="section-title">Test Cases</h3>
-      <p className="test-case-description">
-        A test case consists of input values to the program and the expected output. 
-        Input will be fed to the program's STDIN and output will be expected in STDOUT.
-      </p>
+const ChallengeTestCaseTab = () => {
+  const [testCases, setTestCases] = useState<TestCase[]>([]);
 
-      {/* Test Cases List */}
-      <div className="test-cases-list">
-        {challenge.testCases.map((testCase, index) => (
-          <div key={testCase.id} className="test-case-card">
-            <h4 className="test-case-title">Test Case {index + 1}</h4>
-            
-            <div className="test-case-field">
-              <label className="field-label">Input:</label>
-              <pre className="field-value">{testCase.input}</pre>
+  // Add new testcase
+  const handleAdd = () => {
+    const newCase: TestCase = {
+      id: crypto.randomUUID(),
+      input: "",
+      output: "",
+    };
+
+    setTestCases([...testCases, newCase]);
+  };
+
+  // Delete testcase
+  const handleDelete = (id: string) => {
+    setTestCases(testCases.filter((tc) => tc.id !== id));
+  };
+
+  return (
+    <div className="space-y-6">
+
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h3 className="text-sm font-semibold">
+            Test Cases
+          </h3>
+          <p className="text-xs text-gray-500">
+            Define inputs and expected outputs for evaluation.
+          </p>
+        </div>
+
+        <button
+          onClick={handleAdd}
+          className="px-4 py-2 text-sm bg-purple-600 text-white rounded-md"
+        >
+          + Add Test Case
+        </button>
+      </div>
+
+      {/* Empty State */}
+      {testCases.length === 0 && (
+        <p className="text-gray-400 text-sm">
+          No test cases yet. Click “Add Test Case”.
+        </p>
+      )}
+
+      {/* Test Case List */}
+      <div className="space-y-4">
+        {testCases.map((tc, index) => (
+          <div
+            key={tc.id}
+            className="border rounded-md p-4 space-y-3 bg-gray-50"
+          >
+            <div className="flex justify-between items-center">
+              <p className="font-medium text-sm">
+                Test Case #{index + 1}
+              </p>
+
+              <button
+                onClick={() => handleDelete(tc.id)}
+                className="text-red-500 text-sm"
+              >
+                Delete
+              </button>
             </div>
-            
-            <div className="test-case-field">
-              <label className="field-label">Expected Output:</label>
-              <pre className="field-value">{testCase.expectedOutput}</pre>
-            </div>
+
+            {/* Input */}
+            <textarea
+              placeholder="Input"
+              value={tc.input}
+              className="w-full border rounded px-3 py-2 text-sm font-mono"
+              rows={3}
+              onChange={(e) => {
+                const updated = testCases.map((item) =>
+                  item.id === tc.id
+                    ? { ...item, input: e.target.value }
+                    : item
+                );
+                setTestCases(updated);
+              }}
+            />
+
+            {/* Output */}
+            <textarea
+              placeholder="Expected Output"
+              value={tc.output}
+              className="w-full border rounded px-3 py-2 text-sm font-mono"
+              rows={3}
+              onChange={(e) => {
+                const updated = testCases.map((item) =>
+                  item.id === tc.id
+                    ? { ...item, output: e.target.value }
+                    : item
+                );
+                setTestCases(updated);
+              }}
+            />
           </div>
         ))}
       </div>
-
-      {/* Buttons */}
-      <div className="button-group">
-        <button className="btn btn-primary">Add Test Case</button>
-        <button className="btn btn-secondary">Export</button>
-      </div>
     </div>
-  )
-}
+  );
+};
 
-export default TestCaseTab
+export default ChallengeTestCaseTab;
