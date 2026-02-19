@@ -7,6 +7,7 @@ import { ChallengeDetailHeader, type ChallengeTabKey } from "./ChallengeDetailHe
 import { ChallengeInfoTab } from "./ChallengeInfoTab";
 import { ChallengeStartCodeTab } from "./ChallengeStartCodeTab";
 import { ChallengeTestCaseTab } from "./ChallengeTestCaseTab";
+import { ChallengeSettingTab } from "./ChallengeSettingTab";
 import { ConfirmDialog } from "@/shared/components/design/dialog/ConfirmDialog";
 
 export const ChallengeDetailPanel = () => {
@@ -26,7 +27,6 @@ export const ChallengeDetailPanel = () => {
     }
   }, [selectedChallenge]);
 
-  // No challenge selected
   if (!selectedChallenge || !draft) {
     return (
       <div className="flex items-center justify-center h-full text-sm text-[hsl(var(--muted-foreground))]">
@@ -65,7 +65,7 @@ export const ChallengeDetailPanel = () => {
   return (
     <div className="flex flex-col h-full bg-[hsl(var(--background))]">
 
-      {/* Header */}
+      {/* Header — Title + Tabs + Save/Discard/Delete */}
       <ChallengeDetailHeader
         title={draft.title}
         activeTab={activeTab}
@@ -81,22 +81,24 @@ export const ChallengeDetailPanel = () => {
         className="flex-1 overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
+        {/* Description tab — Title + Description */}
         {activeTab === "description" && (
           <ChallengeInfoTab data={draft} onChange={handleChange} />
         )}
 
+        {/* Start Code tab — Language + Starter Code */}
         {activeTab === "startCode" && (
           <ChallengeStartCodeTab data={draft} onChange={handleChange} />
         )}
 
+        {/* Test Case tab — Table + Add modal */}
         {activeTab === "testCase" && (
           <ChallengeTestCaseTab data={draft} onChange={handleChange} />
         )}
 
+        {/* Setting tab — Points + Difficulty + Category + AI */}
         {activeTab === "setting" && (
-          <div className="p-6 text-sm text-[hsl(var(--muted-foreground))]">
-            Setting tab — coming soon
-          </div>
+          <ChallengeSettingTab data={draft} onChange={handleChange} />
         )}
       </div>
 
