@@ -6,6 +6,7 @@ import { useChallengeStore } from "../stores/challengeStore";
 import { ChallengeDetailHeader, type ChallengeTabKey } from "./ChallengeDetailHeader";
 import { ChallengeInfoTab } from "./ChallengeInfoTab";
 import { ChallengeStartCodeTab } from "./ChallengeStartCodeTab";
+import { ChallengeTestCaseTab } from "./ChallengeTestCaseTab";
 import { ConfirmDialog } from "@/shared/components/design/dialog/ConfirmDialog";
 
 export const ChallengeDetailPanel = () => {
@@ -34,33 +35,28 @@ export const ChallengeDetailPanel = () => {
     );
   }
 
-  // Update draft fields and mark as dirty
   const handleChange = (updated: Partial<LibraryChallenge>) => {
     setDraft((prev) => prev ? { ...prev, ...updated } : prev);
     setIsDirty(true);
   };
 
-  // Save — persist to store
   const handleSave = () => {
     if (!draft) return;
     updateChallenge(draft);
     setIsDirty(false);
   };
 
-  // Discard — show confirmation if dirty
   const handleDiscard = () => {
     if (!isDirty) return;
     setShowDiscard(true);
   };
 
-  // Confirmed discard — revert to original
   const handleConfirmDiscard = () => {
     setDraft({ ...selectedChallenge });
     setIsDirty(false);
     setShowDiscard(false);
   };
 
-  // Confirmed delete
   const handleConfirmDelete = () => {
     deleteChallenge(selectedChallenge.id);
     setShowDelete(false);
@@ -69,7 +65,7 @@ export const ChallengeDetailPanel = () => {
   return (
     <div className="flex flex-col h-full bg-[hsl(var(--background))]">
 
-      {/* Header — Title + Tabs + Save/Discard/Delete */}
+      {/* Header */}
       <ChallengeDetailHeader
         title={draft.title}
         activeTab={activeTab}
@@ -94,9 +90,7 @@ export const ChallengeDetailPanel = () => {
         )}
 
         {activeTab === "testCase" && (
-          <div className="p-6 text-sm text-[hsl(var(--muted-foreground))]">
-            Test Case tab — coming in Subtask 4
-          </div>
+          <ChallengeTestCaseTab data={draft} onChange={handleChange} />
         )}
 
         {activeTab === "setting" && (
@@ -106,7 +100,7 @@ export const ChallengeDetailPanel = () => {
         )}
       </div>
 
-      {/* Discard Confirmation Dialog */}
+      {/* Discard Confirmation */}
       <ConfirmDialog
         open={showDiscard}
         onOpenChange={setShowDiscard}
@@ -120,7 +114,7 @@ export const ChallengeDetailPanel = () => {
         </p>
       </ConfirmDialog>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Delete Confirmation */}
       <ConfirmDialog
         open={showDelete}
         onOpenChange={setShowDelete}
