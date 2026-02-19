@@ -1,66 +1,81 @@
-import { MainBar } from '@/shared/components/layout/MainBar'
-import {assignments, classrooms, type Assignment } from "@/shared/types/types";
-import AssignmentCard from '@/shared/components/ui/assignmentCard';
-import { useNavigate, useParams } from 'react-router-dom';
+
+import { MainBar } from "@/shared/components/layout/MainBar";
+import { useClassroomRoute } from "@/features/class/hooks/useClassroomRoute";
+import { useAssignmentClassrooms, useCreateAssignment } from "@/features/assignment/hooks/useAssignmentQuery";
+import AssignmentCard from "@/shared/components/ui/assignmentCard";
+import { useSelectedClassroom } from "../hooks/useClassroom";
+import type {  AssignmentDto } from "@/shared/types/types";
+import { useNavigate} from "react-router-dom"
+
+const MainBarClassroom = () => {
+  const navigate =useNavigate();
+  const { classroomId,assignmentId } = useClassroomRoute();
+  const { data: classroom} = useSelectedClassroom(classroomId);
+  const { mutate: createAssignment} = useCreateAssignment(classroomId);
+
+  const { data: assignments = [], isLoading } =
+    useAssignmentClassrooms(classroomId);
+
+  const openStudentList = () => {
+    console.log("open student list");
+  };
+
+  const handleSetting = () => {};
+
+  const handleCreate = () => {
+    // TODO - Create Assignment
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // add 1 day
+    tomorrow.setHours(23, 59, 0, 0);
+
+    if(classroomId==null) return;
+    
+    const newAssignmentPayload:AssignmentDto = {
+      title: "New Assignment",
+      classroomId: Number(classroomId),
+      dueAt: tomorrow.toISOString(),
+      description:"",
+      position:0
+    };
+
+    createAssignment(newAssignmentPayload)
+  };
 
 
-const MainBarClassrooom = () => {
-
-  const navigate = useNavigate()
-  const { classId, assignmentId } = useParams()
-
-  const classroom = classrooms.find(
-    (c) => c.id === classId
-  )
-  
-   const classroomAssignments = assignments.filter(
-    (a) => a.classroomId === classId
-  )
-
-
-  const openStudentList= ():void=>{
-      console.log("open student list");
-  }
-
-  const handleSetting=():void=>{
-      console.log("open setting");
-  }
-
-  const handleCreate=():void=>{
-      console.log("open modal")
-  }
-  
-  const handleDelete=():void=>{
-      console.log("open modal")
-  }
-  
   return (
-    <MainBar 
-      title={classroom?.name ?? "Classroom"}
-      student={34} 
+    <MainBar
+      title={classroom?.name}
+      student={67}
       openSetting={handleSetting}
       openStudentList={openStudentList}
       create={handleCreate}
     >
-      {/* Render assignments */}
-      <div className="flex flex-col ">
-        {classroomAssignments.map((assignment) => (
-          <AssignmentCard
-            key={assignment.id}
-            assignment={assignment}
-            onDelete={handleDelete}
-            onClick={() =>
-              navigate(
-                `/classrooms/${classId}/assignments/${assignment.id}`
-              )
-            }
-            isSelect={assignment.id === assignmentId}
-            totalStudent={34}
-          />
-        ))}
+      <div className="flex flex-col gap-2">
+        {isLoading ? (
+          <p>Loading assignments...</p>
+        ) : assignments.length === 0 ? (
+          <p>No assignments found</p>
+        ) : (
+          assignments.map((a) => (
+            <AssignmentCard
+              key={a.id}           
+              assignment={a}        
+              isSelect={a.id==assignmentId}  
+              onDelete={() => {}}
+              onClick={() => {
+                navigate(
+                  `/classrooms/${classroomId}/assignments/${a.id}`
+                )
+              }}
+              totalStudent={67}
+            />
+          ))
+        )}
       </div>
     </MainBar>
-  )
-}
+  );
+};
 
-export default MainBarClassrooom
+
+export default MainBarClassroom;

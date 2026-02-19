@@ -62,5 +62,6 @@ export const ChallengeCard = ({ challenge, showDescription, selectable, isSelect
         </div>
       )}
     </div>
+    
   );
 };

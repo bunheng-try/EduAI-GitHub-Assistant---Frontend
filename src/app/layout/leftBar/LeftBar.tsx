@@ -1,152 +1,81 @@
-import { useEffect, useRef, useState } from "react"
-import {
-  Users,
-  Plus,
-  Library,
-  User,
-  MoreHorizontal,
-} from "lucide-react"
+import { useState } from "react"
+import { Plus, Library, User } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 import { LeftBarButton } from "./LeftBarButton"
-import { useContextMenu } from "@/shared/components/context-menu/ContextMenuProvider"
-import { getClassroomContextMenu } from "@/features/classes/components/classContextMenu"
-import { AllClassesDialog } from "@/features/classes/components/AllClassesDialog"
-import { CreateClassDialog } from "@/features/class/components/CreateClassDialog"
+import { CreateClassDialog } from "@/features/classes/components/CreateClassDialog"
+import { useClassrooms } from "@/features/classes/hooks/useClassroom"
 import { useClassroomRoute } from "@/features/class/hooks/useClassroomRoute"
-
-import { classrooms, type Classroom } from "@/shared/types/types"
-
-const BUTTON_HEIGHT = 48
+import { LeftBarClasses } from "@/features/classes/components/LeftBarClasses"
+import { useClassroomActions } from "@/features/classes/hooks/useClassroomAction"
+import { LeftBarClassesSkeleton } from "@/features/classes/components/LeftBarClassesSkeleton"
+import { LeftBarClassesError } from "@/features/classes/components/LeftBarClassesError"
+import { ConfirmDialog } from "@/shared/components/design/dialog"
+import { classrooms } from "@/shared/types/types"
+import { EditClassDialog } from "@/features/classes/components/EditClassDialog"
 
 export function LeftBar() {
   const navigate = useNavigate()
   const { classroomId } = useClassroomRoute()
-  const { openMenu } = useContextMenu()
-
-  /** ---------------------------
-   *  STATE
-   * -------------------------- */
-  const [classes, setClasses] = useState<Classroom[]>(classrooms)
-  const [openAll, setOpenAll] = useState(false)
+  const { data: classes = [], isLoading, isError, refetch } = useClassrooms()
   const [openCreate, setOpenCreate] = useState(false)
+  const { createClassroom, deleteClassroom, editClassroom } = useClassroomActions();
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
+  const [classToDelete, setClassToDelete] = useState<string | null>(null)
 
-  const listRef = useRef<HTMLDivElement>(null)
-  const [visibleCount, setVisibleCount] = useState(classes.length)
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selectedClass, setSelectedClass] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
-  /** ---------------------------
-   *  ORDER: active always first
-   * -------------------------- */
-  const orderedClasses = [
-    ...classes.filter((c) => c.id === classroomId),
-    ...classes.filter((c) => c.id !== classroomId),
-  ]
+  const handleEdit = (classroomId: string) => {
+    const cls = classrooms.find((c) => String(c.id) === classroomId);
+    if (!cls) return;
+    setSelectedClass({ id: classroomId, name: cls.name });
+    setOpenEdit(true);
+  };
 
-  /** ---------------------------
-   *  MEASURE HEIGHT
-   * -------------------------- */
-  useEffect(() => {
-    const el = listRef.current
-    if (!el) return
-
-    const calculate = () => {
-      const max = Math.floor(el.clientHeight / BUTTON_HEIGHT)
-      setVisibleCount(Math.max(max, 0))
-    }
-
-    calculate()
-    window.addEventListener("resize", calculate)
-    return () => window.removeEventListener("resize", calculate)
-  }, [classes])
-
-  const visibleClasses = orderedClasses.slice(0, visibleCount)
-  const hiddenClasses = orderedClasses.slice(visibleCount)
-
-  /** ---------------------------
-   *  ACTIONS
-   * -------------------------- */
-  const createClassroom = (name: string) => {
-    const newClass: Classroom = {
-      id: crypto.randomUUID(),
-      name,
-    }
-
-    setClasses((prev) => [newClass, ...prev])
-    navigate(`/classrooms/${newClass.id}`)
+  const handleOpenDelete = (id: string) => {
+    setClassToDelete(id)
+    setConfirmDeleteOpen(true)
   }
 
-  const deleteClassroom = (id: string) => {
-    setClasses((prev) => prev.filter((c) => c.id !== id))
-
-    if (classroomId === id) {
-      navigate("/classrooms")
-    }
-  }
-
-  const archiveClassroom = (id: string) => {
-    console.log("archive later:", id)
-  }
-
-  /** ---------------------------
-   *  RENDER
-   * -------------------------- */
   return (
     <>
       <aside className="flex h-full w-16 flex-col border-r border-border bg-card">
-
-        {/* TOP — CLASSES */}
-        <div
-          ref={listRef}
-          className="flex flex-col gap-1 px-2 py-2 overflow-hidden flex-1"
-        >
-          {visibleClasses.map((c) => (
-            <LeftBarButton
-              key={c.id}
-              icon={<Users className="h-5 w-5" />}
-              tooltip={c.name}
-              active={c.id === classroomId}
-              onClick={() => navigate(`/classrooms/${c.id}`)}
-              onContextMenu={(e) => {
-                e.preventDefault()
-                openMenu({
-                  x: e.clientX,
-                  y: e.clientY,
-                  items: getClassroomContextMenu(c.id, {
-                    deleteClassroom,
-                    archiveClassroom,
-                  }),
-                })
-              }}
-            />
-          ))}
-        </div>
-
-        {/* MORE */}
-        {hiddenClasses.length > 0 && (
-          <div className="px-2 py-1">
-            <LeftBarButton
-              icon={<MoreHorizontal className="h-5 w-5" />}
-              tooltip={`${hiddenClasses.length} more classes`}
-              onClick={() => setOpenAll(true)}
-            />
+        {classes.length === 0 && (
+          <div className="flex flex-col items-center justify-center flex-1 px-2 py-4 text-center text-sm text-[hsl(var(--muted-foreground))]">
+            <p>No classes available</p>
           </div>
+        )}
+
+        {isLoading ? (
+          <LeftBarClassesSkeleton />
+        ) : isError ? (
+          <LeftBarClassesError onRetry={refetch} />
+        ) : (
+          <LeftBarClasses
+            classes={classes}
+            selectedClassroomId={classroomId}
+            onDelete={handleOpenDelete}
+            onEdit={handleEdit}
+          />
         )}
 
         <div className="flex-1" />
 
-        {/* BOTTOM */}
+        {/* bottom actions */}
         <div className="flex flex-col gap-1 px-2 py-2">
           <LeftBarButton
             icon={<Plus className="h-5 w-5" />}
             tooltip="Create class"
             onClick={() => setOpenCreate(true)}
           />
-
           <LeftBarButton
             icon={<Library className="h-5 w-5" />}
             tooltip="Exercise library"
           />
-
           <LeftBarButton
             icon={<User className="h-5 w-5 text-primary" />}
             tooltip="Profile"
@@ -154,20 +83,36 @@ export function LeftBar() {
         </div>
       </aside>
 
-      {/* ALL CLASSES */}
-      <AllClassesDialog
-        open={openAll}
-        onOpenChange={setOpenAll}
-        classrooms={classes}
-        onSelect={(id) => navigate(`/classrooms/${id}`)}
-      />
-
-      {/* CREATE CLASS */}
       <CreateClassDialog
         open={openCreate}
         onClose={() => setOpenCreate(false)}
         onCreate={createClassroom}
       />
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        title="Are you sure you want to delete this class?"
+        onConfirm={() => {
+          if (classToDelete) {
+            deleteClassroom(classToDelete);
+            setClassToDelete(null);
+            setConfirmDeleteOpen(false);
+          }
+        }}
+        confirmText="Delete"
+        cancelText="Cancel"
+      >
+        <p>This action cannot be undone.</p>
+      </ConfirmDialog>
+      <EditClassDialog
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        initialName={selectedClass?.name || ""}
+        onConfirm={(newName) => {
+          if (!selectedClass) return;
+          editClassroom(selectedClass.id, newName);
+        }}
+      />
     </>
-  )
+  );
 }

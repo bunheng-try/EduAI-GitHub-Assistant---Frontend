@@ -13,6 +13,7 @@ import { ClassroomLayout } from "../layout/ClassroomLayout";
 import { ClassroomHome } from "@/features/classes/components/ClassroomHome";
 import { ProtectedRoute } from "./protectedRoute";
 import SignInPage from "@/features/auth/pages/SignInPage";
+import { NoClassSelected } from "@/features/classes/components/NoClassSelected";
 
 const router = createBrowserRouter([
   { path: "/signin", element: <SignInPage /> },
@@ -21,25 +22,29 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedRoute>
+      // <ProtectedRoute>
         <AppShell />
-      </ProtectedRoute>
+      // </ProtectedRoute>
     ),
     children: [
-    {
-      path: "classrooms/:classId",
-      element: <ClassroomLayout />,
-      children: [
-        {
-          index: true,
-          element: <ClassroomHome />
-        },
-        {
-          path: "assignments/:assignmentId",
-          element: <AssignmentEditor />,
-        },
-      ],
-    },
+      {
+        path: "classrooms",
+        element: <ClassroomLayout />,
+        children: [
+          {
+            index: true,
+            element: <NoClassSelected />,
+          },
+          {
+            path: ":classId",
+            element: <ClassroomHome />,
+          },
+          {
+            path: ":classId/assignments/:assignmentId",
+            element: <AssignmentEditor />,
+          },
+        ],
+      },
   ],
   },
 
