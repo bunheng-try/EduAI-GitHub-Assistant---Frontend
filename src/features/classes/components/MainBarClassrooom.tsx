@@ -6,6 +6,7 @@ import AssignmentCard from "@/shared/components/ui/assignmentCard";
 import { useSelectedClassroom } from "../hooks/useClassroom";
 import type {  AssignmentDto } from "@/shared/types/types";
 import { useNavigate} from "react-router-dom"
+import { MOCK_STUDENTS } from "@/features/class/Students.data";
 
 const MainBarClassroom = () => {
   const navigate =useNavigate();
@@ -17,7 +18,7 @@ const MainBarClassroom = () => {
     useAssignmentClassrooms(classroomId);
 
   const openStudentList = () => {
-    console.log("open student list");
+    navigate(`/classrooms/${classroomId}/students`)
   };
 
   const handleSetting = () => {};
@@ -46,7 +47,7 @@ const MainBarClassroom = () => {
   return (
     <MainBar
       title={classroom?.name}
-      student={67}
+      student={MOCK_STUDENTS.length}
       openSetting={handleSetting}
       openStudentList={openStudentList}
       create={handleCreate}
