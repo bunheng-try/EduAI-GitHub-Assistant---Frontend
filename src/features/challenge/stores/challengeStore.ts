@@ -1,42 +1,53 @@
+// features/challenge/stores/challengeStore.ts
+
 import { create } from "zustand";
-import type { Challenge }  from "../types/challenge";
+import type { LibraryChallenge } from "../types/challenge";
+import { mockLibraryChallenges } from "../challenge.mock";
 
-interface ChallengeState {
-    challenges: Challenge[];
-    selectedChallengeId: string | null;
+interface ChallengeStore {
+  challenges: LibraryChallenge[];
+  selectedChallenge: LibraryChallenge | null;
 
-    selectChallenge: (id: string) => void;
-
-    createChallenge: (challenge: Challenge) => void;
-    updateChallenge: (challenge: Challenge) => void;
-    deleteChallenge: (id: string) => void;
+  setSelectedChallenge: (challenge: LibraryChallenge | null) => void;
+  addChallenge: (challenge: LibraryChallenge) => void;
+  updateChallenge: (updated: LibraryChallenge) => void;
+  deleteChallenge: (id: string) => void;
 }
 
-export const useChallengeStore = create<ChallengeState>((set, get) => ({
-    challenges: [],
-    selectedChallengeId: null,
+export const useChallengeStore = create<ChallengeStore>((set) => ({
+  challenges: mockLibraryChallenges,
+  selectedChallenge: mockLibraryChallenges[0] ?? null,
 
-    selectChallenge: (id) => set({ selectedChallengeId: id }),
+  setSelectedChallenge: (challenge) =>
+    set({ selectedChallenge: challenge }),
 
-    createChallenge: (challenge) =>
-        set((state) => ({
-            challenges: [...state.challenges, challenge],
-            selectedChallengeId: challenge.id,
-        })),
+  addChallenge: (challenge) =>
+    set((state) => ({
+      challenges: [...state.challenges, challenge],
+      selectedChallenge: challenge,
+    })),
 
-    updateChallenge: (updated) =>
-        set((state) => ({
-            challenges: state.challenges.map((c) =>
-                c.id === updated.id ? updated : c
-            ),
-        })),
+  updateChallenge: (updated) =>
+    set((state) => ({
+      challenges: state.challenges.map((c) =>
+        c.id === updated.id ? updated : c
+      ),
+      selectedChallenge:
+        state.selectedChallenge?.id === updated.id
+          ? updated
+          : state.selectedChallenge,
+    })),
 
-    deleteChallenge: (id) => {
-        const filtered = get().challenges.filter((c) => c.id !== id);
-
-        set({
-            challenges: filtered,
-            selectedChallengeId: filtered.length > 0 ? filtered[0].id : null,
-        });
-    },
+  deleteChallenge: (id) =>
+    set((state) => {
+      const remaining = state.challenges.filter((c) => c.id !== id);
+      const wasSelected = state.selectedChallenge?.id === id;
+      return {
+        challenges: remaining,
+        // Auto-select next challenge, or null if none left → shows empty state
+        selectedChallenge: wasSelected
+          ? (remaining[0] ?? null)
+          : state.selectedChallenge,
+      };
+    }),
 }));
