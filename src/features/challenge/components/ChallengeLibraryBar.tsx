@@ -5,7 +5,6 @@ import { Plus, MoreVertical } from "lucide-react";
 import { useChallengeStore } from "../stores/challengeStore";
 import { ChallengeListTitle } from "./ChallengeListTitle";
 import { ChallengeEmptyState } from "./ChallengeEmptyState";
-import { ChallengeFormDialog } from "./ChallengeFormDialog";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -13,18 +12,21 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/shared/components/ui/tooltip";
-import type { LibraryChallenge } from "../types/challenge";
 
-export const ChallengeLibraryBar = () => {
-  const [search, setSearch]       = useState("");
-  const [showCreate, setShowCreate] = useState(false);
+interface ChallengeLibraryBarProps {
+  onCreateChallenge: () => void;
+}
+
+export const ChallengeLibraryBar = ({
+  onCreateChallenge,
+}: ChallengeLibraryBarProps) => {
+  const [search, setSearch] = useState("");
 
   const {
     challenges,
     selectedChallenge,
     setSelectedChallenge,
     deleteChallenge,
-    addChallenge,
   } = useChallengeStore();
 
   const filtered = challenges.filter(
@@ -33,102 +35,83 @@ export const ChallengeLibraryBar = () => {
       c.description?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleCreate = (data: Omit<LibraryChallenge, "id" | "author" | "date">) => {
-    const newChallenge: LibraryChallenge = {
-      ...data,
-      id: crypto.randomUUID(),
-      author: "Me",
-      date: new Date(),
-    };
-    addChallenge(newChallenge);
-  };
-
   return (
-    <>
-      <div className="flex flex-col h-full w-full border-r border-[hsl(var(--border))] bg-[hsl(var(--background))]">
+    <div className="flex flex-col h-full w-full border-r border-[hsl(var(--border))] bg-[hsl(var(--background))]">
 
-        {/* Header */}
-        <div className="px-4 pt-6 pb-3 border-b border-[hsl(var(--border))] shrink-0">
-          <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="px-4 pt-6 pb-3 border-b border-[hsl(var(--border))] shrink-0">
+        <div className="flex items-center justify-between">
 
-            {/* Title + Count */}
-            <div>
-              <h2 className="text-lg font-bold tracking-tight text-[hsl(var(--foreground))]">
-                Library
-              </h2>
-              <p className="text-xs text-[hsl(var(--muted-foreground))]">
-                {challenges.length} Challenge{challenges.length !== 1 ? "s" : ""}
-              </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-1">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => setShowCreate(true)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" sideOffset={8}>
-                  Create Challenge
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon-sm">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" sideOffset={8}>
-                  More options
-                </TooltipContent>
-              </Tooltip>
-            </div>
+          {/* Title + Count */}
+          <div>
+            <h2 className="text-lg font-bold tracking-tight text-[hsl(var(--foreground))]">
+              Library
+            </h2>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              {challenges.length} Challenge{challenges.length !== 1 ? "s" : ""}
+            </p>
           </div>
 
-          {/* Search */}
-          <div className="mt-3">
-            <Input
-              placeholder="Search challenge..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-8 text-xs"
-            />
+          {/* Action Buttons */}
+          <div className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={onCreateChallenge}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={8}>
+                Create Challenge
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon-sm">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={8}>
+                More options
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
 
-        {/* Challenge List or Empty State */}
-        <div
-          className="flex-1 overflow-y-auto"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {filtered.length === 0 ? (
-            <ChallengeEmptyState onCreate={() => setShowCreate(true)} />
-          ) : (
-            filtered.map((challenge) => (
-              <ChallengeListTitle
-                key={challenge.id}
-                challenge={challenge}
-                isSelected={selectedChallenge?.id === challenge.id}
-                onClick={() => setSelectedChallenge(challenge)}
-                onDelete={deleteChallenge}
-              />
-            ))
-          )}
+        {/* Search */}
+        <div className="mt-3">
+          <Input
+            placeholder="Search challenge..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-8 text-xs"
+          />
         </div>
       </div>
 
-      {/* Create Challenge Dialog */}
-      <ChallengeFormDialog
-        open={showCreate}
-        onOpenChange={setShowCreate}
-        onSubmit={handleCreate}
-      />
-    </>
+      {/* Challenge List or Empty State */}
+      <div
+        className="flex-1 overflow-y-auto"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        {filtered.length === 0 ? (
+          <ChallengeEmptyState onCreate={onCreateChallenge} />
+        ) : (
+          filtered.map((challenge) => (
+            <ChallengeListTitle
+              key={challenge.id}
+              challenge={challenge}
+              isSelected={selectedChallenge?.id === challenge.id}
+              onClick={() => setSelectedChallenge(challenge)}
+              onDelete={deleteChallenge}
+            />
+          ))
+        )}
+      </div>
+    </div>
   );
 };
