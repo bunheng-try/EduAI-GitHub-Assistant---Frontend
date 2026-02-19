@@ -9,7 +9,11 @@ interface InviteDialogProps {
   onInvite: (name: string) => { success: boolean; error?: string }
 }
 
-export default function InviteDialog({ open, onOpenChange, onInvite }: InviteDialogProps) {
+export default function InviteDialog({
+  open,
+  onOpenChange,
+  onInvite,
+}: InviteDialogProps) {
   const [name, setName] = useState("")
   const [error, setError] = useState("")
   const [copied, setCopied] = useState(false)
@@ -17,35 +21,49 @@ export default function InviteDialog({ open, onOpenChange, onInvite }: InviteDia
 
   useEffect(() => {
     if (open) {
-      setTimeout(() => inputRef.current?.focus(), 50)
-    } else {
-      setName("")
-      setError("")
+      const timer = setTimeout(() => {
+        inputRef.current?.focus()
+      }, 50)
+
+      return () => clearTimeout(timer)
     }
   }, [open])
 
+  // ✅ Proper open/close handler
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setName("")
+      setError("")
+      setCopied(false)
+    }
+    onOpenChange(nextOpen)
+  }
+
   const handleSubmit = () => {
     const result = onInvite(name)
+
     if (!result.success) {
       setError(result.error ?? "Something went wrong.")
       return
     }
-    onOpenChange(false)
+
+    handleOpenChange(false)
   }
 
   const handleCopy = () => {
     navigator.clipboard?.writeText(CLASS_CODE).catch(() => {})
     setCopied(true)
+
     setTimeout(() => setCopied(false), 2000)
   }
 
   return (
     <FormDialog
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       title="Invite Students"
       onSubmit={handleSubmit}
-      submitText="Invites"
+      submitText="Invite"
       cancelText="Cancel"
     >
       <div className="space-y-4 py-4">
@@ -54,17 +72,23 @@ export default function InviteDialog({ open, onOpenChange, onInvite }: InviteDia
           <label className="block text-sm font-semibold text-gray-700 mb-1.5">
             Student Name
           </label>
+
           <input
             ref={inputRef}
             value={name}
-            onChange={(e) => { setName(e.target.value); setError("") }}
+            onChange={(e) => {
+              setName(e.target.value)
+              setError("")
+            }}
             placeholder="Enter student name"
             className={`w-full px-3.5 py-2.5 text-sm rounded-xl border outline-none transition-all
-              ${error
-                ? "border-red-400 ring-2 ring-red-100"
-                : "border-gray-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+              ${
+                error
+                  ? "border-red-400 ring-2 ring-red-100"
+                  : "border-gray-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
               }`}
           />
+
           {error && (
             <p className="flex items-center gap-1.5 mt-2 text-xs text-red-500">
               <AlertCircle size={13} className="shrink-0" />
@@ -80,16 +104,25 @@ export default function InviteDialog({ open, onOpenChange, onInvite }: InviteDia
               <Link2 size={16} className="text-violet-600" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-gray-700">Or Copy Class Code</p>
-              <p className="text-xs text-gray-500 font-mono">{CLASS_CODE}</p>
+              <p className="text-xs font-semibold text-gray-700">
+                Or Copy Class Code
+              </p>
+              <p className="text-xs text-gray-500 font-mono">
+                {CLASS_CODE}
+              </p>
             </div>
           </div>
+
           <button
             type="button"
             onClick={handleCopy}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 shrink-0"
           >
-            {copied ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
+            {copied ? (
+              <Check size={13} className="text-emerald-500" />
+            ) : (
+              <Copy size={13} />
+            )}
             {copied ? "Copied!" : "Copy"}
           </button>
         </div>

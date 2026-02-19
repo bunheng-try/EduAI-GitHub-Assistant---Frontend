@@ -14,6 +14,7 @@ import { ClassroomHome } from "@/features/classes/components/ClassroomHome";
 import { ProtectedRoute } from "./protectedRoute";
 import SignInPage from "@/features/auth/pages/SignInPage";
 import { NoClassSelected } from "@/features/classes/components/NoClassSelected";
+import StudentManagement from "@/features/class/components/StudentManagement";
 
 const router = createBrowserRouter([
   { path: "/signin", element: <SignInPage /> },
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
             path: ":classId/assignments/:assignmentId",
             element: <AssignmentEditor />,
           },
+          {
+            path: ":classId/students",
+            element: <StudentManagement />,
+          }
         ],
       },
   ],

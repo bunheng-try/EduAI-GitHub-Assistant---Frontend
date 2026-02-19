@@ -17,8 +17,8 @@ export default function StudentManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-3xl overflow-hidden">
+    <div className="min-h-screen bg-white">
+      <div className="w-full overflow-hidden">
         <StudentHeader totalCount={students.length} onInviteClick={() => setInviteOpen(true)} />
         <StudentTab />
         <StudentToolbar search={search} onSearchChange={setSearch} onExport={exportStudents} />
