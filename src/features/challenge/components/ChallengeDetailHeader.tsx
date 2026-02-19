@@ -1,7 +1,7 @@
 // features/challenge/components/ChallengeDetailHeader.tsx
 
-import { Save, X } from "lucide-react";
-import { ButtonPrimary, ButtonSecondary } from "@/shared/components/design/button";
+import { Save, X, Trash2 } from "lucide-react";
+import { ButtonPrimary, ButtonSecondary, ButtonDestructive } from "@/shared/components/design/button";
 import MenuTabs from "@/shared/components/menu_tabs/MenuTabs";
 import type { TabItem } from "@/shared/components/menu_tabs/MenuTabs";
 
@@ -20,6 +20,7 @@ interface ChallengeDetailHeaderProps {
   onTabChange: (tab: ChallengeTabKey) => void;
   onSave: () => void;
   onDiscard: () => void;
+  onDelete: () => void;
   isDirty: boolean;
 }
 
@@ -29,6 +30,7 @@ export const ChallengeDetailHeader = ({
   onTabChange,
   onSave,
   onDiscard,
+  onDelete,
   isDirty,
 }: ChallengeDetailHeaderProps) => {
   return (
@@ -59,8 +61,19 @@ export const ChallengeDetailHeader = ({
           </h1>
         </div>
 
-        {/* Save / Discard buttons */}
+        {/* Actions — Delete + Discard + Save */}
         <div className="flex items-center gap-2 shrink-0">
+
+          {/* Delete */}
+          <ButtonDestructive
+            onClick={onDelete}
+            className="gap-1.5"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete
+          </ButtonDestructive>
+
+          {/* Discard */}
           <ButtonSecondary
             onClick={onDiscard}
             disabled={!isDirty}
@@ -70,6 +83,7 @@ export const ChallengeDetailHeader = ({
             Discard
           </ButtonSecondary>
 
+          {/* Save */}
           <ButtonPrimary
             onClick={onSave}
             disabled={!isDirty}

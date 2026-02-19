@@ -9,12 +9,13 @@ import { ChallengeStartCodeTab } from "./ChallengeStartCodeTab";
 import { ConfirmDialog } from "@/shared/components/design/dialog/ConfirmDialog";
 
 export const ChallengeDetailPanel = () => {
-  const { selectedChallenge, updateChallenge } = useChallengeStore();
+  const { selectedChallenge, updateChallenge, deleteChallenge } = useChallengeStore();
 
   const [activeTab, setActiveTab]     = useState<ChallengeTabKey>("description");
   const [draft, setDraft]             = useState<LibraryChallenge | null>(null);
   const [isDirty, setIsDirty]         = useState(false);
   const [showDiscard, setShowDiscard] = useState(false);
+  const [showDelete, setShowDelete]   = useState(false);
 
   // Sync draft when selected challenge changes
   useEffect(() => {
@@ -59,16 +60,23 @@ export const ChallengeDetailPanel = () => {
     setShowDiscard(false);
   };
 
+  // Confirmed delete
+  const handleConfirmDelete = () => {
+    deleteChallenge(selectedChallenge.id);
+    setShowDelete(false);
+  };
+
   return (
     <div className="flex flex-col h-full bg-[hsl(var(--background))]">
 
-      {/* Header — Title + Tabs + Save/Discard */}
+      {/* Header — Title + Tabs + Save/Discard/Delete */}
       <ChallengeDetailHeader
         title={draft.title}
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onSave={handleSave}
         onDiscard={handleDiscard}
+        onDelete={() => setShowDelete(true)}
         isDirty={isDirty}
       />
 
@@ -109,6 +117,20 @@ export const ChallengeDetailPanel = () => {
       >
         <p className="text-sm text-[hsl(var(--muted-foreground))]">
           You have unsaved changes. Are you sure you want to discard them?
+        </p>
+      </ConfirmDialog>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={showDelete}
+        onOpenChange={setShowDelete}
+        title={`Delete "${selectedChallenge.title}"?`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+      >
+        <p className="text-sm text-[hsl(var(--muted-foreground))]">
+          This action cannot be undone. The challenge will be permanently removed.
         </p>
       </ConfirmDialog>
 
