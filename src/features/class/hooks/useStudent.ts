@@ -2,18 +2,27 @@ import { useState, useMemo } from "react";
 import type { Student } from "../types/Students.types";
 import { MOCK_STUDENTS, SYSTEM_STUDENTS } from "../Students.data";
 
+export type FilterBy = "all" | "name" | "email";
+
 export function useStudents() {
   const [students, setStudents] = useState<Student[]>(MOCK_STUDENTS);
   const [search, setSearch] = useState("");
+  const [filterBy, setFilterBy] = useState<FilterBy>("all");
 
   const filtered = useMemo(
     () =>
-      students.filter(
-        (s) =>
+      students.filter((s) => {
+        if (filterBy === "name")
+          return s.name.toLowerCase().includes(search.toLowerCase());
+        if (filterBy === "email")
+          return s.email.toLowerCase().includes(search.toLowerCase());
+        // "all" — searches both name and email
+        return (
           s.name.toLowerCase().includes(search.toLowerCase()) ||
           s.email.toLowerCase().includes(search.toLowerCase())
-      ),
-    [students, search]
+        );
+      }),
+    [students, search, filterBy]
   );
 
   const inviteStudent = (name: string): { success: boolean; error?: string } => {
@@ -61,6 +70,8 @@ export function useStudents() {
     filtered,
     search,
     setSearch,
+    filterBy,
+    setFilterBy,
     inviteStudent,
     removeStudent,
     exportStudents,

@@ -29,7 +29,6 @@ export default function InviteDialog({
     }
   }, [open])
 
-  // ✅ Proper open/close handler
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
       setName("")
@@ -61,9 +60,9 @@ export default function InviteDialog({
     <FormDialog
       open={open}
       onOpenChange={handleOpenChange}
-      title="Invite Students"
+      title="Add Students"
       onSubmit={handleSubmit}
-      submitText="Invite"
+      submitText="Add"
       cancelText="Cancel"
     >
       <div className="space-y-4 py-4">
@@ -80,7 +79,7 @@ export default function InviteDialog({
               setName(e.target.value)
               setError("")
             }}
-            placeholder="Enter student name"
+            placeholder="Enter student email"
             className={`w-full px-3.5 py-2.5 text-sm rounded-xl border outline-none transition-all
               ${
                 error

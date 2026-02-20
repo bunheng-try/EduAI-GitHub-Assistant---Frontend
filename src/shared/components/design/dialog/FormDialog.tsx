@@ -29,7 +29,7 @@ export function FormDialog({
 }: FormDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="bg-white">
         <form
           onSubmit={(e) => {
             e.preventDefault();

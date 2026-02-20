@@ -1,13 +1,31 @@
-import { Search, SlidersHorizontal, Upload, X } from "lucide-react";
-import { ButtonSecondary } from "../../../../shared/components/design/button";
+import { useState } from "react"
+import { Search, SlidersHorizontal, Upload, X, Check } from "lucide-react"
+import { ButtonSecondary } from "../../../../shared/components/design/button"
+import type { FilterBy } from "../../hooks/useStudent"
 
 interface StudentToolbarProps {
-  search: string;
-  onSearchChange: (value: string) => void;
-  onExport: () => void;
+  search: string
+  onSearchChange: (value: string) => void
+  onExport: () => void
+  filterBy: FilterBy
+  onFilterChange: (value: FilterBy) => void
 }
 
-export default function StudentToolbar({ search, onSearchChange, onExport }: StudentToolbarProps) {
+export default function StudentToolbar({
+  search,
+  onSearchChange,
+  onExport,
+  filterBy,
+  onFilterChange,
+}: StudentToolbarProps) {
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  const filterOptions: { label: string; value: FilterBy }[] = [
+    { label: "All", value: "all" },
+    { label: "By Name", value: "name" },
+    { label: "By Email", value: "email" },
+  ]
+
   return (
     <div className="flex items-center gap-3 px-6 py-4">
       {/* Search */}
@@ -29,15 +47,51 @@ export default function StudentToolbar({ search, onSearchChange, onExport }: Stu
         )}
       </div>
 
-      <ButtonSecondary className="flex items-center gap-2">
-        <SlidersHorizontal size={15} />
-        Filtering
-      </ButtonSecondary>
+      {/* Filtering dropdown */}
+      <div className="relative">
+        <ButtonSecondary
+          onClick={() => setDropdownOpen((v) => !v)}
+          className="flex items-center gap-2"
+        >
+          <SlidersHorizontal size={15} />
+          Filtering
+          {filterBy !== "all" && (
+            <span className="text-violet-600 font-semibold">· {filterBy}</span>
+          )}
+        </ButtonSecondary>
 
+        {dropdownOpen && (
+          <>
+            {/* Backdrop to close on outside click */}
+            <div
+              className="fixed inset-0 z-10"
+              onClick={() => setDropdownOpen(false)}
+            />
+            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-100 rounded-xl shadow-lg overflow-hidden z-20 min-w-[150px]">
+              {filterOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    onFilterChange(option.value)
+                    setDropdownOpen(false)
+                  }}
+                  className={`flex items-center justify-between w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors
+                    ${filterBy === option.value ? "text-violet-600" : "text-gray-700"}`}
+                >
+                  {option.label}
+                  {filterBy === option.value && <Check size={14} />}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Export */}
       <ButtonSecondary onClick={onExport} className="flex items-center gap-2">
         <Upload size={15} />
         Export
       </ButtonSecondary>
     </div>
-  );
+  )
 }
