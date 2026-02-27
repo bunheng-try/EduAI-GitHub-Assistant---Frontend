@@ -3,10 +3,10 @@ import type { Assignment, AssignmentDto } from "@/shared/types/types";
 
 
 export const assignmentsApi = {
-    getAssignmentByClassId:(id:string) => httpClient.get<Assignment[]>(`/assignments/classroom/${id}`),
-    getAssignmentById:(id:string) => httpClient.get<Assignment>(`/assignments/${id}`),
-    publishAssignment:(id:string) => httpClient.patch<Assignment, {}>(`/assignments/${id}/publish`, {}),
-    createAssignment:(dto:AssignmentDto)=> httpClient.post<Assignment,AssignmentDto>(`/assignments`,dto)
+    getAssignmentByClassId:(classroomId:string) => httpClient.get<Assignment[]>(`/classrooms/${classroomId}/assignments`),
+    getAssignmentById:(classroomId:string,id:string) => httpClient.get<Assignment>(`/classrooms/${classroomId}/assignments/${id}`),
+    publishAssignment:(classroomId:string,id:string) => httpClient.patch<Assignment, {}>(`/classrooms/${classroomId}/assignments/${id}/publish`, {}),
+    createAssignment:(classroomId:String,dto:AssignmentDto)=> httpClient.post<Assignment,AssignmentDto>(`/classrooms/${classroomId}/assignments`,dto)
 };
 
 

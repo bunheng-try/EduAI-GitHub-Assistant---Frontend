@@ -5,6 +5,7 @@ import type { Assignment } from "@/shared/types/types";
 import type { JSX } from "react";
 import { CodeIcon, MoreVerticalIcon, PencilIcon, SettingsIcon, UsersIcon } from "lucide-react";
 import { usePublishAssignment } from "../hooks/useAssignmentQuery";
+import { useClassroomRoute } from "@/features/class/hooks/useClassroomRoute";
 
 type Props = {
   assignment: Assignment;
@@ -13,7 +14,8 @@ type Props = {
 
 const AssignmentHeader = ({ assignment, isEditing }: Props) => {
   const { activeTab, setActiveTab } = useAssignmentTabs();
-  const { mutate: publishAssignment } = usePublishAssignment();
+  const { classroomId } = useClassroomRoute();
+  const { mutate: publishAssignment } = usePublishAssignment(classroomId);
 
   if (!assignment) {
     return <div className="p-4 text-red-600">Assignment data missing</div>;

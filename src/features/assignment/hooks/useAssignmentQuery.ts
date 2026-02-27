@@ -22,25 +22,27 @@ export const useAssignmentClassrooms = (classroomId: string | null) => {
   });
 };
 
-export const useAssignment = (assignmentId: string | null) => {
+export const useAssignment = (classroomId:string| null,assignmentId: string | null) => {
   return useQuery<Assignment, Error>({
     queryKey: assignmentId
         ? QUERY_KEYS.ASSIGNMENTID(assignmentId)
         : ["assignment","none"],
 
     queryFn: () => {
-        if (!assignmentId) throw new Error("No classroom selected");
-        return assignmentsApi.getAssignmentById(assignmentId);
+        if (!classroomId) throw new Error("No classroom selected");
+        if (!assignmentId) throw new Error("No assignment Select selected");
+        return assignmentsApi.getAssignmentById(classroomId,assignmentId);
     },
   });
 };
 
 
-export const usePublishAssignment = () => {
+export const usePublishAssignment = (classroomId:string| null) => {
   const queryClient = useQueryClient();
 
+  if (!classroomId) throw new Error("No classroom selected");
   return useMutation<Assignment, Error, string>({
-    mutationFn: (assignmentId: string) => assignmentsApi.publishAssignment(assignmentId),
+    mutationFn: (assignmentId) => assignmentsApi.publishAssignment(classroomId,assignmentId),
     onSuccess: (updatedAssignment: Assignment) => {
       // Update the single assignment cache
       queryClient.setQueryData(
@@ -68,7 +70,7 @@ export const useCreateAssignment = (classroomId: string | null) => {
     mutationFn: (dto: AssignmentDto) => {
       if (!classroomId) throw new Error("No classroom selected");
       console.log(dto,classroomId);
-      return assignmentsApi.createAssignment(dto); // <-- return here
+      return assignmentsApi.createAssignment(classroomId,dto);
     },
 
     onSuccess: (newAssignment: Assignment) => {

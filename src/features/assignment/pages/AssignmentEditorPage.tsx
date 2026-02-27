@@ -12,8 +12,8 @@ import {mockSubmissions } from "@/shared/types/types";
 
 const AssignmentEditor = () => {
   const { activeTab } = useAssignmentTabs();
-  const { assignmentId } = useClassroomRoute();
-  const { data: assignment, isLoading } = useAssignment(assignmentId || null);
+  const { classroomId,assignmentId } = useClassroomRoute();
+  const { data: assignment, isLoading } = useAssignment(classroomId||null,assignmentId || null);
 
   const [isEditing, setIsEditing] = useState(false);
 
