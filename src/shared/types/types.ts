@@ -18,11 +18,11 @@ export type Assignment = {
 }
 
 export type AssignmentDto={
-  classroomId: number;
-  title: string;
-  dueAt: string;
-  description: string;
-  position?:number
+  classroomId?: number;
+  title?: string;
+  dueAt?: string;
+  description?: string;
+  position?:number;
 }
 
 export interface Challenge {

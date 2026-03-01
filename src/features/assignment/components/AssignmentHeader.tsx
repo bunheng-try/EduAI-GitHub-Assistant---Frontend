@@ -2,10 +2,11 @@ import MenuTabs from "@/shared/components/menu_tabs/MenuTabs";
 import { Button } from "@/shared/components/ui/button";
 import { useAssignmentTabs } from "../hooks/useMenuTabs";
 import { CodeIcon, MoreVerticalIcon, PencilIcon, SettingsIcon, UsersIcon } from "lucide-react";
-import { usePublishAssignment } from "../hooks/useAssignmentQuery";
+import { usePublishAssignment, useUpdateAssignment } from "../hooks/useAssignmentQuery";
 import type { Assignment } from "../apis/assignment.api";
 import type { JSX } from "react";
 import { BasePanelHeader } from "@/shared/components/layout/mainPanel/BasePanelHeader";
+import { useState } from "react";
 
 type Props = {
   classroomId: number
@@ -15,17 +16,18 @@ type Props = {
 
 const AssignmentHeader = ({ classroomId, assignment, isEditing }: Props) => {
   const { activeTab, setActiveTab } = useAssignmentTabs();
-  const { classroomId } = useClassroomRoute();
-  const { mutate: publishAssignment } = usePublishAssignment(classroomId);
+  const { mutate: publishAssignment} = usePublishAssignment();
+  const {mutate:updateAssignment}= useUpdateAssignment();
+  const [titleInput, setTitleInput] = useState(assignment.title);
 
   if (!assignment) return <div className="p-4 text-red-600">Assignment data missing</div>;
 
-  const showPublishedUI = assignment.published && !isEditing;
+  const showPublishedUI = assignment.isPublished && !isEditing;
 
   const handlePublish = () => publishAssignment({classroomId, assignmentId: assignment.id});
   const handleUnpublish = () => console.log("Assignment unpublished");
   const handleDiscard = () => console.log("Assignment discarded");
-  const handleEditTitle = () => console.log("Edit title clicked");
+
   const handleMenuClick = () => console.log("Three-dot menu clicked");
 
   type TabKey = "challenge" | "settings" | "submission";
@@ -49,17 +51,33 @@ const AssignmentHeader = ({ classroomId, assignment, isEditing }: Props) => {
     : baseTabs;
 
   const left = (
-    <>
-      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shrink-0">
-        <CodeIcon className="w-4 h-4 text-white" />
-      </div>
-      <div className="flex items-center gap-2 min-w-0">
-        <h2 className="text-lg font-semibold text-[hsl(var(--foreground))] truncate">{assignment.title}</h2>
-        <button onClick={handleEditTitle} className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] shrink-0">
-          <PencilIcon className="w-4 h-4" />
-        </button>
-      </div>
-    </>
+    <div className="flex items-center gap-2 min-w-0">
+      <input
+        type="text"
+        value={titleInput}
+        onChange={(e) => setTitleInput(e.target.value)}
+        onBlur={() => {
+          if (titleInput !== assignment.title) {
+            updateAssignment({
+              classroomId,
+              assignmentId: assignment.id,
+              dto: { title: titleInput },
+            });
+          }
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.currentTarget.blur();
+          }
+        }}
+        className="
+          text-lg font-semibold text-[hsl(var(--foreground))] truncate 
+          w-full px-2 py-1 rounded-md 
+          focus:border-[hsl(var(--accent))] focus:ring-1 focus:ring-[hsl(var(--accent))] 
+          bg-[hsl(var(--background))] outline-none
+        "
+      />
+    </div>
   );
 
   const right = (

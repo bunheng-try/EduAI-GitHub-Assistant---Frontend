@@ -4,6 +4,7 @@ import { ChallengeCard } from "../components/ChallengeItemCard";
 import { AddChallengeLibraryModal } from "../components/AddChallengeLibraryModal";
 import { AddNewChallengeModal } from "../components/AddNewChallengeModal";
 import type { Challenge } from "../types/assignment";
+import { useChallenges } from "@/features/challenge/hooks/useChallengeQuery";
 
 
 const LIBRARY_MOCK: Challenge[] = [
@@ -21,6 +22,8 @@ const ChallengeTab = ({assignmentId}: ChallengeTabProps) => {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+
+  const {data:challenge} = useChallenges();
 
   const addFromLibrary = (selected: Challenge[]) => {
     const existingIds = challenges.map(c => c.id);
@@ -56,7 +59,7 @@ const ChallengeTab = ({assignmentId}: ChallengeTabProps) => {
         onClose={() => setLibraryOpen(false)}
         onCreateNew={() => { setLibraryOpen(false); setCreateOpen(true); }}
         onAddSelected={addFromLibrary}
-        libraryChallenges={LIBRARY_MOCK}
+        libraryChallenges={challenge|| []}
       />
 
       <AddNewChallengeModal

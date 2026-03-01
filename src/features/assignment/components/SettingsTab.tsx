@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { CalendarIcon, ChevronDownIcon, ClockIcon, Edit, Save, StarIcon, Trash2, X } from "lucide-react";
 import { useAssignmentSettings } from "../hooks/useAssignmentSettings";
 import type { Assignment } from "../apis/assignment.api";
+import { useUpdateAssignment } from "../hooks/useAssignmentQuery";
 
 interface SettingsTabProps {
   assignment: Assignment;
@@ -13,7 +14,7 @@ interface SettingsTabProps {
   onDelete?: () => void;
 }
 
-export const SettingsTab = ({ assignment, isEditing, onEditChange, onAssignmentUpdate }: SettingsTabProps) => {
+export const SettingsTab = ({ assignment, isEditing, onEditChange, onAssignmentUpdate, onDelete }: SettingsTabProps) => {
   const {
     dueDate,
     setDueDate,
@@ -31,9 +32,17 @@ export const SettingsTab = ({ assignment, isEditing, onEditChange, onAssignmentU
     handleDeleteConfirm,
   } = useAssignmentSettings(assignment);
 
+  const { mutate: updateAssignment} = useUpdateAssignment();
+
   const onSave = () => {
-    const updated = handleSave();
-    if (onAssignmentUpdate) onAssignmentUpdate(updated);
+    const updatedData = handleSave();
+    console.log(updateAssignment);
+
+    updateAssignment({
+      classroomId: assignment.classroomId,
+      assignmentId: assignment.id,
+      dto: updatedData,
+    });
     onEditChange(false);
   };
 
@@ -66,7 +75,7 @@ export const SettingsTab = ({ assignment, isEditing, onEditChange, onAssignmentU
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Status</span>
-            <span className="capitalize">{assignment.published?"Published":"Not Publish"}</span>
+            <span className="capitalize">{assignment.isPublished?"Published":"Not Publish"}</span>
           </div>
         </div>
 
@@ -98,7 +107,7 @@ export const SettingsTab = ({ assignment, isEditing, onEditChange, onAssignmentU
               <Button variant="default" onClick={() => setShowDeleteDialog(false)}>
                 Cancel
               </Button>
-              <Button variant="outline" onClick={handleDeleteConfirm}>
+              <Button variant="outline" onClick={onDelete}>
                 Delete
               </Button>
             </DialogFooter>
@@ -140,23 +149,6 @@ export const SettingsTab = ({ assignment, isEditing, onEditChange, onAssignmentU
             type="time"
             value={timeDue}
             onChange={(e) => setTimeDue(e.target.value)}
-            className="w-full h-12 pl-12 pr-10 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <ChevronDownIcon className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm text-gray-600 mb-1">
-          Points <span className="text-red-500">*</span>
-        </label>
-        <div className="relative">
-          <StarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="number"
-            min={0}
-            // value={points}
-            // onChange={(e) => setPoints(e.target.value)}
             className="w-full h-12 pl-12 pr-10 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <ChevronDownIcon className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />

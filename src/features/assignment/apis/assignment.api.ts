@@ -10,7 +10,8 @@ export interface Assignment {
     title: string;
     description: string;
     dueAt: string;
-    published: boolean;
+    isPublished: boolean;
+    classroomId :number;
     sectionId: number;
     createdAt: string;
     updatedAt: string;
@@ -62,6 +63,11 @@ export const assignmentsApi = {
             `/classrooms/${classroomId}/assignments/${id}`
         ),
 
+    publish: (classroomId: number, id: number) =>
+        httpClient.patch<Assignment, {}>(
+            `/classrooms/${classroomId}/assignments/${id}/publish`,
+            {}
+        ),
     publish: (classroomId: number, id: number) =>
         httpClient.patch<Assignment, {}>(
             `/classrooms/${classroomId}/assignments/${id}/publish`,

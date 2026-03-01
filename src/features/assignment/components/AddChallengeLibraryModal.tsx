@@ -22,6 +22,7 @@ export const AddChallengeLibraryModal = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [filterLevel, setFilterLevel] = useState("All");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const {}=useCha
 
   if (!isOpen) return null;
 
@@ -40,14 +41,13 @@ export const AddChallengeLibraryModal = ({
 
   const handleConfirm = () => {
     const selected = libraryChallenges.filter(c => selectedIds.includes(c.id));
-    onAddSelected(selected);
-    setSelectedIds([]);
+    
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <div className="bg-white rounded-[24px] w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         <div className="p-8 pb-2">
           <div className="flex justify-between items-start mb-1">
             <div>

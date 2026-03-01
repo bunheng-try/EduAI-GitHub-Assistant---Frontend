@@ -48,7 +48,7 @@ export const useAssignment = (
 };
 
 
-export const usePublishAssignment = (classroomId:string| null) => {
+export const usePublishAssignment = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -64,7 +64,7 @@ export const usePublishAssignment = (classroomId:string| null) => {
     onSuccess: (updatedAssignment: Assignment) => {
       queryClient.setQueryData(
         QUERY_KEYS.ASSIGNMENT(
-          updatedAssignment.sectionId,
+          updatedAssignment.classroomId,
           updatedAssignment.id
         ),
         updatedAssignment
@@ -72,7 +72,7 @@ export const usePublishAssignment = (classroomId:string| null) => {
 
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.ASSIGNMENTS(
-          updatedAssignment.sectionId
+          updatedAssignment.classroomId
         ),
       });
     },
@@ -122,7 +122,7 @@ export const useUpdateAssignment = () => {
     onSuccess: (updatedAssignment) => {
       queryClient.setQueryData(
         QUERY_KEYS.ASSIGNMENT(
-          updatedAssignment.sectionId,
+          updatedAssignment.classroomId,
           updatedAssignment.id
         ),
         updatedAssignment
@@ -130,7 +130,7 @@ export const useUpdateAssignment = () => {
 
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.ASSIGNMENTS(
-          updatedAssignment.sectionId
+          updatedAssignment.classroomId
         ),
       });
     },

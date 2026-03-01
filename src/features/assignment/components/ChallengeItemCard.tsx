@@ -41,15 +41,15 @@ export const ChallengeCard = ({ challenge, showDescription, selectable, isSelect
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
             <h3 className="font-bold text-[15px] text-[#1A1A1A]">{challenge.title}</h3>
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${getDifficultyStyle(challenge.level)}`}>
-              {challenge.level}
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${getDifficultyStyle(challenge.level||"Easy")}`}>
+              {challenge.level|| "Easy"}
             </span>
           </div>
           {showDescription && <p className="text-[12px] text-gray-400 font-medium">{challenge.description || "Challenge description..."}</p>}
           <div className="flex items-center gap-4 text-[12px] text-[#A0A0A0] font-semibold mt-0.5">
-            <div className="flex items-center gap-1.5"><Trophy size={14} /><span>{challenge.score} Score</span></div>
+            <div className="flex items-center gap-1.5"><Trophy size={14} /><span>{challenge.score||100} Score</span></div>
             <div className="flex items-center gap-1.5"><Code2 size={14} /><span>{challenge.language}</span></div>
-            <div className="flex items-center gap-1.5"><Tag size={14} /><span>{challenge.topic}</span></div>
+            <div className="flex items-center gap-1.5"><Tag size={14} /><span>{challenge.topic||"Array"}</span></div>
           </div>
         </div>
       </div>
