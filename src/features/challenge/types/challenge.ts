@@ -1,16 +1,20 @@
-export type Difficulty = "Easy" | "Medium" | "Hard";
+// features/challenge/types/challenge.ts
+// Extends the shared Challenge type with library-specific fields
 
-export interface Challenge {
-    id: string;
+import type { Challenge } from "@/shared/types/types";
 
-    title: string;
-    description: string;
+export type { Challenge };
 
-    language: string;
-    difficulty: Difficulty;
+export interface TestCase {
+  id: string;
+  name: string;
+  type: "sample" | "hidden";
+  input: string;
+  expectedOutput: string;
+}
 
-    category: string;
-    points: number;
-
-    starterCode?: string;
+// Extended type for the Challenge Library (teacher's management view)
+export interface LibraryChallenge extends Challenge {
+  starterCode: string;
+  testCases: TestCase[];
 }
