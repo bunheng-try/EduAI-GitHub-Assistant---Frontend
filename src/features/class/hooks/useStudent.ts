@@ -1,61 +1,40 @@
 import { useState, useMemo } from "react";
-import type { Student } from "../types/Students.types";
-import { MOCK_STUDENTS, SYSTEM_STUDENTS } from "../Students.data";
+import type { Member } from "../apis/member.api";
+import { useMembers, useUserByEmail } from "./useMemberQuery";
+import { useAddMember, useRemoveMember } from "./useMemberQuery";
 
 export type FilterBy = "all" | "name" | "email";
 
-export function useStudents() {
-  const [students, setStudents] = useState<Student[]>(MOCK_STUDENTS);
+export function useStudents(classroomId: number | null) {
   const [search, setSearch] = useState("");
   const [filterBy, setFilterBy] = useState<FilterBy>("all");
 
+  // Use React Query to fetch members
+  const { data: students = [], isLoading, error } = useMembers(classroomId);
+
+  // Filtered students
   const filtered = useMemo(
     () =>
       students.filter((s) => {
-        if (filterBy === "name")
-          return s.name.toLowerCase().includes(search.toLowerCase());
-        if (filterBy === "email")
-          return s.email.toLowerCase().includes(search.toLowerCase());
-        // "all" — searches both name and email
+        const lowerSearch = search.toLowerCase();
+        if (filterBy === "name") return s.name.toLowerCase().includes(lowerSearch);
+        if (filterBy === "email") return s.id.toString().includes(lowerSearch); // or email if exists
+        // all
         return (
-          s.name.toLowerCase().includes(search.toLowerCase()) ||
-          s.email.toLowerCase().includes(search.toLowerCase())
+          s.name.toLowerCase().includes(lowerSearch) ||
+          s.id.toString().includes(lowerSearch)
         );
       }),
     [students, search, filterBy]
   );
 
-  const inviteStudent = (name: string): { success: boolean; error?: string } => {
-    if (!name.trim()) return { success: false, error: "Please enter a student name." };
+  // Mutations
+  const addStudent = useAddMember(classroomId);
+  const removeStudent = useRemoveMember(classroomId);
 
-    if (!SYSTEM_STUDENTS.includes(name.trim().toLowerCase())) {
-      return { success: false, error: "Student not found in the system. Please check the name and try again." };
-    }
-
-    if (students.find((s) => s.name.toLowerCase() === name.trim().toLowerCase())) {
-      return { success: false, error: "This student is already in the class." };
-    }
-
-    const initials = name.trim().split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
-    setStudents((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        name: name.trim(),
-        email: `${name.trim().replace(/\s+/g, ".").toLowerCase()}@student.cadt.com`,
-        initials,
-      },
-    ]);
-
-    return { success: true };
-  };
-
-  const removeStudent = (id: number) => {
-    setStudents((prev) => prev.filter((s) => s.id !== id));
-  };
-
+  // Export students as CSV
   const exportStudents = () => {
-    const csv = ["Student,Email", ...students.map((s) => `${s.name},${s.email}`)].join("\n");
+    const csv = ["Student,ID", ...students.map((s) => `${s.name},${s.id}`)].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -68,11 +47,13 @@ export function useStudents() {
   return {
     students,
     filtered,
+    isLoading,
+    error,
     search,
     setSearch,
     filterBy,
     setFilterBy,
-    inviteStudent,
+    addStudent,
     removeStudent,
     exportStudents,
   };
