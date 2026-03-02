@@ -1,10 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useChallenge } from "../hooks/useChallengeQuery";
 import { Button } from "@/shared/components/ui/button";
 import { useState } from "react";
 import MainPanel from "@/shared/components/layout/mainPanel/MainPanel";
 import { BasePanelHeader } from "@/shared/components/layout/mainPanel/BasePanelHeader";
 
+interface OutletContext {
+    onEdit: (id: number) => void;
+}
 
 export const ChallengeDetailPanel = () => {
     const { challengeId } = useParams<{ challengeId: string }>();
@@ -12,6 +15,8 @@ export const ChallengeDetailPanel = () => {
 
     const { data: challenge, isLoading, isError } = useChallenge(id);
     const [showStarter, setShowStarter] = useState(false);
+
+    const { onEdit } = useOutletContext<OutletContext>();
 
     if (isLoading)
         return <MainPanel emptyState={<div className="p-6">Loading challenge...</div>} />;
@@ -25,10 +30,10 @@ export const ChallengeDetailPanel = () => {
                     left={<h1 className="text-lg font-bold truncate">{challenge.title}</h1>}
                     right={
                         <div className="flex gap-2">
-                            <Button size="sm" variant="outline" onClick={() => console.log("Edit clicked")}>
+                            <Button size="default" variant="outline" onClick={() => onEdit(challenge.id)}>
                                 Edit
                             </Button>
-                            <Button size="sm" variant="default" onClick={() => console.log("Try It clicked")}>
+                            <Button size="default" variant="default" onClick={() => console.log("Try It clicked")}>
                                 Try It
                             </Button>
                         </div>
@@ -63,7 +68,13 @@ export const ChallengeDetailPanel = () => {
                             </Button>
                         </div>
                         {showStarter && (
-                            <pre className="mt-2 p-2 bg-[hsl(var(--muted))] rounded text-xs overflow-auto">
+                            <pre className="mt-1 p-4
+                            bg-[#1e1e1e] text-[#d4d4d4]
+                            rounded-md shadow
+                            overflow-auto
+                            text-xs font-mono
+                            border border-[#333]
+                            scrollbar-thin scrollbar-thumb-[#3c3c3c] scrollbar-track-[#1e1e1e]">
                                 {challenge.starterCode}
                             </pre>
                         )}

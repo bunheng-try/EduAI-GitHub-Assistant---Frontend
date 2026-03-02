@@ -7,6 +7,7 @@ import StarterCodeTab from "../components/StarterCodeTab";
 import TestCaseTab from "../components/TestCaseTab";
 import { useChallengeEditorPanel } from "../hooks/useChallengeEditorPanel";
 import { getEditorTabs, type EditorTab } from "../components/tabs";
+import { Button } from "@/shared/components/ui/button";
 
 interface Props {
     mode: "create" | "edit";
@@ -41,9 +42,13 @@ export default function ChallengeEditorPanel({ mode: initialMode, challengeId: i
                         left={<h2 className="text-lg font-semibold">{mode === "create" ? "Create Challenge" : "Edit Challenge"}</h2>}
                         right={
                             <>
-                                <button onClick={() => handleCancel(onClose)} className="px-4 py-2 border rounded-md text-sm">Cancel</button>
+                                <Button size="default" variant="outline" onClick={() => handleCancel(onClose)}>Cancel</ Button>
+                                {mode === "edit" && <Button size="default" variant="destructive" onClick={remove}>Delete</ Button> }
+                                <Button size="default" variant="default" onClick={() => handleSave(onClose)}>{mode === "create" ? "Create" : "Save"}</ Button>
+
+                                {/* <button onClick={() => handleCancel(onClose)} className="px-4 py-2 border rounded-md text-sm">Cancel</button>
                                 {mode === "edit" && <button onClick={remove} disabled={isDeleting} className="px-4 py-2 border text-red-600 rounded-md text-sm">Delete</button>}
-                                <button onClick={handleSave} disabled={isSaving} className="px-4 py-2 bg-purple-600 text-white rounded-md text-sm">{mode === "create" ? "Create" : "Save"}</button>
+                                <button onClick={() => handleSave(onClose)} disabled={isSaving} className="px-4 py-2 bg-purple-600 text-white rounded-md text-sm">{mode === "create" ? "Create" : "Save"}</button> */}
                             </>
                         }
                     />

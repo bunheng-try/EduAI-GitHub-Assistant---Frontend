@@ -1,11 +1,16 @@
 import { ResizablePanel, ResizablePanelContainer, ResizablePanelDivider } from "@/shared/components/layout/ResizablePanel";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { ChallengeLibraryBar } from "../components/ChallengeLibraryBar";
 import { useState } from "react";
 import ChallengeEditorPanel from "./ChallengeEditorPanel";
 
 export const ChallengeLibraryPage = () => {
     const [creatingChallenge, setCreatingChallenge] = useState(false);
+    const [editingChallengeId, setEditingChallengeId] = useState<number | null>(null);
+
+    const handleEdit = (id: number) => {
+        setEditingChallengeId(id);
+    };
 
     return (
         <ResizablePanelContainer direction="horizontal" className="flex-1">
@@ -26,8 +31,14 @@ export const ChallengeLibraryPage = () => {
                         mode="create"
                         onClose={() => setCreatingChallenge(false)}
                     />
+                ) : editingChallengeId ? (
+                    <ChallengeEditorPanel
+                        mode="edit"
+                        challengeId={editingChallengeId}
+                        onClose={() => setEditingChallengeId(null)}
+                    />
                 ) : (
-                    <Outlet />
+                    <Outlet context={{ onEdit: handleEdit }} />
                 )}
             </ResizablePanel>
 

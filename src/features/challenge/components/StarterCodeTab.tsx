@@ -21,18 +21,8 @@ export default function StarterCodeTab({ draft, updateField }: Props) {
             case "python":
                 setLanguage("python");
                 break;
-            case "java":
-                setLanguage("java");
-                break;
-            case "c++":
-            case "cpp":
-                setLanguage("cpp");
-                break;
             case "c":
                 setLanguage("c");
-                break;
-            case "typescript":
-                setLanguage("typescript");
                 break;
             default:
                 setLanguage("javascript");
@@ -57,10 +47,10 @@ export default function StarterCodeTab({ draft, updateField }: Props) {
             <div className="border border-[hsl(var(--border))] rounded-md overflow-hidden">
                 <Editor
                     height="500px"
-                    defaultLanguage={language}
                     language={language}
                     value={draft.starterCode}
                     onChange={handleChange}
+                    theme="vs-dark"
                     options={{
                         fontFamily: "Fira Code, monospace",
                         fontSize: 14,
@@ -68,6 +58,12 @@ export default function StarterCodeTab({ draft, updateField }: Props) {
                         scrollBeyondLastLine: false,
                         automaticLayout: true,
                         tabSize: 2,
+                        lineNumbers: "on",
+                        roundedSelection: false,
+                        scrollBeyondLastColumn: 0,
+                        cursorBlinking: "blink",
+                        wordWrap: "on",
+                        renderLineHighlight: "all",
                     }}
                 />
             </div>

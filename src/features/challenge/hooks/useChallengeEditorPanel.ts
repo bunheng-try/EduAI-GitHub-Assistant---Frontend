@@ -2,8 +2,10 @@
 import { useState } from "react";
 import { useChallengeEditor } from "./useChallengeEditor";
 import { useDeleteChallenge } from "./useChallengeQuery";
+import { useNavigate } from "react-router-dom";
 
 export const useChallengeEditorPanel = (initialMode: "create" | "edit", initialId?: number) => {
+    const navigate = useNavigate();
     const [mode, setMode] = useState<"create" | "edit">(initialMode);
     const [challengeId, setChallengeId] = useState<number | undefined>(initialId);
 
@@ -12,12 +14,22 @@ export const useChallengeEditorPanel = (initialMode: "create" | "edit", initialI
 
     const deleteChallenge = useDeleteChallenge();
 
-    const handleSave = async () => {
+    const handleSave = async (onClose: () => void) => {
         const saved = await saveChallenge();
-        if (mode === "create" && saved?.id) {
-            setChallengeId(saved.id);
-            setMode("edit");
+
+        if (saved?.id) {
+            if (mode === "create") {
+                setChallengeId(saved.id);
+                setMode("edit");
+
+                // Navigate to the detail page
+                navigate(`/challenge-library/${saved.id}`);
+            }
+
+            // Close the editor panel
+            onClose();
         }
+
         return saved;
     };
 
