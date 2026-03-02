@@ -2,6 +2,10 @@ import { useContextMenu } from "@/shared/components/context-menu/ContextMenuProv
 import type { ContextMenuItem } from "../context-menu/types";
 import {Code } from "lucide-react";
 import type { Assignment } from "@/features/assignment/apis/assignment.api";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/shared/components/ui/dialog";
+import { Button } from "@/shared/components/ui/button";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   assignment: Assignment;
@@ -18,8 +22,10 @@ const AssignmentCard = ({
   isSelect=false,
   totalStudent
 }: Props) => {
-  const { openMenu } = useContextMenu();
+  const { openMenu,closeMenu } = useContextMenu();
+  const [openDialog,setOpenDialog]=useState<boolean>(false);
 
+  const navigate = useNavigate();
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -29,7 +35,10 @@ const AssignmentCard = ({
     {
       type: "item",
       label: "Edit",
-      onClick: () => onClick(assignment),
+      onClick: () => {
+        navigate(`/classrooms/${assignment.classroomId}/assignments/${assignment.id}?tab=settings`);
+        closeMenu();
+      },
     },
     {
       type: "separator",
@@ -38,7 +47,10 @@ const AssignmentCard = ({
       type: "item",
       label: "Delete assignment",
       danger: true,
-      onClick: () => onDelete(assignment.id),
+      onClick: () => {
+        setOpenDialog(true);
+        closeMenu();
+      },
     },
   ];
 
@@ -84,8 +96,8 @@ const AssignmentCard = ({
             <span className="text-sm font-semibold"><Code /></span>
           </div>
 
-          <div>
-            <p className="font-medium text-gray-900">
+          <div className="w-40">
+            <p className="font-medium text-gray-900 truncate">
               {assignment.title}
             </p>
             <p className="text-sm text-gray-500">
@@ -97,16 +109,34 @@ const AssignmentCard = ({
         <div className="w-20 flex items-center flex-col gap-2 text-sm capitalize text-gray-500">
         
         <button
-            className={`w-full rounded-full py-1 px-2 ${assignment.published?'bg-green-50 text-green-600':'bg-white text-gray-800'}`}
+            className={`w-full rounded-full py-1 px-2 ${assignment.isPublished?'bg-green-50 text-green-600':'bg-white text-gray-800'}`}
         >
-            {assignment.published?"Published":"Draft"}
+            {assignment.isPublished?"Published":"Draft"}
         </button>
-          {assignment.published 
+          {assignment.isPublished 
             ?`${10}/${totalStudent}`
             :"Inactive"
             }
         </div>
       </div>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Delete Assignment</DialogTitle>
+            <DialogDescription>
+              Do you want to delete this assignment?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-4">
+            <Button variant="default" onClick={() => setOpenDialog(false)}>
+              Cancel
+            </Button>
+            <Button variant="outline" onClick={()=> onDelete(assignment.id)}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

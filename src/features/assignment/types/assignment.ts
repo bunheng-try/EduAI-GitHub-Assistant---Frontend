@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
 export interface Challenge {
-  level: string;
-  topic: ReactNode;
+  level?: string;
+  topic?: ReactNode;
   language: ReactNode;
-  score: ReactNode;
-  id: string;
+  score?: ReactNode;
+  id: number;
   title: string;
   description?: string;
-  author: string;
-  date: Date;
+  author?: string;
+  date?: Date;
 }
 
 export interface Assignment {

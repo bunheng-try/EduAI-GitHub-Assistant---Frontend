@@ -39,15 +39,18 @@ export const AddChallengeLibraryModal = ({
   };
 
   const handleConfirm = () => {
-    const selected = libraryChallenges.filter(c => selectedIds.includes(c.id));
-    onAddSelected(selected);
-    setSelectedIds([]);
+    const selected = libraryChallenges.filter(c => selectedIds.includes(c.id.toString()));
+
+    if (selected.length > 0) {
+      onAddSelected(selected);
+    }
+
     onClose();
-  };
+  }
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <div className="bg-white rounded-[24px] w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         <div className="p-8 pb-2">
           <div className="flex justify-between items-start mb-1">
             <div>
@@ -113,7 +116,7 @@ export const AddChallengeLibraryModal = ({
                 challenge={c} 
                 showDescription 
                 selectable 
-                isSelected={selectedIds.includes(c.id)}
+                isSelected={selectedIds.includes(c.id.toString())}
                 onSelect={toggleSelect}
               />
             ))

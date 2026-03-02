@@ -1,7 +1,7 @@
 
 import { MainBar } from "@/shared/components/layout/MainBar";
 import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
-import { useAssignmentClassrooms, useCreateAssignment } from "@/features/assignment/hooks/useAssignmentQuery";
+import { useAssignmentClassrooms, useCreateAssignment, useDeleteAssignment } from "@/features/assignment/hooks/useAssignmentQuery";
 import AssignmentCard from "@/shared/components/ui/assignmentCard";
 import { useSelectedClassroom } from "../hooks/useClassroomQuery";
 import type {  AssignmentDto } from "@/shared/types/types";
@@ -26,6 +26,7 @@ const MainBarClassroom = () => {
   
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
   const [classToDelete, setClassToDelete] = useState<number | null>(null)
+  const {mutate:deleteAssignment}=useDeleteAssignment();
 
   const [openEdit, setOpenEdit] = useState(false);
     const [selectedClass, setSelectedClass] = useState<{
@@ -54,7 +55,7 @@ const MainBarClassroom = () => {
   };
 
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     // TODO - Create Assignment
 
     const tomorrow = new Date();
@@ -101,12 +102,14 @@ const MainBarClassroom = () => {
         ) : assignments.length === 0 ? (
           <p>No assignments found</p>
         ) : (
-          assignments.map((a) => (
+          assignments.slice().sort((a, b) => a.id - b.id).map((a) => (
             <AssignmentCard
               key={a.id}           
               assignment={a}        
               isSelect={a.id==assignmentId}  
-              onDelete={() => {}}
+              onDelete={() => {
+                deleteAssignment({classroomId,assignmentId:a.id})
+              }}
               onClick={() => {
                 navigate(
                   `/classrooms/${classroomId}/assignments/${a.id}`

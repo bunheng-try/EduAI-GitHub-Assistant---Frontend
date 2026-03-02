@@ -6,7 +6,7 @@ import { SettingsTab } from "../components/SettingsTab";
 import { SubmissionsTab } from "../components/SubmissionTab";
 import { useAssignmentTabs } from "../hooks/useMenuTabs";
 import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
-import { useAssignment } from "../hooks/useAssignmentQuery";
+import { useAssignment, useDeleteAssignment } from "../hooks/useAssignmentQuery";
 import {mockSubmissions } from "@/shared/types/types";
 import type { Assignment } from "../apis/assignment.api";
 
@@ -14,6 +14,7 @@ const AssignmentEditor = () => {
   const { activeTab } = useAssignmentTabs();
   const { classroomId, assignmentId } = useClassroomRoute();
   const { data: assignment, isLoading } = useAssignment(classroomId || null, assignmentId || null);
+  const {mutate:deleteAssignment} = useDeleteAssignment();
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -32,7 +33,7 @@ const AssignmentEditor = () => {
 
   const handleDelete = () => {
     // Ideally call a mutation to delete the assignment here
-    
+    deleteAssignment({classroomId,assignmentId});
   };
 
   return (
@@ -41,7 +42,7 @@ const AssignmentEditor = () => {
       emptyState={<div className="p-6 text-gray-400">No content</div>}
     >
       <div className="flex-1 overflow-auto">
-        {activeTab === "challenge" && <ChallengeTab assignmentId={assignmentId} />}
+        {activeTab === "challenge" && <ChallengeTab challenges={assignment.codingChallenges} />}
         {activeTab === "settings" && (
           <SettingsTab
             assignment={assignment}

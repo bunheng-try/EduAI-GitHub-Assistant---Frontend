@@ -39,18 +39,26 @@ export const useAssignmentSettings = (assignment: Assignment) => {
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const handleSave = () => {
-    const updated = {
-      dueDate:
-        dueDate && timeDue
-          ? `${dueDate}T${timeDue}:00`
-          : assignment.dueAt,
-      // points: points ? Number(points) : assignment.points,
-      description: description || assignment.description,
-    };
+  const combineDateTimeToISO = (date: string, time: string) => {
+    const [year, month, day] = date.split("-").map(Number);
+    const [hours, minutes] = time.split(":").map(Number);
 
-    return updated;
+    const d = new Date(year, month - 1, day, hours, minutes);
+
+    return d.toISOString();
   };
+
+  const handleSave = () => {
+    return {
+      title: assignment.title,
+      description: description || assignment.description,
+      dueAt:
+        dueDate && timeDue
+          ? combineDateTimeToISO(dueDate, timeDue)
+          : assignment.dueAt,
+    };
+  };
+
 
   const handleCancel = () => {
     const { date, time } = parseDateTime(assignment.dueAt);

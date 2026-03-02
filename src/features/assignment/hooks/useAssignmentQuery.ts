@@ -8,6 +8,8 @@ export const QUERY_KEYS = {
 
   ASSIGNMENT: (classroomId: number, assignmentId: number) =>
     ["assignment", classroomId, assignmentId] as const,
+  CHALLENGES: (assignmentId: number) =>
+    ["challenges",assignmentId] as const
 };
 
 
@@ -61,10 +63,10 @@ export const usePublishAssignment = () => {
     }) =>
       assignmentsApi.publish(classroomId, assignmentId),
 
-    onSuccess: (updatedAssignment: Assignment) => {
+    onSuccess: (updatedAssignment: Assignment,) => {
       queryClient.setQueryData(
         QUERY_KEYS.ASSIGNMENT(
-          updatedAssignment.sectionId,
+          updatedAssignment.classroomId,
           updatedAssignment.id
         ),
         updatedAssignment
@@ -72,7 +74,38 @@ export const usePublishAssignment = () => {
 
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.ASSIGNMENTS(
-          updatedAssignment.sectionId
+          updatedAssignment.classroomId
+        ),
+      });
+    },
+  });
+};
+
+export const useUnPublishAssignment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      classroomId,
+      assignmentId,
+    }: {
+      classroomId: number;
+      assignmentId: number;
+    }) =>
+      assignmentsApi.unPublish(classroomId, assignmentId),
+
+    onSuccess: (updatedAssignment: Assignment) => {
+      queryClient.setQueryData(
+        QUERY_KEYS.ASSIGNMENT(
+          updatedAssignment.classroomId,
+          updatedAssignment.id
+        ),
+        updatedAssignment
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.ASSIGNMENTS(
+          updatedAssignment.classroomId
         ),
       });
     },
@@ -98,7 +131,8 @@ export const useCreateAssignment = (classroomId: number | null) => {
       });
 
       navigate(
-        `/classrooms/${classroomId}/assignments/${newAssignment.id}`
+        `/classrooms/${classroomId}/assignments/${newAssignment.id}`,
+        { state:{ autoFocusTitle: true } }
       );
     },
   });
@@ -122,7 +156,7 @@ export const useUpdateAssignment = () => {
     onSuccess: (updatedAssignment) => {
       queryClient.setQueryData(
         QUERY_KEYS.ASSIGNMENT(
-          updatedAssignment.sectionId,
+          updatedAssignment.classroomId,
           updatedAssignment.id
         ),
         updatedAssignment
@@ -130,7 +164,7 @@ export const useUpdateAssignment = () => {
 
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.ASSIGNMENTS(
-          updatedAssignment.sectionId
+          updatedAssignment.classroomId
         ),
       });
     },
@@ -162,6 +196,28 @@ export const useDeleteAssignment = () => {
 
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.ASSIGNMENTS(classroomId),
+      });
+    },
+  });
+};
+
+export const useAssignmentAddChallenge = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      classroomId,
+      assignmentId,
+      challengeIds,
+    }: {
+      classroomId: number;
+      assignmentId: number;
+      challengeIds: number[];
+    }) => assignmentsApi.addChallenge(classroomId, assignmentId, challengeIds),
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.ASSIGNMENT(variables.classroomId, variables.assignmentId),
       });
     },
   });

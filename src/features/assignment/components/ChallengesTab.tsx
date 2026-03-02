@@ -2,35 +2,31 @@ import { useState } from "react";
 import { Plus, EllipsisVertical } from "lucide-react";
 import { ChallengeCard } from "../components/ChallengeItemCard";
 import { AddChallengeLibraryModal } from "../components/AddChallengeLibraryModal";
-import { AddNewChallengeModal } from "../components/AddNewChallengeModal";
 import type { Challenge } from "../types/assignment";
+import { useChallenges } from "@/features/challenge/hooks/useChallengeQuery";
+import { useAssignmentAddChallenge } from "../hooks/useAssignmentQuery";
+import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
 
 
-const LIBRARY_MOCK: Challenge[] = [
-  { id: 'L1', title: 'Binary Search', level: 'Medium', score: '20', language: 'C++', topic: 'Algorithms', description: 'Implement recursive binary search.', author: 'Admin', date: new Date() },
-  { id: 'L2', title: 'Two Sum', level: 'Easy', score: '10', language: 'Python', topic: 'Array', description: 'Find two indices that sum to target.', author: 'Admin', date: new Date() },
-  { id: 'L3', title: 'N-Queens', level: 'High', score: '50', language: 'Java', topic: 'Backtracking', description: 'Solve the classical N-Queens problem.', author: 'Admin', date: new Date() },
-];
 
-interface ChallengeTabProps {
-  assignmentId: number;
-}
-
-
-const ChallengeTab = ({assignmentId}: ChallengeTabProps) => {
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
+const ChallengeTab = ({challenges=[]}:{challenges:Challenge[]}) => {
   const [libraryOpen, setLibraryOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
+
+  const { assignmentId,classroomId} = useClassroomRoute();
+
+  const { data: challenge } = useChallenges();
+  const { mutate: addChallengeToAssignment } = useAssignmentAddChallenge();
 
   const addFromLibrary = (selected: Challenge[]) => {
-    const existingIds = challenges.map(c => c.id);
-    const newOnes = selected.filter(s => !existingIds.includes(s.id));
-    setChallenges(prev => [...prev, ...newOnes]);
+    const ids = selected.map((c) => c.id);
+    
+    if (!classroomId || !assignmentId) return;
+
+    addChallengeToAssignment(
+      { classroomId, assignmentId, challengeIds: ids },
+    );
   };
 
-  const createNew = (challenge: Challenge) => {
-    setChallenges(prev => [...prev, challenge]);
-  };
 
   return (
     <div className="w-full max-w-5xl mx-auto p-6">
@@ -54,16 +50,11 @@ const ChallengeTab = ({assignmentId}: ChallengeTabProps) => {
       <AddChallengeLibraryModal
         isOpen={libraryOpen}
         onClose={() => setLibraryOpen(false)}
-        onCreateNew={() => { setLibraryOpen(false); setCreateOpen(true); }}
+        onCreateNew={() => { console.log("navigate to challenge create") }}
         onAddSelected={addFromLibrary}
-        libraryChallenges={LIBRARY_MOCK}
+        libraryChallenges={challenge|| []}
       />
 
-      <AddNewChallengeModal
-        isOpen={createOpen}
-        onClose={() => setCreateOpen(false)}
-        onAdd={createNew}
-      />
     </div>
   );
 };

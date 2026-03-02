@@ -1,4 +1,5 @@
 import { httpClient } from "@/app/services/httpClient";
+import type { Challenge } from "@/features/challenge/apis/challenge.api";
 // import type { Assignment, AssignmentDto } from "@/shared/types/types";
 
 /* =========================
@@ -10,10 +11,12 @@ export interface Assignment {
     title: string;
     description: string;
     dueAt: string;
-    published: boolean;
+    isPublished: boolean;
+    classroomId :number;
     sectionId: number;
     createdAt: string;
     updatedAt: string;
+    codingChallenges: Challenge[]
 }
 
 export interface CreateAssignmentDto {
@@ -66,6 +69,16 @@ export const assignmentsApi = {
         httpClient.patch<Assignment, {}>(
             `/classrooms/${classroomId}/assignments/${id}/publish`,
             {}
+        ),
+    unPublish: (classroomId: number, id: number) =>
+        httpClient.patch<Assignment, {}>(
+            `/classrooms/${classroomId}/assignments/${id}/unpublish`,
+            {}
+        ),
+    addChallenge: (classroomId: number, assignmentId: number, challengeIds: number[]) =>
+        httpClient.post<void, { challengeIds: number[] }>(
+            `/classrooms/${classroomId}/assignments/${assignmentId}/challenges`,
+            { challengeIds }
         ),
 };
 
