@@ -6,10 +6,10 @@ import { useState } from "react";
 import { useChallengeStore } from "../../stores/challengeStore";
 import type { LibraryChallenge, TestCase } from "../../types/challenge";
 import { ChallengeCreateHeader } from "./ChallengeCreateHeader";
-import { ChallengeInfoTab } from "../ChallengeInfoTab";
-import { ChallengeStartCodeTab } from "../ChallengeStartCodeTab";
-import { ChallengeTestCaseTab } from "../ChallengeTestCaseTab";
-import { ChallengeSettingTab } from "../ChallengeSettingTab";
+import { ChallengeInfoTab } from "./ChallengeInfoTab";
+import { ChallengeStartCodeTab } from "./ChallengeStartCodeTab";
+import { ChallengeTestCaseTab } from "./ChallengeTestCaseTab";
+import { ChallengeSettingTab } from "./ChallengeSettingTab";
 import type { ChallengeTabKey } from "./ChallengeDetailHeader";
 
 interface ChallengeCreatePanelProps {
