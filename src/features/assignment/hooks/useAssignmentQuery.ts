@@ -8,6 +8,8 @@ export const QUERY_KEYS = {
 
   ASSIGNMENT: (classroomId: number, assignmentId: number) =>
     ["assignment", classroomId, assignmentId] as const,
+  CHALLENGES: (assignmentId: number) =>
+    ["challenges",assignmentId] as const
 };
 
 
@@ -166,3 +168,24 @@ export const useDeleteAssignment = () => {
     },
   });
 };
+
+export const useAssignmentAddChallenge = () => {
+  
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({
+      classroomId,
+      assignmentId,
+      challengesId
+    }:{
+    classroomId: number,
+    assignmentId: number,
+    challengesId: number[]
+      }) => assignmentsApi.addChallenge(classroomId, assignmentId, challengesId),
+    onSuccess: () => {
+      
+    }
+    
+  });
+}

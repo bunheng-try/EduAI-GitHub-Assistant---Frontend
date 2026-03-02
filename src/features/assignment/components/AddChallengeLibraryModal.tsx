@@ -22,7 +22,6 @@ export const AddChallengeLibraryModal = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [filterLevel, setFilterLevel] = useState("All");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const {}=useCha
 
   if (!isOpen) return null;
 
@@ -40,7 +39,7 @@ export const AddChallengeLibraryModal = ({
   };
 
   const handleConfirm = () => {
-    const selected = libraryChallenges.filter(c => selectedIds.includes(c.id));
+    const selected = libraryChallenges.filter(c => selectedIds.includes(c.id.toString()));
     
     onClose();
   };
@@ -113,7 +112,7 @@ export const AddChallengeLibraryModal = ({
                 challenge={c} 
                 showDescription 
                 selectable 
-                isSelected={selectedIds.includes(c.id)}
+                isSelected={selectedIds.includes(c.id.toString())}
                 onSelect={toggleSelect}
               />
             ))

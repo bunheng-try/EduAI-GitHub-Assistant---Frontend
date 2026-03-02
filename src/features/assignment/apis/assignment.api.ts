@@ -68,10 +68,12 @@ export const assignmentsApi = {
             `/classrooms/${classroomId}/assignments/${id}/publish`,
             {}
         ),
-    publish: (classroomId: number, id: number) =>
-        httpClient.patch<Assignment, {}>(
-            `/classrooms/${classroomId}/assignments/${id}/publish`,
-            {}
+    addChallenge: (classroomId: number, id: number, challengeList: number[]) =>
+        httpClient.post < Assignment,{ chanllengeIds:number[]}>(
+            `/classrooms/${classroomId}/assignments/${id}/challenges`,
+            {
+                chanllengeIds:challengeList
+            }
         ),
 };
 

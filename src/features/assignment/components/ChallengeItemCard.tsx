@@ -22,7 +22,7 @@ export const ChallengeCard = ({ challenge, showDescription, selectable, isSelect
 
   return (
     <div 
-      onClick={() => selectable && onSelect?.(challenge.id)}
+      onClick={() => selectable && onSelect?.(challenge.id.toString())}
       className={`bg-white rounded-xl px-4 py-4 border transition-all mb-3 flex items-center justify-between cursor-pointer
         ${isSelected ? "border-[#7B57E0] ring-1 ring-[#7B57E0]" : "border-gray-100 shadow-sm hover:border-gray-200"}`}
     >

@@ -6,13 +6,6 @@ import { AddNewChallengeModal } from "../components/AddNewChallengeModal";
 import type { Challenge } from "../types/assignment";
 import { useChallenges } from "@/features/challenge/hooks/useChallengeQuery";
 
-
-const LIBRARY_MOCK: Challenge[] = [
-  { id: 'L1', title: 'Binary Search', level: 'Medium', score: '20', language: 'C++', topic: 'Algorithms', description: 'Implement recursive binary search.', author: 'Admin', date: new Date() },
-  { id: 'L2', title: 'Two Sum', level: 'Easy', score: '10', language: 'Python', topic: 'Array', description: 'Find two indices that sum to target.', author: 'Admin', date: new Date() },
-  { id: 'L3', title: 'N-Queens', level: 'High', score: '50', language: 'Java', topic: 'Backtracking', description: 'Solve the classical N-Queens problem.', author: 'Admin', date: new Date() },
-];
-
 interface ChallengeTabProps {
   assignmentId: number;
 }

@@ -96,8 +96,8 @@ const AssignmentCard = ({
             <span className="text-sm font-semibold"><Code /></span>
           </div>
 
-          <div>
-            <p className="font-medium text-gray-900">
+          <div className="w-40">
+            <p className="font-medium text-gray-900 truncate">
               {assignment.title}
             </p>
             <p className="text-sm text-gray-500">
