@@ -1,11 +1,11 @@
-import type { Student } from "../../types/Students.types";
+import type { Member } from "../../apis/member.api";
 import StudentRow from "../students/Studentrow";
 import EmptyState from "../students/EmptyState";
 
 interface StudentTableProps {
-  students: Student[];
+  students: Member[];
   isFiltered: boolean;
-  onContextMenu: (e: React.MouseEvent, student: Student) => void;
+  onContextMenu: (e: React.MouseEvent, student: Member) => void;
 }
 
 export default function StudentTable({ students, isFiltered, onContextMenu }: StudentTableProps) {
@@ -13,10 +13,11 @@ export default function StudentTable({ students, isFiltered, onContextMenu }: St
     <div className="px-1 pb-6">
       <div className="border border-gray-100 rounded-xl overflow-hidden">
         {/* Header */}
-        <div className="grid grid-cols-[2fr_3fr_56px] px-4 py-3 bg-gray-50 border-b border-gray-100">
+        <div className="grid grid-cols-[2fr_3fr_2fr_1fr] px-4 py-3 bg-gray-50 border-b border-gray-100">
           <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Student</span>
-          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex-1 px-6">Email</span>
-          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Action</span>
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Email</span>
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">role</span>
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Action</span>
         </div>
 
         {/* Rows */}
@@ -25,8 +26,8 @@ export default function StudentTable({ students, isFiltered, onContextMenu }: St
         ) : (
           students.map((student, i) => (
             <StudentRow
-              key={student.id}
-              student={student}
+              key={student.id} // updated key
+              student={student} // Member type
               isLast={i === students.length - 1}
               onContextMenu={onContextMenu}
             />
