@@ -16,6 +16,9 @@ export type AddMemberDto = {
 };
 
 export const memberApi = {
+    getUserByEmail: (email: string) =>
+        httpClient.get<Member>(`/users/${encodeURIComponent(email)}`),
+
     addMember: (classroomId: number, dto: AddMemberDto) =>
         httpClient.post<void, AddMemberDto>(`/classrooms/${classroomId}/members`, dto),
 
