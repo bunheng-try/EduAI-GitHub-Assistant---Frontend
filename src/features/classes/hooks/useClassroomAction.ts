@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { useClassrooms, useCreateClassroom, useDeleteClassroom, useUpdateClassroom } from "./useClassroom"
+import { useClassrooms, useCreateClassroom, useDeleteClassroom, useUpdateClassroom } from "./useClassroomQuery"
 
 export function useClassroomActions() {
     const navigate = useNavigate()

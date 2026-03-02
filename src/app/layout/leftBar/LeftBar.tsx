@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 import { LeftBarButton } from "./LeftBarButton"
 import { CreateClassDialog } from "@/features/classes/components/CreateClassDialog"
-import { useClassrooms } from "@/features/classes/hooks/useClassroom"
+import { useClassrooms } from "@/features/classes/hooks/useClassroomQuery"
 import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute"
 import { LeftBarClasses } from "@/features/classes/components/LeftBarClasses"
 import { useClassroomActions } from "@/features/classes/hooks/useClassroomAction"
