@@ -6,6 +6,20 @@ import { memberApi, type Member, type AddMemberDto, type MemberRoleDto } from ".
 export const QUERY_KEYS = {
   MEMBERS: (classroomId: number) => ["members", classroomId] as const,
   MEMBER: (classroomId: number, memberId: number) => ["member", classroomId, memberId] as const,
+  USER_BY_EMAIL: (email: string) => ["userByEmail", email] as const,
+};
+
+
+// Get user by email
+export const useUserByEmail = (email: string | null) => {
+  return useQuery<Member>({
+    queryKey: email ? QUERY_KEYS.USER_BY_EMAIL(email) : ["userByEmail", "none"],
+    enabled: !!email, // only fetch if email exists
+    queryFn: () => {
+      if (!email) throw new Error("No email provided");
+      return memberApi.getUserByEmail(email);
+    },
+  });
 };
 
 // Get all members

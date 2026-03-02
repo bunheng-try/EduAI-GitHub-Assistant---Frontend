@@ -4,7 +4,6 @@ import {
   ResizablePanelContainer,
   ResizablePanelDivider,
 } from "@/shared/components/layout/ResizablePanel";
-import { ClassroomMainBar } from "@/features/class/pages/ClassroomMainBar";
 import MainBarClassrooom from "@/features/classes/components/MainBarClassrooom";
 
 export const ClassroomLayout = () => {
