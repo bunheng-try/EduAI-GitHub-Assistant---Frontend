@@ -4,6 +4,7 @@ import { BasePanelHeader } from "@/shared/components/layout/mainPanel/BasePanelH
 import MainPanel from "@/shared/components/layout/mainPanel/MainPanel";
 import { useAssignment } from "../hooks/useAssignmentQuery";
 import { StudentChallengeRow } from "../components/StudentChallengeRow";
+import { ButtonPrimary } from "@/shared/components/design/button";
 
 const StudentAssignmentPage = () => {
   const { classId, assignmentId } = useParams();
@@ -58,6 +59,7 @@ const StudentAssignmentPage = () => {
     : "—";
 
   const hasNoChallenges = assignment.codingChallenges.length === 0;
+  const firstChallengeId = assignment.codingChallenges[0]?.id;
 
   return (
     <Panel>
@@ -65,6 +67,13 @@ const StudentAssignmentPage = () => {
         header={
           <BasePanelHeader
             left={<h2 className="text-lg font-semibold">{assignment.title}</h2>}
+            right={
+              firstChallengeId && (
+                <ButtonPrimary onClick={() => handleStart(firstChallengeId)}>
+                  Start
+                </ButtonPrimary>
+              )
+            }
           />
         }
       >
