@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useChallenges } from "../hooks/useChallengeQuery";
-import { ChallengeCard } from "./ChallengeCard";
+import { ChallengeListTitle } from "../hooks/ChallengeListTitle";
 import { ChallengeEmptyState } from "./inused/ChallengeEmptyState";
 import { Input } from "@/shared/components/ui/input";
 import { MainBar } from "@/shared/components/layout/mainBar/MainBar";
@@ -65,12 +65,11 @@ export const ChallengeLibraryBar = ({
         <ChallengeEmptyState onCreate={onCreateChallenge} />
       ) : (
         filtered.map((challenge) => (
-          <ChallengeCard
+          <ChallengeListTitle
             key={challenge.id}
             challenge={challenge}
-            variant="library"
+            selectable={true}
             isSelected={selectedChallenge?.id === challenge.id}
-            showDescription
           />
         ))
       )}

@@ -1,80 +1,70 @@
+import { useState } from "react";
+import MainPanel from "@/shared/components/layout/mainPanel/MainPanel";
+import AssignmentHeader from "../components/AssignmentHeader";
 import ChallengeTab from "../components/ChallengesTab";
 import { SettingsTab } from "../components/SettingsTab";
 import { SubmissionsTab } from "../components/SubmissionTab";
-import { useAssignmentTabs, type AssignmentTab } from "../hooks/useMenuTabs";
+import { useAssignmentTabs } from "../hooks/useMenuTabs";
+import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
+import { useAssignment, useDeleteAssignment } from "../hooks/useAssignmentQuery";
 import { mockSubmissions } from "@/shared/types/types";
-import { AssignmentHeader } from "../components/AssignmentHeader";
-import { type TabItem } from "@/shared/components/menu_tabs/MenuTabs";
-import { Panel, PanelContent } from "@/shared/components/design/Panel";
-import { useAssignmentEditor } from "../hooks/useAssignmentEditor";
+import { useClassroomRole } from "@/features/classes/hooks/useClassroomRole";
+import type { Assignment } from "../apis/assignment.api";
 
 const AssignmentEditor = () => {
-  const { activeTab, setActiveTab } = useAssignmentTabs();
+  const { activeTab } = useAssignmentTabs();
+  const { classroomId, assignmentId } = useClassroomRoute();
+  const { data: assignment, isLoading } = useAssignment(classroomId || null, assignmentId || null);
+  const { mutate: deleteAssignment } = useDeleteAssignment();
+  const { data: roleData } = useClassroomRole(classroomId);
+  const isAdmin = roleData?.role === "ADMIN";
 
-  const {
-    assignment,
-    isLoading,
-    title,
-    setTitle,
-    isEditing,
-    setIsEditing,
-    publish,
-    unpublish,
-    deleteAssignment,
-  } = useAssignmentEditor();
+  const [isEditing, setIsEditing] = useState(false);
 
   if (isLoading) {
-    return <div className="p-6">Loading assignment...</div>;
+    return <div className="p-6 text-muted-foreground">Loading assignment...</div>;
   }
 
-  if (!assignment) {
-    return <div className="p-6">Select an assignment</div>;
+  if (!assignmentId || !assignment) {
+    return <div className="p-6 text-muted-foreground">Select an assignment</div>;
   }
 
-  const tabs: TabItem<AssignmentTab>[] = [
-    { key: "challenge", label: "Challenges" },
-    { key: "settings", label: "Settings" },
-    ...(assignment.isPublished
-      ? [{ key: "submission" as AssignmentTab, label: "Submissions" }]
-      : []),
-  ];
+  const handleAssignmentUpdate = (updated: Partial<Assignment>) => { };
+
+  const handleDelete = () => {
+    deleteAssignment({ classroomId, assignmentId });
+  };
 
   return (
-    <Panel>
-      <AssignmentHeader
-        assignment={assignment}
-        title={title}
-        isEditing={isEditing}
-        onTitleChange={setTitle}
-        onEditStart={() => setIsEditing(true)}
-        onEditDone={() => setIsEditing(false)}
-        onPublish={publish}
-        onUnpublish={unpublish}
-        onDiscard={() => setIsEditing(false)}
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
-
-      <PanelContent>
+    <MainPanel
+      header={
+        <AssignmentHeader
+          classroomId={classroomId}
+          assignment={assignment}
+          isEditing={isEditing}
+          isAdmin={isAdmin}
+        />
+      }
+      emptyState={<div className="p-6 text-gray-400">No content</div>}
+    >
+      <div className="flex-1 overflow-auto">
         {activeTab === "challenge" && (
           <ChallengeTab challenges={assignment.codingChallenges} />
         )}
-
-        {activeTab === "settings" && (
+        {isAdmin && activeTab === "settings" && (
           <SettingsTab
             assignment={assignment}
             isEditing={isEditing}
             onEditChange={setIsEditing}
-            onDelete={deleteAssignment}
+            onAssignmentUpdate={handleAssignmentUpdate}
+            onDelete={handleDelete}
           />
         )}
-
-        {activeTab === "submission" && assignment.isPublished && (
+        {isAdmin && activeTab === "submission" && (
           <SubmissionsTab submissions={mockSubmissions ?? []} />
         )}
-      </PanelContent>
-    </Panel>
+      </div>
+    </MainPanel>
   );
 };
 

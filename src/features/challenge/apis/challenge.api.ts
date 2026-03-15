@@ -1,17 +1,12 @@
-import { httpClient } from "@/app/services/httpClient";
-import type { ReactNode } from "react";
-
-export interface Challenge {
-  level?: string;
-  topic?: ReactNode;
-  language: ReactNode;
-  score?: ReactNode;
+export type Challenge = {
   id: number;
   title: string;
-  description?: string;
-  author?: string;
-  date?: Date;
-}
+  description: string;
+  starterCode: string;
+  language: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
 export type ChallengeDto = {
   title: string;
@@ -20,6 +15,7 @@ export type ChallengeDto = {
   language: string;
 };
 
+import { httpClient } from "@/app/services/httpClient";
 
 export const challengesApi = {
   // Get all challenges
