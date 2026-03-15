@@ -23,7 +23,7 @@ export default function TopBar({ title }: { title?: string }) {
       "
         >
             <div className="flex items-center gap-[var(--spacing-md)]">
-                <Button onClick={handleBack} variant="ghost">
+                <Button onClick={handleBack} variant="ghost" size={"icon"}>
                     <WrapIcon icon={ArrowLeft} />
                 </Button>
                 <span className="text-sm font-medium">{title ?? "Untitled Assignment"}</span>

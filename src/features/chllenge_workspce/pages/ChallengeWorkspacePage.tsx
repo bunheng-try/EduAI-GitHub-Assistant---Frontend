@@ -4,51 +4,54 @@ import {
   ResizablePanelContainer,
   ResizablePanelDivider,
 } from "@/shared/components/layout/ResizablePanel";
-import { useParams } from "react-router-dom";
 import ChallengeSidebar from "../components/ChallengeSidebar";
 import InstructionPanel from "../components/InstructionPanel";
 import IDEPanel from "../components/IDEPanel";
 import ResultPanel from "../components/ResultPanel";
 import { useAssignment } from "@/features/assignment/hooks/useAssignmentQuery";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useWorkspaceStore } from "../stores/useWorkspaceStore";
 
 function ChallengeWorkspace() {
-  const { classroomId, assignmentId, challengeId } = useParams();
-
-  const assignmentQuery = useAssignment(
-    Number(classroomId),
-    Number(assignmentId)
-  );
-
+  const { classroomId, assignmentId } = useParams();
+  const assignmentQuery = useAssignment(Number(classroomId), Number(assignmentId));
   const assignment = assignmentQuery.data;
   const challenges = assignment?.codingChallenges ?? [];
 
-  const currentChallenge = challenges.find(
-    (c) => c.id === Number(challengeId)
-  );
+  const { currentChallengeId, setCurrentChallenge } = useWorkspaceStore();
 
-  // if (assignmentQuery.isLoading) return <div>Loading assignment...</div>;
-  // if (!currentChallenge) return <div>Challenge not found</div>;
-  
+  useEffect(() => {
+    if (challenges.length && currentChallengeId === null) {
+      setCurrentChallenge(challenges[0].id);
+    }
+  }, [challenges, currentChallengeId, setCurrentChallenge]);
+
+  const currentChallenge = challenges.find((c) => c.id === currentChallengeId);
+
+  if (assignmentQuery.isLoading) return <div>Loading assignment...</div>;
+  if (!currentChallenge) return <div>No challenge selected</div>;
+
   return (
     <div className="flex-col h-screen w-screen overflow-hidden">
-      <TopBar title={assignment?.title}/>
-      <div className="flex">
-        <ChallengeSidebar />
+      <TopBar title={assignment?.title} />
+      <div className="flex h-full">
+        <ChallengeSidebar challenges={challenges} />
         <ResizablePanelContainer direction="horizontal" className="flex-1">
           <ResizablePanel>
-            <InstructionPanel/>
+            <InstructionPanel challenge={currentChallenge} />
           </ResizablePanel>
 
           <ResizablePanelDivider />
 
           <ResizablePanel>
-            <IDEPanel />
+            <IDEPanel challengeId={currentChallengeId!} />
           </ResizablePanel>
 
           <ResizablePanelDivider />
 
           <ResizablePanel>
-            <ResultPanel />
+            <ResultPanel challengeId={currentChallengeId!} />
           </ResizablePanel>
         </ResizablePanelContainer>
       </div>

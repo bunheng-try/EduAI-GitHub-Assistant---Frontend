@@ -71,7 +71,7 @@ const router = createBrowserRouter([
   ],
   },
   {
-    path: "classrooms/:classroomId/assignments/:assignmentId/challenges/:challengeId",
+    path: "classrooms/:classroomId/assignments/:assignmentId/workspace",
     element: <ChallengeWorkspace />
   },
   {
