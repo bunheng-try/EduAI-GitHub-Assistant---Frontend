@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import MainPanel from "@/shared/components/layout/mainPanel/MainPanel";
 import AssignmentHeader from "../components/AssignmentHeader";
 import ChallengeTab from "../components/ChallengesTab";
@@ -7,17 +7,19 @@ import { SubmissionsTab } from "../components/SubmissionTab";
 import { useAssignmentTabs } from "../hooks/useMenuTabs";
 import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
 import { useAssignment, useDeleteAssignment } from "../hooks/useAssignmentQuery";
-import {mockSubmissions } from "@/shared/types/types";
+import { mockSubmissions } from "@/shared/types/types";
+import { useClassroomRole } from "@/features/classes/hooks/useClassroomRole";
 import type { Assignment } from "../apis/assignment.api";
 
 const AssignmentEditor = () => {
   const { activeTab } = useAssignmentTabs();
   const { classroomId, assignmentId } = useClassroomRoute();
   const { data: assignment, isLoading } = useAssignment(classroomId || null, assignmentId || null);
-  const {mutate:deleteAssignment} = useDeleteAssignment();
+  const { mutate: deleteAssignment } = useDeleteAssignment();
+  const { data: roleData } = useClassroomRole(classroomId);
+  const isAdmin = roleData?.role === "ADMIN";
 
   const [isEditing, setIsEditing] = useState(false);
-
 
   if (isLoading) {
     return <div className="p-6 text-muted-foreground">Loading assignment...</div>;
@@ -27,23 +29,29 @@ const AssignmentEditor = () => {
     return <div className="p-6 text-muted-foreground">Select an assignment</div>;
   }
 
-  const handleAssignmentUpdate = (updated: Partial<Assignment>) => {
-    
-  };
+  const handleAssignmentUpdate = (updated: Partial<Assignment>) => { };
 
   const handleDelete = () => {
-    // Ideally call a mutation to delete the assignment here
-    deleteAssignment({classroomId,assignmentId});
+    deleteAssignment({ classroomId, assignmentId });
   };
 
   return (
     <MainPanel
-      header={<AssignmentHeader classroomId={classroomId} assignment={assignment} isEditing={isEditing} />}
+      header={
+        <AssignmentHeader
+          classroomId={classroomId}
+          assignment={assignment}
+          isEditing={isEditing}
+          isAdmin={isAdmin}
+        />
+      }
       emptyState={<div className="p-6 text-gray-400">No content</div>}
     >
       <div className="flex-1 overflow-auto">
-        {activeTab === "challenge" && <ChallengeTab challenges={assignment.codingChallenges} />}
-        {activeTab === "settings" && (
+        {activeTab === "challenge" && (
+          <ChallengeTab challenges={assignment.codingChallenges} />
+        )}
+        {isAdmin && activeTab === "settings" && (
           <SettingsTab
             assignment={assignment}
             isEditing={isEditing}
@@ -52,7 +60,9 @@ const AssignmentEditor = () => {
             onDelete={handleDelete}
           />
         )}
-        {activeTab === "submission" && <SubmissionsTab submissions={mockSubmissions ?? []} />}
+        {isAdmin && activeTab === "submission" && (
+          <SubmissionsTab submissions={mockSubmissions ?? []} />
+        )}
       </div>
     </MainPanel>
   );

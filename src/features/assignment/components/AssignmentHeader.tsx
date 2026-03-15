@@ -1,7 +1,7 @@
 import MenuTabs from "@/shared/components/menu_tabs/MenuTabs";
 import { Button } from "@/shared/components/ui/button";
 import { useAssignmentTabs } from "../hooks/useMenuTabs";
-import { CodeIcon, MoreVerticalIcon, PencilIcon, SettingsIcon, UsersIcon } from "lucide-react";
+import { CodeIcon, MoreVerticalIcon, SettingsIcon, UsersIcon } from "lucide-react";
 import { usePublishAssignment, useUnPublishAssignment, useUpdateAssignment } from "../hooks/useAssignmentQuery";
 import type { Assignment } from "../apis/assignment.api";
 import type { JSX } from "react";
@@ -13,13 +13,14 @@ type Props = {
   classroomId: number
   assignment: Assignment;
   isEditing: boolean;
+  isAdmin: boolean;
 };
 
-const AssignmentHeader = ({ classroomId, assignment, isEditing}: Props) => {
+const AssignmentHeader = ({ classroomId, assignment, isEditing, isAdmin }: Props) => {
   const { activeTab, setActiveTab } = useAssignmentTabs();
   const { mutate: publishAssignment } = usePublishAssignment();
   const { mutate: unpublishAssignment } = useUnPublishAssignment();
-  const {mutate:updateAssignment}= useUpdateAssignment();
+  const { mutate: updateAssignment } = useUpdateAssignment();
   const [titleInput, setTitleInput] = useState(assignment.title);
 
   if (!assignment) return <div className="p-4 text-red-600">Assignment data missing</div>;
@@ -27,7 +28,6 @@ const AssignmentHeader = ({ classroomId, assignment, isEditing}: Props) => {
   const showPublishedUI = assignment.isPublished && !isEditing;
 
   const titleInputRef = useRef<HTMLInputElement>(null);
-
   const location = useLocation();
   const autoFocusTitle = location.state?.autoFocusTitle || false;
 
@@ -38,31 +38,25 @@ const AssignmentHeader = ({ classroomId, assignment, isEditing}: Props) => {
     }
   }, [autoFocusTitle]);
 
-  const handlePublish = () => publishAssignment({classroomId, assignmentId: assignment.id});
+  const handlePublish = () => publishAssignment({ classroomId, assignmentId: assignment.id });
   const handleUnpublish = () => unpublishAssignment({ classroomId, assignmentId: assignment.id });
   const handleDiscard = () => console.log("Assignment discarded");
-
   const handleMenuClick = () => console.log("Three-dot menu clicked");
 
   type TabKey = "challenge" | "settings" | "submission";
+  interface Tab { key: TabKey; label: string; icon: JSX.Element; }
 
-  interface Tab {
-    key: TabKey;
-    label: string;
-    icon: JSX.Element;
-  }
-
-  const baseTabs: Tab[] = [
+  // Student only sees Challenges
+  // Admin sees Challenges + Settings + Submission 
+  const tabs: Tab[] = [
     { key: "challenge", label: "Challenges", icon: <CodeIcon className="w-4 h-4 mr-2" /> },
-    { key: "settings", label: "Settings", icon: <SettingsIcon className="w-4 h-4 mr-2" /> },
+    ...(isAdmin ? [
+      { key: "settings" as TabKey, label: "Settings", icon: <SettingsIcon className="w-4 h-4 mr-2" /> },
+    ] : []),
+    ...(isAdmin && showPublishedUI ? [
+      { key: "submission" as TabKey, label: "Submission", icon: <UsersIcon className="w-4 h-4 mr-2" /> },
+    ] : []),
   ];
-
-  const tabs: Tab[] = showPublishedUI
-    ? [
-      ...baseTabs,
-      { key: "submission", label: "Submission", icon: <UsersIcon className="w-4 h-4 mr-2" /> },
-    ]
-    : baseTabs;
 
   const left = (
     <div className="flex items-center gap-2 min-w-0">
@@ -85,6 +79,7 @@ const AssignmentHeader = ({ classroomId, assignment, isEditing}: Props) => {
             e.currentTarget.blur();
           }
         }}
+        readOnly={!isAdmin}
         className="
           text-lg font-semibold text-[hsl(var(--foreground))] truncate 
           w-full px-2 py-1 rounded-md 
@@ -95,7 +90,8 @@ const AssignmentHeader = ({ classroomId, assignment, isEditing}: Props) => {
     </div>
   );
 
-  const right = (
+  // Student sees nothing on the right
+  const right = isAdmin ? (
     <>
       {!showPublishedUI ? (
         <>
@@ -114,7 +110,7 @@ const AssignmentHeader = ({ classroomId, assignment, isEditing}: Props) => {
         </>
       )}
     </>
-  );
+  ) : null;
 
   return (
     <>
