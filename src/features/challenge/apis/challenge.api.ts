@@ -9,6 +9,7 @@ export interface Challenge {
   id: number;
   title: string;
   description?: string;
+  starterCode: string;
   author?: string;
   date?: Date;
 }
