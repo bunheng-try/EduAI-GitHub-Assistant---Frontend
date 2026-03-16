@@ -7,6 +7,7 @@ import type { Challenge } from "@/features/challenge/apis/challenge.api";
    ========================= */
 
 export interface Assignment {
+    points: number;
     id: number;
     title: string;
     description: string;
