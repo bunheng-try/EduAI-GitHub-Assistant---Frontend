@@ -162,7 +162,7 @@ const MainBarClassroom = () => {
                       )
                     } else {
                       navigate(
-                        `/classrooms/${classroomId}/assignments/${a.id}`
+                        `/classrooms/${classroomId}/assignments/${a.id}/view`
                       )
                     }
                   }}
