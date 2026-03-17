@@ -171,7 +171,6 @@ const MainBarClassroom = () => {
         </PanelContent>
       </Panel>
 
-      {/* Confirm dialogs */}
       <ConfirmDialog
         open={confirmDeleteOpen}
         onOpenChange={setConfirmDeleteOpen}

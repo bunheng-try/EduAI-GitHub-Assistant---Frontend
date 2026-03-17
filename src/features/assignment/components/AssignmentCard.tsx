@@ -1,6 +1,5 @@
-import { Card, CardContent, CardHeader, CardMeta } from "@/shared/components/design/Card";
-import { WrapIcon } from "@/shared/components/ui/wrapIcon";
-import { Calendar, MoreVertical } from "lucide-react";
+import { Card, CardContent, CardHeader, CardMeta, CardStatItem } from "@/shared/components/design/Card";
+import { Calendar, MoreVertical, User } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
 
 import { useAssignmentCard } from "../hooks/useAssignmentCard";
@@ -52,8 +51,8 @@ export const AssignmentCard = ({
                 </div>
 
                 <CardMeta>
-                    <span>Due {dueDate}</span>
-                    <span>{submissions}</span>
+                    <CardStatItem icon={Calendar} label={`Due ${dueDate}`} />
+                    <CardStatItem icon={User} label={submissions} />
                 </CardMeta>
             </CardContent>
         </Card>
