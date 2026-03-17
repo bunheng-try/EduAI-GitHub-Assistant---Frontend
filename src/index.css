@@ -3,38 +3,97 @@
 
 :root {
   --radius: 6px;
-  
-  /* danger */
-  --destructive: 0 70% 50%;
-  --destructive-foreground: 0 0% 100%;
 
-  /* Backgrounds */
+  /* =========================
+     Layout
+     ========================= */
+
   --background: 260 20% 97%;
-  --card: 0 0% 100%;
+  --workspace: 260 18% 95%;
+  --canvas: 260 20% 98%;
+  --navigation: 260 18% 93%;
+  --panel: 260 16% 91%;
 
-  /* Text */
+  /* =========================
+     Surfaces
+     ========================= */
+
+  --surface: 0 0% 100%;
+  --surface-muted: 260 16% 94%;
+  --surface-hover: 270 40% 96%;
+  --surface-active: 270 45% 92%;
+
+  /* =========================
+     Text
+     ========================= */
+
   --foreground: 260 10% 15%;
-  --muted-foreground: 260 5% 45%;
+  --muted-foreground: 260 6% 44%;
 
-  /* Brand (Slack-like purple) */
+  /* =========================
+     Borders
+     ========================= */
+
+  --border: 260 12% 85%;
+  --border-strong: 260 15% 78%;
+
+  /* =========================
+     Brand
+     ========================= */
+
   --primary: 285 45% 32%;
   --primary-foreground: 0 0% 100%;
 
-  /* Surfaces */
-  --secondary: 260 20% 93%;
-  --secondary-foreground: 260 10% 15%;
+  /* =========================
+     UI Tokens
+     ========================= */
 
-  --muted: 260 20% 94%;
-  --accent: 260 20% 91%;
+  --secondary: 260 16% 92%;
+  --accent: 260 16% 90%;
+  --muted: 260 16% 94%;
 
-  /* Borders */
-  --border: 260 15% 88%;
-  --input: 260 15% 88%;
+  /* =========================
+     States
+     ========================= */
 
-  /* Focus */
   --ring: 285 45% 32%;
 
-  --accent-foreground: 260 10% 15%;
+  --destructive: 0 70% 50%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* =========================
+     Challenge Difficulty
+     ========================= */
+
+  --challenge-easy: 120 35% 80%;
+  --challenge-medium: 45 70% 80%;
+  --challenge-hard: 0 60% 80%;
+
+  --challenge-easy-foreground: 120 40% 20%;
+  --challenge-medium-foreground: 45 50% 20%;
+  --challenge-hard-foreground: 0 50% 20%;
+
+  /* =========================
+     Status
+     ========================= */
+
+  --status-draft: 210 35% 80%;
+  --status-published: 140 40% 80%;
+  --status-foreground: 0 0% 20%;
+
+  /* =========================
+     Spacing
+     ========================= */
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+
+  --card-padding-x: var(--spacing-lg);
+  --card-padding-y: var(--spacing-md);
+  --card-gap: var(--spacing-lg);
 }
 
 @layer base {
@@ -46,5 +105,88 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+  }
+}
+
+@layer utilities {
+
+  .badge {
+    border-radius: var(--radius);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    display: inline-block;
+    text-transform: capitalize;
+  }
+
+  .challenge-easy {
+    background-color: hsl(var(--challenge-easy));
+    color: hsl(var(--challenge-easy-foreground));
+  }
+
+  .challenge-medium {
+    background-color: hsl(var(--challenge-medium));
+    color: hsl(var(--challenge-medium-foreground));
+  }
+
+  .challenge-hard {
+    background-color: hsl(var(--challenge-hard));
+    color: hsl(var(--challenge-hard-foreground));
+  }
+
+  .status-draft {
+    background-color: hsl(var(--status-draft));
+    color: hsl(var(--status-foreground));
+  }
+
+  .status-published {
+    background-color: hsl(var(--status-published));
+    color: hsl(var(--status-foreground));
+  }
+
+  .typo-display {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .typo-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .typo-title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .typo-body {
+    font-size: 0.875rem;
+  }
+
+  .typo-body-sm {
+    font-size: 0.75rem;
+  }
+
+  .typo-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .typo-caption {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .typo-tab-active {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: hsl(var(--primary));
+  }
+
+  .typo-tab-inactive {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useChallenges } from "../hooks/useChallengeQuery";
-import { ChallengeListTitle } from "../hooks/ChallengeListTitle";
+import { ChallengeListTitle } from "./ChallengeCard";
 import { ChallengeEmptyState } from "./inused/ChallengeEmptyState";
 import { Input } from "@/shared/components/ui/input";
 import { MainBar } from "@/shared/components/layout/mainBar/MainBar";

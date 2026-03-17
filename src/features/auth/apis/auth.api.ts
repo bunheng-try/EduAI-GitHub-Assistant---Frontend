@@ -15,7 +15,7 @@ export const authApi = {
         { email, password }
       );
       useAuthStore.getState().setAuth(null, data.access_token);
-      
+
       const user = await httpClient.get<User>("/users/me");
 
       useAuthStore.getState().setAuth(user, data.access_token);
@@ -33,8 +33,13 @@ export const authApi = {
         "/auth/signup",
         { name, email, password }
       );
-      useAuthStore.getState().setAuth(data.user, data.access_token);
-      return data.user;
+      useAuthStore.getState().setAuth(null, data.access_token);
+
+      const user = await httpClient.get<User>("/users/me");
+
+      useAuthStore.getState().setAuth(user, data.access_token);
+
+      return user;
     } catch (err: any) {
       console.error("Signup failed:", err.message);
       throw err;

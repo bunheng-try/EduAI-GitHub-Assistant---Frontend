@@ -18,6 +18,7 @@ import StudentManagement from "@/features/class/components/StudentManagement";
 import { ChallengeLibraryPage } from "@/features/challenge/pages/ChallengeLibraryPage";
 import ChallengeEditorPanel from "@/features/challenge/pages/ChallengeEditorPanel";
 import { ChallengeDetailPanel } from "@/features/challenge/hooks/ChallengeDetailPanel";
+import ChallengeWorkspace from "@/features/chllenge_workspce/pages/ChallengeWorkspacePage";
 
 const router = createBrowserRouter([
   { path: "/signin", element: <SignInPage /> },
@@ -69,7 +70,10 @@ const router = createBrowserRouter([
       },
   ],
   },
-
+  {
+    path: "classrooms/:classroomId/assignments/:assignmentId/workspace",
+    element: <ChallengeWorkspace />
+  },
   {
     path: "/showroom",
     element: <ShowroomLayout />,
