@@ -7,7 +7,7 @@ interface PanelProps {
 }
 
 export const Panel: React.FC<PanelProps> = ({ children, className }) => {
-  return <div className={cn("flex flex-col w-full h-full", className)}>{children}</div>;
+  return <div className={cn("flex flex-col border-r w-full h-full ", className)}>{children}</div>;
 };
 
 export const PanelContent: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (

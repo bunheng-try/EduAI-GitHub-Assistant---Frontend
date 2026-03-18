@@ -1,13 +1,9 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import Challenge from "@/features/challenge/components/unused/Challenge";
-
 import { ShowroomLayout } from "@/showroom/ShowroomLayout";
 import { ButtonsShowroom } from "@/showroom/routes/design/buttons.page";
 import EditorShowroom from "@/showroom/routes/features/codeEditor/Editor.page";
-
 import { AppShell } from "../layout/AppShell";
-import MainBarClassrooom from "@/features/classes/components/MainBarClassrooom";
 import AssignmentEditor from "@/features/assignment/pages/AssignmentEditorPage";
 import { ClassroomLayout } from "../layout/ClassroomLayout";
 import { ClassroomHome } from "@/features/classes/components/ClassroomHome";
@@ -17,12 +13,12 @@ import { NoClassSelected } from "@/features/classes/components/NoClassSelected";
 import StudentManagement from "@/features/class/components/StudentManagement";
 import { ChallengeLibraryPage } from "@/features/challenge/pages/ChallengeLibraryPage";
 import ChallengeEditorPanel from "@/features/challenge/pages/ChallengeEditorPanel";
-import { ChallengeDetailPanel } from "@/features/challenge/hooks/ChallengeDetailPanel";
 import ChallengeWorkspace from "@/features/chllenge_workspce/pages/ChallengeWorkspacePage";
+import SignUpPage from "@/features/auth/pages/SignUpPage";
 
 const router = createBrowserRouter([
   { path: "/signin", element: <SignInPage /> },
-  // { path: "/signup", element: <SignUpPage /> },
+  { path: "/signup", element: <SignUpPage /> },
 
   {
     path: "/",
@@ -63,8 +59,8 @@ const router = createBrowserRouter([
             element: <NoClassSelected />,
           },
           {
-            path: ":challengeId",
-            element: <ChallengeDetailPanel />,
+            path: "challenges/:challengeId",
+            element: <ChallengeEditorPanel />,
           },
         ]
       },
