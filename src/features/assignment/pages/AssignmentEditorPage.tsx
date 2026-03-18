@@ -1,5 +1,4 @@
 import { useState } from "react";
-import MainPanel from "@/shared/components/layout/mainPanel/MainPanel";
 import AssignmentHeader from "../components/AssignmentHeader";
 import ChallengeTab from "../components/ChallengesTab";
 import { SettingsTab } from "../components/SettingsTab";
@@ -10,12 +9,16 @@ import { useAssignment, useDeleteAssignment } from "../hooks/useAssignmentQuery"
 import { mockSubmissions } from "@/shared/types/types";
 import { useClassroomRole } from "@/features/classes/hooks/useClassroomRole";
 import type { Assignment } from "../apis/assignment.api";
+import { Panel } from "react-resizable-panels";
+import { PanelContent } from "@/shared/components/design/Panel";
 
 const AssignmentEditor = () => {
   const { activeTab } = useAssignmentTabs();
   const { classroomId, assignmentId } = useClassroomRoute();
   const { data: assignment, isLoading } = useAssignment(classroomId || null, assignmentId || null);
   const { mutate: deleteAssignment } = useDeleteAssignment();
+  const { data: roleData } = useClassroomRole(classroomId);
+  const isAdmin = roleData?.role === "OWNER";
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -34,21 +37,19 @@ const AssignmentEditor = () => {
   };
 
   return (
-    <MainPanel
-      header={
+    <Panel>
         <AssignmentHeader
           classroomId={classroomId}
           assignment={assignment}
           isEditing={isEditing}
         />
-      }
-      emptyState={<div className="p-6 text-gray-400">No content</div>}
-    >
-      <div className="flex-1 overflow-auto">
+
+      <PanelContent>
         {activeTab === "challenge" && (
           <ChallengeTab challenges={assignment.codingChallenges} />
         )}
-        { activeTab === "settings" && (
+
+        {isAdmin && activeTab === "settings" && (
           <SettingsTab
             assignment={assignment}
             isEditing={isEditing}
@@ -57,11 +58,12 @@ const AssignmentEditor = () => {
             onDelete={handleDelete}
           />
         )}
-        { activeTab === "submission" && (
+
+        {isAdmin && activeTab === "submission" && (
           <SubmissionsTab submissions={mockSubmissions ?? []} />
         )}
-      </div>
-    </MainPanel>
+      </PanelContent>
+    </Panel>
   );
 };
 

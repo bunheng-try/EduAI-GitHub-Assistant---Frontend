@@ -2,6 +2,7 @@ import { FormDialog } from "@/shared/components/design/dialog/FormDialog";
 import { Input } from "@/shared/components/ui/input";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useCreateAssignmentForm } from "../hooks/useCreateAssignmentForm";
+import { FormField, TextAreaInput, TextInput } from "@/shared/components/design/FormField";
 
 type Props = {
   open: boolean;
@@ -33,31 +34,27 @@ export const CreateAssignmentDialog = ({ open, onOpenChange, classroomId }: Prop
       cancelText="Cancel"
     >
       <div className="flex flex-col gap-4 py-4">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="title" className="text-sm font-medium">
-            Title <span className="text-red-500">*</span>
-          </label>
-          <Input
+
+        <FormField label="Title" htmlFor="title" required>
+          <TextInput
             id="title"
             placeholder="e.g. Week 1 Homework"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            required
             autoFocus
           />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="description" className="text-sm font-medium">
-            Description
-          </label>
-          <Textarea
+        </FormField>
+
+        <FormField label="Description" htmlFor="description">
+          <TextAreaInput
             id="description"
             placeholder="Enter assignment details here..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
           />
-        </div>
+        </FormField>
+
       </div>
     </FormDialog>
   );
