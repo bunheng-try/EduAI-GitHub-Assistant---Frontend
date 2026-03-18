@@ -22,8 +22,6 @@ export const SettingsTab = ({ assignment, onAssignmentUpdate, onDelete }: Settin
     setTimeDue,
     description,
     setDescription,
-    showDeleteDialog,
-    setShowDeleteDialog,
     handleSave,
     handleCancel,
     handleDeleteRequest,

@@ -42,7 +42,6 @@ const AssignmentEditor = () => {
           classroomId={classroomId}
           assignment={assignment}
           isEditing={isEditing}
-          isAdmin={isAdmin}
         />
 
       <PanelContent>

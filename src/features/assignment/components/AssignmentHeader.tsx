@@ -13,10 +13,9 @@ type Props = {
   classroomId: number;
   assignment: Assignment;
   isEditing: boolean;
-  isAdmin: boolean;
 };
 
-const AssignmentHeader = ({ classroomId, assignment, isEditing, isAdmin }: Props) => {
+const AssignmentHeader = ({ classroomId, assignment, isEditing }: Props) => {
   const { activeTab, setActiveTab } = useAssignmentTabs();
   const { mutate: publishAssignment } = usePublishAssignment();
   const { mutate: unpublishAssignment } = useUnPublishAssignment();
@@ -47,12 +46,8 @@ const AssignmentHeader = ({ classroomId, assignment, isEditing, isAdmin }: Props
 
   const tabs: Tab[] = [
     { key: "challenge", label: "Challenges", icon: <CodeIcon className="w-4 h-4 mr-2" /> },
-    ...(isAdmin ? [
-      { key: "settings" as TabKey, label: "Settings", icon: <SettingsIcon className="w-4 h-4 mr-2" /> },
-    ] : []),
-    ...(isAdmin && showPublishedUI ? [
-      { key: "submission" as TabKey, label: "Submission", icon: <UsersIcon className="w-4 h-4 mr-2" /> },
-    ] : []),
+    { key: "settings" as TabKey, label: "Settings", icon: <SettingsIcon className="w-4 h-4 mr-2" /> },
+    { key: "submission" as TabKey, label: "Submission", icon: <UsersIcon className="w-4 h-4 mr-2" /> },
   ];
 
   return (
