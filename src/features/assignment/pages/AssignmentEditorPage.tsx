@@ -9,6 +9,7 @@ import { Panel, PanelContent } from "@/shared/components/design/Panel";
 import { useAssignmentEditorDirty } from "../hooks/useAssignmentEditorDirty";
 import { mockSubmissions } from "@/shared/types/types";
 import { useChallengesDirty } from "../hooks/useChallengeDirty";
+import { useEffect } from "react";
 
 const AssignmentEditor = () => {
   const { activeTab } = useAssignmentTabs();
@@ -33,7 +34,7 @@ const AssignmentEditor = () => {
     hasUnsaved: hasUnsavedChallenge,
     save: saveChallenge,
     cancel: cancelChallenge,
-  } = useChallengesDirty(assignmentId, classroomId, draft?.codingChallenges || []);
+  } = useChallengesDirty(assignmentId, classroomId, draft?.assignmentChallenges || []);
 
   if (isLoading || !draft) {
     return <div className="p-6 text-muted-foreground">Loading assignment...</div>;
@@ -51,14 +52,12 @@ const AssignmentEditor = () => {
     if (hasUnsavedChallenge) saveChallenge(); 
   };
 
-
-
   return (
     <Panel>
       <AssignmentHeader
         classroomId={classroomId}
         assignment={draft}
-        isDirty={isDirty && hasUnsavedChallenge}
+        isDirty={isDirty || hasUnsavedChallenge}
         updateField={updateField}
         save={handleSaveAll}
         cancel={handleCancelAll}
@@ -67,7 +66,7 @@ const AssignmentEditor = () => {
 
       <PanelContent>
         {activeTab === "challenge" && (
-          <ChallengeTab challenges={draft.codingChallenges} onAddSelected={addChallenge} />
+          <ChallengeTab challenges={challengeDraft} onAddSelected={addChallenge} />
         )}
 
         {isAdmin && activeTab === "settings" && (

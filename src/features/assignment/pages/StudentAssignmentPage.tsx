@@ -53,9 +53,9 @@ const StudentAssignmentPage = () => {
 
   const formattedDue = assignment.dueAt
     ? new Date(assignment.dueAt).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      })
+      month: "short",
+      day: "numeric",
+    })
     : "—";
 
   const hasNoChallenges = assignment.assignmentChallenges.length === 0;
@@ -109,7 +109,7 @@ const StudentAssignmentPage = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-                {assignment.assignmentChallenges.map((challenge, index) => (
+              {assignment.assignmentChallenges.map((challenge, index) => (
                 <StudentChallengeRow
                   key={challenge.id}
                   index={index + 1}
