@@ -33,7 +33,7 @@ const AssignmentEditor = () => {
     hasUnsaved: hasUnsavedChallenge,
     save: saveChallenge,
     cancel: cancelChallenge,
-  } = useChallengesDirty(assignmentId, classroomId, draft?.codingChallenges || []);
+  } = useChallengesDirty(assignmentId, classroomId, draft?.assignmentChallenges || []);
 
   if (isLoading || !draft) {
     return <div className="p-6 text-muted-foreground">Loading assignment...</div>;
@@ -67,7 +67,7 @@ const AssignmentEditor = () => {
 
       <PanelContent>
         {activeTab === "challenge" && (
-          <ChallengeTab challenges={draft.codingChallenges} onAddSelected={addChallenge} />
+          <ChallengeTab challenges={challengeDraft} onAddSelected={addChallenge} />
         )}
 
         {isAdmin && activeTab === "settings" && (
