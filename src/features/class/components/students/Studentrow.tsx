@@ -10,7 +10,6 @@ interface StudentRowProps {
 }
 
 export default function StudentRow({ student, isLast, onContextMenu }: StudentRowProps) {
-  // Compute initials from name
   const initials = student.name
     .split(" ")
     .map((n) => n[0])
@@ -20,24 +19,25 @@ export default function StudentRow({ student, isLast, onContextMenu }: StudentRo
 
   return (
     <div
-      className={`grid grid-cols-[2fr_3fr_2fr_1fr] items-center px-4 py-3.5 hover:bg-gray-50 transition-colors ${!isLast ? "border-b border-gray-100" : ""
-        }`}
+      className={`grid grid-cols-[2fr_3fr_2fr_1fr] items-center px-4 py-3.5 transition-colors
+  hover:bg-[hsl(var(--surface-hover))]
+  ${!isLast ? "border-b border-[hsl(var(--border))]" : ""}`}
     >
-      {/* Name + Avatar */}
       <div className="flex items-center gap-3 truncate">
         <Avatar name={student.name} initials={initials} />
-        <span className="text-sm font-semibold text-gray-800 truncate">{student.name}</span>
+        <span className="typo-body-strong truncate">
+          {student.name}
+        </span>
       </div>
 
-      {/* Email */}
-      <span className="text-sm text-gray-500 truncate">
+      <span className="typo-caption truncate">
         {student.email ?? `${student.name.replace(/\s+/g, ".").toLowerCase()}@student.cadt.com`}
       </span>
 
-      {/* Role */}
-      <span className="text-sm text-gray-500 truncate">{student.role}</span>
+      <span className="typo-caption truncate">
+        {student.role}
+      </span>
 
-      {/* Action */}
       <div className="flex justify-center">
         <ButtonGhost onClick={(e) => onContextMenu(e, student)}>
           <MoreHorizontal size={16} />

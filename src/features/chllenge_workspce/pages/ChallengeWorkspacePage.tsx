@@ -23,10 +23,10 @@ function ChallengeWorkspace() {
   const setStarterCode = useWorkspaceStore((s) => s.setStarterCode);
 
   useEffect(() => {
-    if (challenges.length && currentChallengeId === null) {
+    if (assignmentQuery.isSuccess && challenges.length > 0 && currentChallengeId === null) {
       setCurrentChallenge(challenges[0].id);
     }
-  }, [challenges, currentChallengeId]);
+  }, [assignmentQuery.isSuccess, challenges, currentChallengeId]);
 
   const currentChallenge = challenges.find((c) => c.id === currentChallengeId);
 
@@ -37,7 +37,7 @@ function ChallengeWorkspace() {
   }, [currentChallenge?.id]);
 
   if (assignmentQuery.isLoading) return <div>Loading assignment...</div>;
-  if (!currentChallenge) return <div>No challenge selected</div>;
+  // if (!currentChallenge) return <div>No challenge selected</div>;
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden">
@@ -46,7 +46,7 @@ function ChallengeWorkspace() {
         <ChallengeSidebar challenges={challenges} />
         <ResizablePanelContainer direction="horizontal" className="flex-1 min-h-0">
           <ResizablePanel className="min-h-0">
-            <InstructionPanel challenge={currentChallenge} />
+            <InstructionPanel challenge={currentChallenge!} />
           </ResizablePanel>
 
           <ResizablePanelDivider />
@@ -54,7 +54,7 @@ function ChallengeWorkspace() {
           <ResizablePanel className="flex flex-col min-h-0">
             <IDEPanel
               challengeId={currentChallengeId!}
-              language={currentChallenge.language}
+              language={currentChallenge?.language}
             />
           </ResizablePanel>
 

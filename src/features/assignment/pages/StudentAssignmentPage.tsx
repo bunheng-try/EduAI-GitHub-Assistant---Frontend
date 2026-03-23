@@ -15,8 +15,8 @@ const StudentAssignmentPage = () => {
 
   const { data: assignment, isLoading, isError } = useAssignment(classroomId, assignId);
 
-  const handleStart = (challengeId: number) => {
-    navigate(`/classrooms/${classId}/assignments/${assignmentId}/workspace/${challengeId}`);
+  const handleStart = () => {
+    navigate(`/classrooms/${classId}/assignments/${assignmentId}/workspace`);
   };
 
   if (isLoading) {
@@ -64,7 +64,7 @@ const StudentAssignmentPage = () => {
       <MainPanel
         header={
           <BasePanelHeader
-            left={<h2 className="text-lg font-semibold">{assignment.title}</h2>}
+            left={<h2 className="typo-heading">{assignment.title}</h2>}
             right={
               firstChallengeId && (
                 <ButtonPrimary onClick={() => handleStart()}>
@@ -107,7 +107,7 @@ const StudentAssignmentPage = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              {assignment.codingChallenges.map((challenge, index) => (
+              {assignment.assignmentChallenges.map((challenge, index) => (
                 <ChallengeCard
                   key={challenge.id}
                   challenge={challenge}

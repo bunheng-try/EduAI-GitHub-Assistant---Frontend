@@ -8,29 +8,22 @@ import StudentTable from "./students/StudentTables";
 import StudentDialogs from "./dialogs/StudentDialogs";
 import type { Member } from "../apis/member.api";
 import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
+import { Panel, PanelContent } from "@/shared/components/design/Panel";
+import { PanelHeader } from "@/shared/components/design/PanelHeader";
+import { Button } from "@/shared/components/ui/button";
+import { WrapIcon } from "@/shared/components/ui/wrapIcon";
+import { GraduationCap } from "lucide-react";
 
 export default function StudentManagement() {
   const { classroomId } = useClassroomRoute();
-  // ---------------------------
-  // 1️⃣ Members list
-  // ---------------------------
   const { data: members = [] } = useMembers(classroomId);
 
-  // ---------------------------
-  // 2️⃣ Remove member mutation
-  // ---------------------------
   const removeMember = useRemoveMember(classroomId);
 
-  // ---------------------------
-  // 3️⃣ Dialog state
-  // ---------------------------
   const [inviteOpen, setInviteOpen] = useState(false);
   const [confirmStudent, setConfirmStudent] = useState<any>(null); // selected member for removal
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; student: any } | null>(null);
 
-  // ---------------------------
-  // 4️⃣ Context menu handlers
-  // ---------------------------
   const handleContextMenu = (student: Member, e: React.MouseEvent) => {
     e.preventDefault();
     setContextMenu({ x: e.clientX, y: e.clientY, student });
@@ -39,18 +32,12 @@ export default function StudentManagement() {
   const closeContextMenu = () => setContextMenu(null);
   const openConfirmRemove = (student: any) => setConfirmStudent(student);
 
-  // ---------------------------
-  // 5️⃣ Remove confirm handler
-  // ---------------------------
   const handleRemoveConfirm = () => {
     if (!confirmStudent) return;
     removeMember.mutate(confirmStudent.userId);
     setConfirmStudent(null);
   };
 
-  // ---------------------------
-  // 6️⃣ CSV Export
-  // ---------------------------
   const exportStudents = () => {
     const csv = ["Student,Email", ...members.map(m => `${m.name},${m.id}@student.cadt.com`)].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
@@ -63,23 +50,42 @@ export default function StudentManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="w-full overflow-hidden">
-        <StudentHeader totalCount={members.length} onInviteClick={() => setInviteOpen(true)} />
-        <StudentTab />
-        <StudentToolbar
-          search="" // optional: hook up a search state if needed
-          onSearchChange={() => { }}
-          filterBy="all"
-          onFilterChange={() => { }}
-          onExport={exportStudents}
+    <>
+      <Panel>
+        <PanelHeader
+          topLeft={
+            <div className="flex gap-(--spacing-sm) items-center">
+              <WrapIcon icon={GraduationCap} size={"panel"} withBg/>
+              <h2 className="typo-heading">Students</h2>
+            </div>
+            
+          }
+          bottomContent={
+            <span className="typo-caption">{members.length} Member{ members.length > 1 ? "s" : "" }</span>   
+          }
+
+          topRight={
+            <>
+              <Button variant={"secondary"}>Copy ClassCode</Button>
+              <Button onClick={() => setInviteOpen(true)} >Add Member</Button>
+            </>
+          }
         />
-        <StudentTable
-          students={members}
-          isFiltered={false} // optional: hook up search/filter if needed
-          onContextMenu={(e, student) => handleContextMenu(student, e)}
-        />
-      </div>
+        <PanelContent>
+          <StudentToolbar
+            search="" 
+            onSearchChange={() => { }}
+            filterBy="all"
+            onFilterChange={() => { }}
+            onExport={exportStudents}
+          />
+          <StudentTable
+            students={members}
+            isFiltered={false}
+            onContextMenu={(e, student) => handleContextMenu(student, e)}
+          />
+        </PanelContent>
+      </Panel>
 
       <StudentDialogs
         classroomId={classroomId}
@@ -92,6 +98,6 @@ export default function StudentManagement() {
         onContextMenuRemove={openConfirmRemove}
         onContextMenuClose={closeContextMenu}
       />
-    </div>
+    </>
   );
 }

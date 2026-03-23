@@ -152,7 +152,7 @@
   }
 
   .typo-heading {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
   }
 
@@ -163,6 +163,12 @@
 
   .typo-body {
     font-size: 0.875rem;
+  }
+
+  .typo-body-strong {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
   }
 
   .typo-body-sm {
@@ -189,6 +195,14 @@
   .typo-tab-inactive {
     font-size: 0.875rem;
     font-weight: 500;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .typo-table-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     color: hsl(var(--muted-foreground));
   }
 }

@@ -22,7 +22,7 @@ export function PanelHeader({ topLeft, topRight, bottomContent, tabs, className 
             </div>
 
             {bottomContent && (
-                <div className="flex flex-col gap-2 mt w-full">
+                <div className="flex flex-col gap-2 mt-2 w-full">
                     {bottomContent}
                 </div>
             )}

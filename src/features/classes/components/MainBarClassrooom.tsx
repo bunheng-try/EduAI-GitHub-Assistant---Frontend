@@ -11,7 +11,7 @@ import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
 import { useAssignmentClassrooms, useDeleteAssignment } from "@/features/assignment/hooks/useAssignmentQuery";
 import { useSelectedClassroom } from "../hooks/useClassroomQuery";
 import { useClassroomActions } from "../hooks/useClassroomAction";
-import { useLeaveClassroom } from "../../class/hooks/useMemberQuery";
+import { useLeaveClassroom, useMembers } from "../../class/hooks/useMemberQuery";
 import { useContextMenu } from "@/shared/components/context-menu/ContextMenuProvider";
 import { GraduationCap, Plus, Settings, Users } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
@@ -39,6 +39,8 @@ const MainBarClassroom = () => {
   const [selectedClass, setSelectedClass] = useState<{ id: number; name: string } | null>(null);
 
   const { data: assignments = [], isLoading } = useAssignmentClassrooms(classroomId);
+  const { data: members = [] } = useMembers(classroomId);
+  
 
   // --- Handlers ---
   const handleSetting = (e: React.MouseEvent) => {
@@ -138,7 +140,7 @@ const MainBarClassroom = () => {
               onClick={() => navigate(`/classrooms/${classroomId}/students`)}
             >
               <GraduationCap className="w-4 h-4" />
-              <span>{MOCK_STUDENTS.length ?? 0} Students</span>
+              <span>{members.length ?? 0} Member{members.length > 1 ? "s" : ""}</span>
             </div>
           }
 

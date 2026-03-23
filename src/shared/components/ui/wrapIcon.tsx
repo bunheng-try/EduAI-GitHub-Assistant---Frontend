@@ -17,6 +17,7 @@ const iconVariants = cva("inline-flex items-center justify-center shrink-0 trans
       default: "w-5 h-5 [&>svg]:w-5 [&>svg]:h-5",
       lg: "w-6 h-6 [&>svg]:w-6 [&>svg]:h-6",
       xl: "w-8 h-8 [&>svg]:w-8 [&>svg]:h-8",
+      panel: "w-10 h-10 [&>svg]:w-10 [&>svg]:h-10",
     },
     withBg: {
       true: "rounded-full p-1",
