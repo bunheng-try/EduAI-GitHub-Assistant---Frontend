@@ -1,21 +1,27 @@
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { ButtonGhost } from "../../../../shared/components/design/button";
 import type { Member } from "../../apis/member.api";
 import Avatar from "./Avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
+import { WrapIcon } from "@/shared/components/ui/wrapIcon";
+import { useClassroomRole } from "@/features/classes/hooks/useClassroomRole";
+import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
+import { getInitials } from "@/shared/utils/strings";
 
 interface StudentRowProps {
   student: Member;
   isLast: boolean;
-  onContextMenu: (e: React.MouseEvent, student: Member) => void;
+  onRemove: (student: Member) => void;
 }
 
-export default function StudentRow({ student, isLast, onContextMenu }: StudentRowProps) {
-  const initials = student.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+export default function StudentRow({ student, isLast, onRemove }: StudentRowProps) {
+  const { classroomId } = useClassroomRoute();
+  const { data: classroomRole } = useClassroomRole(classroomId);
+  const initials = getInitials(student.name);
+  
+  const canRemove =
+    classroomRole?.role === "OWNER" && student.role !== "OWNER" ||
+    (classroomRole?.role === "TEACHER" && student.role !== "OWNER" && student.role !== "TEACHER");
 
   return (
     <div
@@ -39,9 +45,27 @@ export default function StudentRow({ student, isLast, onContextMenu }: StudentRo
       </span>
 
       <div className="flex justify-center">
-        <ButtonGhost onClick={(e) => onContextMenu(e, student)}>
-          <MoreHorizontal size={16} />
-        </ButtonGhost>
+        <div className="flex justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <ButtonGhost>
+                <MoreHorizontal size={16} />
+              </ButtonGhost>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {canRemove ? (
+                <DropdownMenuItem onClick={() => onRemove(student)} variant="destructive">
+                  <WrapIcon icon={Trash2} size="sm" />
+                  Remove
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem disabled>
+                  No actions
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );

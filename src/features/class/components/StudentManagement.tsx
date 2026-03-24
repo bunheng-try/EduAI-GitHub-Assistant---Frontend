@@ -1,8 +1,6 @@
 // pages/StudentManagement.tsx
 import { useState } from "react";
-import { useMembers, useAddMember, useRemoveMember, useUserByEmail } from "../hooks/useMemberQuery";
-import StudentHeader from "../components/students/Studentheader";
-import StudentTab from "./students/StudentTaps";
+import { useMembers, useRemoveMember } from "../hooks/useMemberQuery";
 import StudentToolbar from "./students/Studenttoolbar";
 import StudentTable from "./students/StudentTables";
 import StudentDialogs from "./dialogs/StudentDialogs";
@@ -21,7 +19,7 @@ export default function StudentManagement() {
   const removeMember = useRemoveMember(classroomId);
 
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [confirmStudent, setConfirmStudent] = useState<any>(null); // selected member for removal
+  const [confirmStudent, setConfirmStudent] = useState<any>(null);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; student: any } | null>(null);
 
   const handleContextMenu = (student: Member, e: React.MouseEvent) => {
@@ -79,11 +77,11 @@ export default function StudentManagement() {
             onFilterChange={() => { }}
             onExport={exportStudents}
           />
-          <StudentTable
-            students={members}
-            isFiltered={false}
-            onContextMenu={(e, student) => handleContextMenu(student, e)}
-          />
+            <StudentTable
+              students={members}
+              isFiltered={false}
+              onRemove={(student) => setConfirmStudent(student)}
+            />
         </PanelContent>
       </Panel>
 

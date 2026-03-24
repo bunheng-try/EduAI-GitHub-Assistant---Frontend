@@ -2,17 +2,18 @@ import { httpClient } from "@/app/services/httpClient";
 
 export type Member = {
     id: number;
-    role: "STUDENT" | "ADMIN";
+    role: "STUDENT" | "OWNER" | "TEACHER";
     name: string;
+    email: string;
 };
 
 export type MemberRoleDto = {
-    role: "STUDENT" | "ADMIN";
+    role: "STUDENT" | "OWNER" | "TEACHER";
 };
 
 export type AddMemberDto = {
     userId: number;
-    role: "STUDENT" | "ADMIN";
+    role: "STUDENT" | "OWNER" | "TEACHER";
 };
 
 export type AddMembersRequest = {

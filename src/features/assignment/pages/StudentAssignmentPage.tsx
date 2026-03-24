@@ -7,7 +7,6 @@ import { useSubmissions } from "../hooks/useSubmissionQuery";
 import { useAssignment } from "../hooks/useAssignmentQuery";
 import { useCreateSubmission } from "../hooks/useSubmissionQuery";
 import { useAuthStore } from "@/app/store/autStore";
-import { useEffect } from "react";
 
 const StudentAssignmentPage = () => {
   const { classId, assignmentId } = useParams();
@@ -59,20 +58,9 @@ const StudentAssignmentPage = () => {
     } catch (err: any) {
       if (err?.statusCode === 409) {
         navigate(`/classrooms/${classId}/assignments/${assignmentId}/workspace`);
-      } else {
-        console.error("Failed to create submission draft:", err);
-        alert("Failed to start assignment. Please try again.");
       }
     }
   };
-
-  useEffect(() => {
-    console.log("currentUser.id:", currentUser?.id, "type:", typeof currentUser?.id);
-    console.log("submissions:", submissions);
-    submissions?.forEach(s => {
-      console.log("submission studentId:", s.userId, "type:", typeof s.userId);
-    });
-  }, [currentUser, submissions]);
 
   if (isAssignmentLoading || isSubmissionsLoading) {
     return (

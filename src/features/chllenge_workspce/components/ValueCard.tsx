@@ -1,5 +1,3 @@
-    import React from "react"
-
 interface ValueCardProps {
     label: string
     value?: string

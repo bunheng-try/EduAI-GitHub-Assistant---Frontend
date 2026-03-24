@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Plus, Library, User } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
@@ -12,7 +12,7 @@ import { LeftBarClassesSkeleton } from "@/features/classes/components/LeftBarCla
 import { LeftBarClassesError } from "@/features/classes/components/LeftBarClassesError"
 import { ConfirmDialog } from "@/shared/components/design/dialog"
 import { EditClassDialog } from "@/features/classes/components/EditClassDialog"
-import { authApi } from "@/features/auth/apis/auth.api"
+import { UserProfileDropdown } from "@/features/auth/components/UserProfileDropdown"
 
 export function LeftBar() {
   const navigate = useNavigate()
@@ -43,12 +43,7 @@ export function LeftBar() {
 
   return (
     <>
-      <aside className="flex h-full w-16 flex-col border-r border-border bg-card">
-        {classes.length === 0 && (
-          <div className="flex flex-col items-center justify-center flex-1 px-2 py-4 text-center text-sm text-[hsl(var(--muted-foreground))]">
-            <p>No classes available</p>
-          </div>
-        )}
+      <aside className="flex h-full w-16 flex-col border-r border-border bg-card items-center">
 
         {isLoading ? (
           <LeftBarClassesSkeleton />
@@ -66,7 +61,7 @@ export function LeftBar() {
         <div className="flex-1" />
 
       
-        <div className="flex flex-col gap-1 px-2 py-2">
+        <div className="flex flex-col gap-1 px-2 py-2 items-center justify-end">
           <LeftBarButton
             icon={<Plus className="h-5 w-5" />}
             tooltip="Create class"
@@ -77,11 +72,7 @@ export function LeftBar() {
             tooltip="Exercise library"
             onClick={() => navigate('challenge-library')}
           />
-          <LeftBarButton
-          onClick={async () => await authApi.logout()}
-          icon={<User className="h-5 w-5 text-primary" />}
-          tooltip="Profile"
-        />
+          <UserProfileDropdown />
         </div>
       </aside>
 

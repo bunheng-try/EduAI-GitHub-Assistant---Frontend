@@ -1,34 +1,28 @@
-  import * as React from "react"
-  import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip"
-  import { cn } from "@/lib/utils"
+import * as React from "react"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 
-  type LeftBarButtonProps = {
-    icon: React.ReactNode
-    active?: boolean
-    badge?: number
-    tooltip?: string
-    onClick?: () => void
-    onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  }
+type LeftBarButtonProps = {
+  icon: React.ReactNode
+  active?: boolean
+  badge?: number
+  tooltip?: string
+  onClick?: () => void
+  onContextMenu?: (e: React.MouseEvent<HTMLButtonElement>) => void
+}
 
-  export function LeftBarButton({
-    icon,
-    active,
-    badge,
-    tooltip,
-    onClick,
-    onContextMenu
-  }: LeftBarButtonProps) {
+export const LeftBarButton = React.forwardRef<HTMLButtonElement, LeftBarButtonProps>(
+  ({ icon, active, badge, tooltip, onClick, onContextMenu }, ref) => {
     const button = (
       <button
+        ref={ref}
         type="button"
         onClick={onClick}
         onContextMenu={onContextMenu}
         className={cn(
-          "relative flex shrink-0 h-11 w-11 items-center justify-center rounded-md transition-colors cursor-pointer",
-          !active && "hover:bg-[hsl(var(--accent))]",
-          active &&
-          "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
+          "relative flex shrink-0 h-12 w-12 items-center justify-center rounded-lg transition-colors cursor-pointer",
+          !active && "hover:bg-[hsl(var(--leftbar-hover))]",
+          active && "bg-[hsl(var(--leftbar-active))]"
         )}
       >
         {icon}
@@ -40,6 +34,7 @@
       </button>
     )
 
+    // tooltip wrapping
     if (!tooltip) return button
 
     return (
@@ -49,3 +44,6 @@
       </Tooltip>
     )
   }
+)
+
+LeftBarButton.displayName = "LeftBarButton"

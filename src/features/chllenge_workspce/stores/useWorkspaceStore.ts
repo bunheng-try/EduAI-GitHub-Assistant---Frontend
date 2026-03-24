@@ -21,7 +21,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
             codes: {},
             starterCodes: {},
             currentChallengeId: null,
-            dirtyChallenges: [], // array for persistence
+            dirtyChallenges: [],
 
             setCurrentChallenge: (id) => set({ currentChallengeId: id }),
 

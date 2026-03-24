@@ -1,15 +1,14 @@
 import { LeftBarButton } from '@/app/layout/leftBar/LeftBarButton'
 import { useContextMenu } from '@/shared/components/context-menu/ContextMenuProvider';
-import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useClassroomRole } from '../hooks/useClassroomRole';
 import { getClassroomContextMenu } from './classContextMenu';
-import { Users } from 'lucide-react';
 import type { Classroom } from '../apis/classroom.api';
+import { getInitials } from '@/shared/utils/strings';
 
 interface ClassroomItemProp {
     c: Classroom,
-    selectedClassroomId: Number,
+    selectedClassroomId: number,
     onDelete: (id: number) => void
     onEdit: (id: number) => void
 }
@@ -21,7 +20,7 @@ const ClassroomItem = ({ c, selectedClassroomId, onDelete, onEdit }: ClassroomIt
       <div>
           <LeftBarButton
               key={c.id}
-              icon={<Users className="h-5 w-5" />}
+              icon={<span className="h-10 w-10 rounded-md bg-muted flex items-center justify-center text-xs font-semibold text-[hsl(var(--primary-foreground))] bg-[hsl(var(--primary))]"> {getInitials(c.name)} </span>}
               tooltip={c.name}
               active={c.id === selectedClassroomId}
               onClick={() => navigate(`/classrooms/${c.id}`)}

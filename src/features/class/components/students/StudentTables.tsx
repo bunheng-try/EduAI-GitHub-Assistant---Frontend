@@ -5,10 +5,10 @@ import EmptyState from "../students/EmptyState";
 interface StudentTableProps {
   students: Member[];
   isFiltered: boolean;
-  onContextMenu: (e: React.MouseEvent, student: Member) => void;
+  onRemove: (student: Member) => void;
 }
 
-export default function StudentTable({ students, isFiltered, onContextMenu }: StudentTableProps) {
+export default function StudentTable({ students, isFiltered, onRemove }: StudentTableProps) {
   return (
     <div>
       <div className="border border-gray-100 rounded-xl overflow-hidden">
@@ -27,7 +27,7 @@ export default function StudentTable({ students, isFiltered, onContextMenu }: St
               key={student.id}
               student={student}
               isLast={i === students.length - 1}
-              onContextMenu={onContextMenu}
+              onRemove={onRemove}
             />
           ))
         )}

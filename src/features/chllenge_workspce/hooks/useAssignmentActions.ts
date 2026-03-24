@@ -32,10 +32,6 @@ export function useAssignmentActions() {
     const dirtyChallengeIds = Array.from(state.dirtyChallenges);
     const isDraftDirty = dirtyChallengeIds.length > 0;
 
-    useEffect(() => {
-        console.log(`Submission: ${mySubmission?.id}`)
-    })
-    
     const saveDraft = async () => {
         if (dirtyChallengeIds.length === 0 || isSaving) return;
 

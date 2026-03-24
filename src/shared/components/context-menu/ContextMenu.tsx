@@ -10,14 +10,10 @@ type ContextMenuProps = {
 export function ContextMenu({ x, y, items }: ContextMenuProps) {
   return (
     <div
-      className="
-        fixed z-50 min-w-[180px]
-        rounded-md
-        border border-[hsl(var(--border))]
-        bg-[hsl(var(--card))]
-        py-1
-        shadow-md
-      "
+      className={cn(
+        "fixed z-50 min-w-[180px] rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--card))] py-1 shadow-md",
+        "overflow-hidden"
+      )}
       style={{
         top: y,
         left: x,
@@ -37,7 +33,7 @@ export function ContextMenu({ x, y, items }: ContextMenuProps) {
           return (
             <div
               key={index}
-              className="px-3 py-2 text-sm text-muted-foreground"
+              className="px-3 py-2 text-sm font-medium text-muted-foreground flex justify-between items-center cursor-default select-none"
             >
               {item.label} →
             </div>
@@ -50,19 +46,17 @@ export function ContextMenu({ x, y, items }: ContextMenuProps) {
             type="button"
             onClick={item.onClick}
             className={cn(
-                "flex w-full items-center gap-2 px-3 py-2 text-sm text-left transition-colors",
-                "text-[hsl(var(--foreground))]",
-                "hover:bg-[hsl(var(--accent))]",
-                item.danger &&
-                    "text-[hsl(var(--destructive))] hover:bg-[hsl(var(--destructive)/0.12)]"
+              "flex w-full items-center gap-2 px-3 py-2 text-sm text-left transition-colors rounded-sm select-none",
+              "text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] focus:bg-[hsl(var(--accent))] focus:outline-none",
+              item.danger &&
+              "text-[hsl(var(--destructive))] hover:bg-[hsl(var(--destructive)/0.12)]"
             )}
           >
             {item.icon && (
-              <span className="w-4 opacity-70">
+              <span className="w-4 h-4 flex-shrink-0 opacity-70">
                 {item.icon}
               </span>
             )}
-
             {item.label}
           </button>
         )
@@ -70,4 +64,3 @@ export function ContextMenu({ x, y, items }: ContextMenuProps) {
     </div>
   )
 }
-
