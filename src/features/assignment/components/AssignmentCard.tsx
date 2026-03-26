@@ -32,6 +32,11 @@ export const AssignmentCard = ({
             <CardContent>
                 <CardHeader
                     title={assignment.title}
+                    badge={
+                        <Badge variant={status === "Published" ? "status-published" : "status-draft"}>
+                            {status}
+                        </Badge>
+                    }
                     actions={
                         showActions ? (
                             <Button
@@ -44,12 +49,7 @@ export const AssignmentCard = ({
                         ) : undefined
                     }
                 />
-                <div>
-                    <Badge variant={status === "Published" ? "status-published" : "status-draft"}>
-                        {status}
-                    </Badge>
-                </div>
-
+                
                 <CardMeta>
                     <CardStatItem icon={Calendar} label={`Due ${dueDate}`} />
                     <CardStatItem icon={User} label={submissions} />
