@@ -46,19 +46,13 @@ export const ChallengeCard = ({
             title={
               challenge.title
             }
-            actions={
-              <div className="flex items-center gap-2">
-                <WrapIcon icon={MoreVertical} size="default" variantColor="default" />
-              </div>
+            badge={
+              <Badge variant={challengeLevelMap[challenge.difficulty || "Easy"]}>
+                {challenge.difficulty || "Easy"}
+              </Badge>
             }
             className="items-start"
           />
-
-          <div>
-            <Badge variant={challengeLevelMap[challenge.difficulty || "Easy"]}>
-              {challenge.difficulty || "Easy"}
-            </Badge>
-          </div>
 
           <CardMeta className="flex flex-wrap gap-3 mt-1 truncate">
             {/* Compute challenge score from its test case */}

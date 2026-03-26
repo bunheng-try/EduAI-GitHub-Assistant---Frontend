@@ -11,7 +11,8 @@ interface CardProps {
 }
 
 interface CardHeaderProps {
-  title: React.ReactNode;
+  title: string;
+  badge?: React.ReactNode;
   actions?: React.ReactNode;
   className?: string;
 }
@@ -45,7 +46,7 @@ export const Card: React.FC<CardProps> = ({
       onClick={onClick}
       className={cn(
         "group rounded-xl border transition-colors",
-        "px-[var(--card-padding-x)] py-[var(--card-padding-y)]",
+        "px-(--card-padding-x) py-(--card-padding-y)",
         "bg-[hsl(var(--surface))]",
         "border-[hsl(var(--border))]",
         clickable && "cursor-pointer hover:bg-[hsl(var(--surface-hover))]",
@@ -63,12 +64,18 @@ export const Card: React.FC<CardProps> = ({
 // ----------------------
 export const CardHeader: React.FC<CardHeaderProps> = ({
   title,
+  badge,
   actions,
   className,
 }) => {
   return (
-    <div className={cn("flex items-center justify-between mb-[var(--spacing-sm)]", className)}>
-      <h3 className="typo-title truncate">{title}</h3>
+    <div className={cn("flex items-center justify-between mb-(--spacing-sm)", className)}>
+      <h3 className="typo-title truncate" title={title}>{title}</h3>
+      
+      {badge && (
+        badge
+      )}
+
       {actions && (
         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
           {actions}
@@ -85,7 +92,7 @@ export const CardMeta: React.FC<CardMetaProps> = ({ children, className }) => {
   return (
     <div
       className={cn(
-        "flex items-center gap-[var(--spacing-lg)] text-xs text-[hsl(var(--muted-foreground))]",
+        "flex items-center gap-(--spacing-lg) text-xs text-[hsl(var(--muted-foreground))]",
         className
       )}
     >
@@ -105,7 +112,7 @@ export const CardStatItem: React.FC<CardStatItemProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("flex items-center gap-[var(--spacing-sm)]", className)}>
+    <div className={cn("flex items-center gap-(--spacing-sm)", className)}>
       <WrapIcon icon={icon} size={size} withBg={withBg} />
       <span>{label}</span>
     </div>
@@ -117,7 +124,7 @@ export const CardContent: React.FC<{ className?: string; children: React.ReactNo
   className,
 }) => {
   return (
-    <div className={`flex flex-col gap-[var(--spacing-sm)] ${className || ""}`}>
+    <div className={`flex flex-col gap-(--spacing-sm) ${className || ""}`}>
       {children}
     </div>
   );
