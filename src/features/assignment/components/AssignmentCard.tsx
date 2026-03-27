@@ -15,11 +15,13 @@ interface Props {
     showActions?: boolean;
     totalSubmitted?: number;
     classroomId: number
+    onContextMenu?: (e: React.MouseEvent, assignment: Assignment) => void;
 }
 
 export const AssignmentCard = ({
     assignment,
     onClick,
+    onContextMenu,
     isSelect = false,
     totalStudent,
     showActions = false,
@@ -36,7 +38,7 @@ export const AssignmentCard = ({
     });
 
     return (
-        <Card isSelected={isSelect} onClick={() => onClick(assignment)}>
+        <Card isSelected={isSelect} onClick={() => onClick(assignment)} onContextMenu={(e) => onContextMenu?.(e, assignment)}>
             <CardContent>
                 <CardHeader
                     title={assignment.title}

@@ -1,13 +1,19 @@
+import { useState } from "react";
 import { ResizablePanel, ResizablePanelContainer, ResizablePanelDivider } from "@/shared/components/layout/ResizablePanel";
 import { Outlet } from "react-router-dom";
 import { ChallengeLibraryBar } from "../components/ChallengeLibraryBar";
 import { useCreateNewChallenge } from "../hooks/useCreateChallenge";
+import { useDeleteChallenge } from "../hooks/useChallengeQuery";
+import { ConfirmDialog } from "@/shared/components/design/dialog/ConfirmDialog";
 
 export const ChallengeLibraryPage = () => {
     const { isCreating, createNewChallenge } = useCreateNewChallenge();
+    const deleteMutation = useDeleteChallenge();
+
+    const [deletingChallengeId, setDeletingChallengeId] = useState<number | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleCreateChallenge = async () => {
-        console.log("creating")
         try {
             await createNewChallenge();
         } catch (err) {
@@ -15,29 +21,63 @@ export const ChallengeLibraryPage = () => {
         }
     };
 
+    const handleRequestDelete = (challengeId: number) => {
+        setDeletingChallengeId(challengeId);
+        setIsDialogOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!deletingChallengeId) return;
+        try {
+            await deleteMutation.mutateAsync(deletingChallengeId);
+        } catch (err) {
+            console.error("Failed to delete challenge:", err);
+        } finally {
+            setIsDialogOpen(false);
+            setDeletingChallengeId(null);
+        }
+    };
+
     return (
-        <ResizablePanelContainer direction="horizontal" className="flex-1">
+        <>
+            <ResizablePanelContainer direction="horizontal" className="flex-1">
 
-            {/* MAIN BAR */}
-            <ResizablePanel defaultSize={35} minSize={25} maxSize={45}>
-                <ChallengeLibraryBar
-                    onCreateChallenge={handleCreateChallenge}
-                />
-            </ResizablePanel>
+                {/* LIBRARY BAR */}
+                <ResizablePanel defaultSize={35} minSize={25} maxSize={45}>
+                    <ChallengeLibraryBar
+                        onCreateChallenge={handleCreateChallenge}
+                        onEditChallenge={(id) => console.log("Edit", id)}
+                        onRequestDeleteChallenge={handleRequestDelete}
+                    // optionally: onDuplicateChallenge={(id) => console.log("Duplicate", id)}
+                    />
+                </ResizablePanel>
 
-            <ResizablePanelDivider />
+                <ResizablePanelDivider />
 
-            {/* MAIN PANEL */}
-            <ResizablePanel defaultSize={65} minSize={55} maxSize={75}>
-                {isCreating ? (
-                    <div className="flex items-center justify-center h-full text-gray-500 text-sm">
-                        Creating new challenge...
-                    </div>
-                ) : (
-                    <Outlet />
-                )}
-            </ResizablePanel>
+                {/* MAIN PANEL */}
+                <ResizablePanel defaultSize={65} minSize={55} maxSize={75}>
+                    {isCreating ? (
+                        <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                            Creating new challenge...
+                        </div>
+                    ) : (
+                        <Outlet />
+                    )}
+                </ResizablePanel>
 
-        </ResizablePanelContainer>
+            </ResizablePanelContainer>
+
+            {/* DELETE CONFIRM DIALOG */}
+            <ConfirmDialog
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+                title="Delete Challenge"
+                confirmText="Delete"
+                cancelText="Cancel"
+                onConfirm={handleConfirmDelete}
+            >
+                Are you sure you want to delete this challenge? This action cannot be undone.
+            </ConfirmDialog>
+        </>
     );
 };

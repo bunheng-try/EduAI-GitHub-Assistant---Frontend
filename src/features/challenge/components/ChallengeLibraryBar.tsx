@@ -8,24 +8,43 @@ import { PanelHeader } from "@/shared/components/design/PanelHeader";
 import { Button } from "@/shared/components/ui/button";
 import { Plus } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ContextMenu } from "@/shared/components/context-menu/ContextMenu";
+import { useChallengeContextMenu } from "../hooks/useChallengeContextMenu";
 
 interface ChallengeLibraryBarProps {
   onCreateChallenge: () => void;
+  onEditChallenge: (id: number) => void;
+  onDuplicateChallenge?: (id: number) => void;
+  onRequestDeleteChallenge: (id: number) => void;
 }
 
 export const ChallengeLibraryBar = ({
   onCreateChallenge,
+  onEditChallenge,
+  onDuplicateChallenge,
+  onRequestDeleteChallenge,
 }: ChallengeLibraryBarProps) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { challengeId } = useParams();
   const { data: challenges = [], isLoading } = useChallenges();
   const [search, setSearch] = useState("");
-  const { challengeId } = useParams()
 
   const filtered = challenges.filter(
     (c) =>
       c.title.toLowerCase().includes(search.toLowerCase()) ||
       c.description?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const {
+    contextMenu,
+    contextMenuItems,
+    handleChallengeContextMenu,
+    closeContextMenu,
+  } = useChallengeContextMenu({
+    onEdit: onEditChallenge,
+    onDuplicate: onDuplicateChallenge,
+    onRequestDelete: onRequestDeleteChallenge,
+  });
 
   if (isLoading) return <div className="p-6">Loading...</div>;
 
@@ -58,17 +77,32 @@ export const ChallengeLibraryBar = ({
           <ChallengeEmptyState onCreate={onCreateChallenge} />
         ) : (
           filtered.map((challenge) => (
-            <ChallengeCard
+            <div
               key={challenge.id}
-              challenge={challenge}
-              variant="library"
-              isSelected={Number(challengeId) === challenge.id}
-              showDescription
-              onSelect={(id) => navigate(`/challenge-library/challenges/${id}`)}
-            />
+              onContextMenu={(e) => handleChallengeContextMenu(e, challenge.id)}
+            >
+              <ChallengeCard
+                challenge={challenge}
+                variant="library"
+                isSelected={Number(challengeId) === challenge.id}
+                showDescription
+                onSelect={(id) =>
+                  navigate(`/challenge-library/challenges/${id}`)
+                }
+              />
+            </div>
           ))
         )}
       </PanelContent>
+
+      {contextMenu && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          items={contextMenuItems}
+          onClose={closeContextMenu}
+        />
+      )}
     </Panel>
   );
 };
