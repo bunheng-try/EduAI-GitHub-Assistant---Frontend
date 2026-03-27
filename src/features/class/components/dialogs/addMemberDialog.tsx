@@ -1,6 +1,8 @@
 import { CustomDialog } from "@/shared/components/design/dialog/CustomDialog";
 import type { Member, AddMemberDto } from "../../apis/member.api";
 import type { SelectedStudent } from "../../hooks/useInviteStudent";
+import { useState } from "react";
+import { Badge } from "@/shared/components/ui/badge";
 
 interface InviteDialogProps {
   open: boolean;
@@ -38,46 +40,46 @@ export default function InviteDialog({
       onCancel={() => onOpenChange(false)}
       title="Invite Students"
       bodyContent={
-        <div className="flex flex-col gap-2">
-          {/* Input field */}
+        <div className="flex flex-col gap-3">
+          {/* Email input */}
           <input
             type="email"
             value={email}
             placeholder="Enter student email"
-            className="w-full border rounded-md p-2"
+            className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary))]"
             onChange={(e) => onEmailChange(e.target.value)}
           />
 
-          {/* Selected student tags */}
+          {/* Selected students badges */}
           {selectedStudents.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-2">
               {selectedStudents.map((s) => (
-                <div
+                <Badge
                   key={s.userId}
-                  className="bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center gap-1"
+                  className="flex items-center gap-2 cursor-pointer bg-[hsl(var(--surface-muted))] text-[hsl(var(--foreground))] px-3 py-1"
+                  onClick={() => removeSelectedStudent(s.userId)}
                 >
-                  {s.name}
-                  <button
-                    className="text-blue-600 hover:text-blue-900"
-                    onClick={() => removeSelectedStudent(s.userId)}
-                  >
-                    ×
-                  </button>
-                </div>
+                  <div className="flex flex-col leading-tight">
+                    <span className="font-medium">{s.name}</span>
+                    <span className="text-[0.7rem] text-[hsl(var(--muted-foreground))]">{s.email}</span>
+                  </div>
+                  <span className="text-[hsl(var(--destructive))] font-bold">×</span>
+                </Badge>
               ))}
             </div>
           )}
 
-          {/* Search results dropdown */}
+          {/* Search results */}
           {searchResults.length > 0 && (
-            <div className="border rounded-md mt-1 bg-white shadow max-h-40 overflow-y-auto">
+            <div className="border rounded-md mt-1 bg-white shadow max-h-44 overflow-y-auto">
               {searchResults.map((s) => (
                 <div
-                  key={s.id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  key={s.userId}
+                  className="p-2 hover:bg-[hsl(var(--surface-hover))] cursor-pointer flex flex-col"
                   onClick={() => selectStudent(s)}
                 >
-                  {s.name}
+                  <span className="font-medium">{s.name}</span>
+                  <span className="text-[0.75rem] text-[hsl(var(--muted-foreground))]">{s.email}</span>
                 </div>
               ))}
             </div>

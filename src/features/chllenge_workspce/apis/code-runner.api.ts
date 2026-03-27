@@ -21,10 +21,12 @@ export interface TestCodeResult {
     results: TestCaseResult[];
 }
 
+export type JobState = "queue" | "completed" | "failed";
+
 // Job status response
 export interface JobStatusResponse {
     jobId: string;
-    state: "queue" | "completed" | "failed";
+    state: JobState;
     result?: TestCodeResult; // fixed to handle multiple test cases
 }
 

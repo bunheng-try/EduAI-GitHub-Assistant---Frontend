@@ -42,7 +42,7 @@ export const AssignmentCard = ({
                     title={assignment.title}
                     badge={
                         <Badge variant={status === "Published" ? "status-published" : "status-draft"}>
-                            {status}
+                            {status.toLocaleUpperCase()}
                         </Badge>
                     }
                     actions={

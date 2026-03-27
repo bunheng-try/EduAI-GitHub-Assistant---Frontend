@@ -23,7 +23,12 @@ export const useJobStatus = (jobId: string | null) => {
         },
         refetchInterval: (query) => {
             const data = query.state.data;
-            return data?.state === "queue" ? 300 : false;
+
+            if (!data) return 1000;
+
+            return data.state === "completed" || data.state === "failed"
+                ? false
+                : 1000;
         },
     });
 };

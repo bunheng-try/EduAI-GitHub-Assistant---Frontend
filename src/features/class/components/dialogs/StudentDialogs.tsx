@@ -1,4 +1,4 @@
-import InviteDialog from "./InviteDialog";
+import InviteDialog from "./addMemberDialog";
 import ConfirmRemoveDialog from "./ConfirmremoveDialog";
 import ContextMenu from "../students/Contextmenu";
 import type { Member } from "../../apis/member.api";

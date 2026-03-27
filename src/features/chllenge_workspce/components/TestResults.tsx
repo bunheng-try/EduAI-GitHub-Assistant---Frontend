@@ -1,4 +1,6 @@
 import TestCase from "./TestCases"
+import Loading from "@/shared/components/loading/Loading"
+import { StatusPanel } from "@/shared/components/empty_state/StatusPanel"
 
 interface ResultType {
     input: string
@@ -9,12 +11,34 @@ interface ResultType {
 }
 
 interface TestResultsProps {
-    results: ResultType[]
+    results: ResultType[],
+    isError: boolean,
+    isRunning: boolean,
 }
 
-export default function TestResults({ results }: TestResultsProps) {
+export default function TestResults({ results, isError, isRunning }: TestResultsProps) {
+    if (isRunning) {
+        return <Loading message="Running tests..." />;
+    }
+
+    if (isError) {
+        return (
+            <StatusPanel
+                type="error"
+                title="Test run failed"
+                description="Something went wrong while running the tests. Please check your code and try again."
+            />
+        );
+    }
+
     if (results.length === 0) {
-        return <div className="text-sm text-gray-500">No test results yet.</div>
+        return (
+            <StatusPanel
+                type="info"
+                title="No test results yet"
+                description="Run your tests to see results here."
+            />
+        );
     }
 
     return (

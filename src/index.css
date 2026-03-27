@@ -83,8 +83,10 @@
      Status
      ========================= */
 
-  --status-draft: 210 35% 80%;
-  --status-published: 140 40% 80%;
+  --status-draft: 200 40% 80%;
+  /* soft blue */
+  --status-published: 150 40% 80%;
+  /* soft green */
   --status-foreground: 0 0% 20%;
 
   /* =========================
@@ -209,4 +211,41 @@
     text-transform: uppercase;
     color: hsl(var(--muted-foreground));
   }
+
+    /* Spinner animation */
+    @keyframes rotate360 {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  
+    @keyframes prixClipFix {
+      0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+      }
+  
+      25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+      }
+  
+      50% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+      }
+  
+      75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+      }
+  
+      100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+      }
+    }
+  
+    .animate-rotate360 {
+      animation: rotate360 1s linear infinite;
+    }
+  
+    .animate-prixClipFix {
+      animation: prixClipFix 2s linear infinite;
+    }
 }
