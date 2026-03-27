@@ -18,7 +18,7 @@ export default function TestCase({
     passed,
     isHidden = false,
 }: TestCaseProps) {
-    const [collapsed, setCollapsed] = useState(false)
+    const [collapsed, setCollapsed] = useState(true)
 
     const Chip = ({ label }: { label: string }) => (
         <span className="px-2 py-0.5 rounded-full text-xs font-semibold text-white bg-gray-500">
