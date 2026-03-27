@@ -7,6 +7,7 @@ interface CardProps {
   children: React.ReactNode;
   isSelected?: boolean;
   onClick?: () => void;
+  onContextMenu?: (e: React.MouseEvent<HTMLDivElement>) => void
   className?: string;
 }
 
@@ -37,6 +38,7 @@ export const Card: React.FC<CardProps> = ({
   children,
   isSelected = false,
   onClick,
+  onContextMenu,
   className,
 }) => {
   const clickable = !!onClick;
@@ -44,6 +46,7 @@ export const Card: React.FC<CardProps> = ({
   return (
     <div
       onClick={onClick}
+      onContextMenu={onContextMenu}
       className={cn(
         "group rounded-xl border transition-colors",
         "px-(--card-padding-x) py-(--card-padding-y)",

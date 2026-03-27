@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Plus, Library, User } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { Plus, Library } from "lucide-react"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import { LeftBarButton } from "./LeftBarButton"
 import { CreateClassDialog } from "@/features/classes/components/CreateClassDialog"
@@ -19,6 +19,8 @@ import { useGuardedNavigate } from "@/shared/hooks/useGuardedNavigated"
 
 export function LeftBar() {
   const navigate = useGuardedNavigate();
+  const location = useLocation();
+  const isLibraryActive = location.pathname.startsWith("/challenge-library");
   const { classroomId } = useClassroomRoute()
   const { data: classes = [], isLoading, isError, refetch } = useClassrooms()
   const [openCreate, setOpenCreate] = useState(false)
@@ -78,6 +80,7 @@ export function LeftBar() {
             icon={<Library className="h-5 w-5" />}
             tooltip="Exercise library"
             onClick={() => navigate('challenge-library')}
+            active={isLibraryActive}
           />
           <UserProfileDropdown bgColor={currentUser?.profile.color || "var(--primary"}/>
         </div>
