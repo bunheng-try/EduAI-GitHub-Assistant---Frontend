@@ -1,61 +1,105 @@
-import { useState, useEffect } from "react";
-import type { Member, AddMemberDto } from "../apis/member.api";
+import { useState, useMemo } from "react";
+import type { Member, UserFromApi, AddMemberDto } from "../apis/member.api";
 import { useAddMember, useUserByEmail } from "./useMemberQuery";
 
-export type SelectedStudent = AddMemberDto & { name: string };
+export type SelectedStudent = AddMemberDto & { name: string; email: string };
 
-export function useInviteStudent(classroomId: number | null) {
+export function useInviteStudent(classroomId: number | null, existingMembers: Member[] = []) {
     const [email, setEmail] = useState("");
-    const [searchResults, setSearchResults] = useState<Member[]>([]);
     const [selectedStudents, setSelectedStudents] = useState<SelectedStudent[]>([]);
 
-    const { data: users, refetch } = useUserByEmail(email.trim() || null);
+    // Fetch users by email
+    const { data: users = [], refetch } = useUserByEmail(email.trim() || null);
+
+    // Map and filter users for search results
+    const searchResults = useMemo(() => {
+        const lowerEmail = email.toLowerCase().trim();
+        return users
+            .filter(u => u.email.toLowerCase().includes(lowerEmail))
+            .map(u => ({
+                userId: u.id,
+                name: u.name,
+                email: u.email,
+                role: "STUDENT" as const,
+                alreadySelected:
+                    selectedStudents.some(s => s.userId === u.id) ||
+                    existingMembers.some(m => m.userId === u.id),
+            }));
+    }, [users, email, selectedStudents, existingMembers]);
+
+    // Mutation hook (called at top-level, not inside functions)
     const addMember = useAddMember(classroomId);
 
-    useEffect(() => {
-        if (users && users.length > 0) {
-            setSearchResults(users);
+    // Select a student
+    const selectStudent = (student: UserFromApi) => {
+        const alreadySelected =
+            selectedStudents.some(s => s.userId === student.id) ||
+            existingMembers.some(m => m.userId === student.id);
 
-            // Auto-select if only 1 match
-            if (users.length === 1) {
-                setSelectedStudents([{ userId: users[0].id, role: "STUDENT" , name: users[0].name}]);
-            }
-        } else {
-            setSearchResults([]);
-            setSelectedStudents([]);
-        }
-    }, [users]);
-
-    const selectStudent = (student: Member) => {
-        if (!selectedStudents.find((s) => s.userId === student.id)) {
-            setSelectedStudents([...selectedStudents, { userId: student.id, role: "STUDENT", name: student.name }]);
+        if (!alreadySelected) {
+            setSelectedStudents(prev => [
+                ...prev,
+                {
+                    userId: student.id,
+                    role: "STUDENT",
+                    name: student.name,
+                    email: student.email,
+                },
+            ]);
         }
     };
 
+    // Remove from selection
     const removeSelectedStudent = (userId: number) => {
-        setSelectedStudents(selectedStudents.filter((s) => s.userId !== userId));
+        setSelectedStudents(prev => prev.filter(s => s.userId !== userId));
     };
 
+    // Update role for a selected student
+    const updateStudentRole = (userId: number, role: "STUDENT" | "TEACHER") => {
+        setSelectedStudents(prev =>
+            prev.map(s => (s.userId === userId ? { ...s, role } : s))
+        );
+    };
+
+    // Invite selected students
     const onInvite = async (): Promise<{ success: boolean; error?: string }> => {
-        if (selectedStudents.length === 0)
-            return { success: false, error: "No student selected" };
+        if (!classroomId) return { success: false, error: "Classroom not selected" };
+        if (selectedStudents.length === 0) return { success: false, error: "No student selected" };
 
         try {
-            // Wrap in { members: [...] } to match backend expectation
-            await addMember.mutateAsync({members: selectedStudents});
-            setEmail("");
-            setSelectedStudents([]);
-            setSearchResults([]);
+            await addMember.mutateAsync({
+                members: selectedStudents.map(s => ({ userId: Number(s.userId), role: s.role })),
+            });
+            setEmail(""); // clear input
+            setSelectedStudents([]); // clear selection
             return { success: true };
         } catch (err: any) {
+            console.error("Invite failed:", err);
             return { success: false, error: err?.message || "Failed to invite student" };
         }
     };
 
+    // Handle typing in email input
     const searchByEmail = (value: string) => {
         setEmail(value);
-        refetch();
+        if (value.trim()) refetch();
     };
 
-    return { email, searchByEmail, searchResults, selectedStudents, selectStudent, removeSelectedStudent, onInvite };
+    // Reset everything (call when dialog closes)
+    const resetAll = () => {
+        setEmail("");
+        setSelectedStudents([]);
+    };
+
+    return {
+        email,
+        searchByEmail,
+        searchResults,
+        selectedStudents,
+        selectStudent,
+        removeSelectedStudent,
+        updateStudentRole,
+        onInvite,
+        resetAll,
+    };
 }

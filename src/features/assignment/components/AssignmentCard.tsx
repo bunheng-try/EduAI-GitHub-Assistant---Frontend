@@ -5,6 +5,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { useAssignmentCard } from "../hooks/useAssignmentCard";
 import type { Assignment } from "@/features/assignment/apis/assignment.api";
 import { Button } from "@/shared/components/ui/button";
+import { useSubmissions } from "../hooks/useSubmissionQuery";
 
 interface Props {
     assignment: Assignment;
@@ -12,29 +13,38 @@ interface Props {
     isSelect?: boolean;
     totalStudent: number;
     showActions?: boolean;
+    totalSubmitted?: number;
+    classroomId: number
+    onContextMenu?: (e: React.MouseEvent, assignment: Assignment) => void;
 }
 
 export const AssignmentCard = ({
     assignment,
     onClick,
+    onContextMenu,
     isSelect = false,
     totalStudent,
     showActions = false,
+    // totalSubmitted
+    classroomId
 }: Props) => {
+    const { data: submissionsForAssignment = [] } = useSubmissions(classroomId, assignment.id);
+    const totalSubmitted = submissionsForAssignment.length;
 
     const { status, submissions, dueDate } = useAssignmentCard({
         assignment,
         totalStudent,
+        totalSubmitted
     });
 
     return (
-        <Card isSelected={isSelect} onClick={() => onClick(assignment)}>
+        <Card isSelected={isSelect} onClick={() => onClick(assignment)} onContextMenu={(e) => onContextMenu?.(e, assignment)}>
             <CardContent>
                 <CardHeader
                     title={assignment.title}
                     badge={
                         <Badge variant={status === "Published" ? "status-published" : "status-draft"}>
-                            {status}
+                            {status.toLocaleUpperCase()}
                         </Badge>
                     }
                     actions={

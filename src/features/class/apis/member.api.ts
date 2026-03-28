@@ -1,7 +1,7 @@
 import { httpClient } from "@/app/services/httpClient";
 
 export type Member = {
-    id: number;
+    userId: number;
     role: "STUDENT" | "OWNER" | "TEACHER";
     name: string;
     email: string;
@@ -20,9 +20,16 @@ export type AddMembersRequest = {
     members: AddMemberDto[];
 };
 
+export type UserFromApi = {
+    id: number;
+    name: string;
+    email: string;
+    profile?: any;
+};
+
 export const memberApi = {
     getUserByEmail: (email: string) =>
-        httpClient.get<Member[]>(`/users/${encodeURIComponent(email)}`),
+        httpClient.get<UserFromApi[]>(`/users/${encodeURIComponent(email)}`),
 
     addMember: (classroomId: number, dto: AddMembersRequest) =>
         httpClient.post<void, AddMembersRequest>(`/classrooms/${classroomId}/members`, dto),

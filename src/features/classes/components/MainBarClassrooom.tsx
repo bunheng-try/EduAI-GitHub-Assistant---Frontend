@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Panel, PanelContent } from "@/shared/components/design/Panel";
 import { PanelHeader } from "@/shared/components/design/PanelHeader";
 import MenuTabs from "@/shared/components/menu_tabs/MenuTabs";
@@ -8,23 +7,48 @@ import { ConfirmDialog } from "@/shared/components/design/dialog";
 import { EditClassDialog } from "./EditClassDialog";
 import { CreateAssignmentDialog } from "@/features/assignment/components/CreateAssignmentDialog";
 import { useClassroomRoute } from "@/features/classes/hooks/useClassroomRoute";
-import { useAssignmentClassrooms } from "@/features/assignment/hooks/useAssignmentQuery";
-import { useSelectedClassroom } from "../hooks/useClassroomQuery";
+import {
+  useAssignmentClassrooms,
+  useDeleteAssignment,
+  usePublishAssignment,
+} from "@/features/assignment/hooks/useAssignmentQuery";
 import { useClassroomActions } from "../hooks/useClassroomAction";
 import { useLeaveClassroom, useMembers } from "../../class/hooks/useMemberQuery";
 import { GraduationCap, Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import SettingsMenu from "./SettingMenu";
+import { AssignementEmptyState } from "@/features/assignment/components/empty/AssignementEmptyState";
+import { getInitials } from "@/shared/utils/strings";
+import { useGuardedNavigate } from "@/shared/hooks/useGuardedNavigated";
+import type { Assignment } from "@/features/assignment/apis/assignment.api";
+import { ContextMenu } from "@/shared/components/context-menu/ContextMenu";
+import { useAssignmentContextMenu } from "@/features/assignment/hooks/useAssignmentContextMenu";
+import ListSkeleton from "@/shared/components/loading-skeleton/ListSkeleton";
+import type { Classroom } from "../apis/classroom.api";
 
 type DialogKey = "edit" | "create" | "delete" | "leave";
 
-const MainBarClassroom = () => {
-  const navigate = useNavigate();
+interface MainBarClassroomProp {
+  classroom: Classroom;
+}
+
+const MainBarClassroom = ({ classroom }:MainBarClassroomProp) => {
+  const navigate = useGuardedNavigate();
   const { classroomId, assignmentId } = useClassroomRoute();
-  const { data: classroom } = useSelectedClassroom(classroomId);
+
+  // Queries
+  const { data: assignments = [], isLoading } = useAssignmentClassrooms(classroomId);
+  const { data: members = [], isLoading: isMembersLoading } = useMembers(classroomId);
+
+  // Mutations
   const { deleteClassroom, editClassroom } = useClassroomActions();
   const { mutate: leaveClassroom } = useLeaveClassroom();
+  const { mutate: deleteAssignment } = useDeleteAssignment();
+  const { mutate: publishAssignment } = usePublishAssignment();
+
+  // Local state
   const [selectedClass, setSelectedClass] = useState<{ id: number; name: string } | null>(null);
+  const [assignmentToDelete, setAssignmentToDelete] = useState<Assignment | null>(null);
 
   const [dialogs, setDialogs] = useState<Record<DialogKey, boolean>>({
     edit: false,
@@ -32,32 +56,10 @@ const MainBarClassroom = () => {
     delete: false,
     leave: false,
   });
-  const openDialog = (key: DialogKey) => setDialogs((prev) => ({ ...prev, [key]: true }));
-  const closeDialog = (key: DialogKey) => setDialogs((prev) => ({ ...prev, [key]: false }));
 
   const isStudent = classroom?.role === "STUDENT";
-
+  const totalStudents = members.filter((m) => m.role === "STUDENT").length;
   const [activeTab, setActiveTab] = useState<string>(isStudent ? "Upcoming" : "All");
-  useEffect(() => {
-    setActiveTab(isStudent ? "Upcoming" : "All");
-  }, [classroomId, isStudent]);
-
-  const { data: assignments = [], isLoading } = useAssignmentClassrooms(classroomId);
-  const { data: members = [] } = useMembers(classroomId);
-
-  const filteredAssignments = useMemo(() => {
-    return assignments.filter((a) => {
-      if (isStudent) {
-        const isPast = new Date(a.dueAt) < new Date();
-        if (activeTab === "Upcoming") return !isPast;
-        if (activeTab === "Past Due") return isPast;
-        return true;
-      }
-      if (activeTab === "Active") return a.isPublished;
-      if (activeTab === "Draft") return !a.isPublished;
-      return true;
-    });
-  }, [assignments, activeTab, isStudent]);
 
   const tabs = isStudent
     ? [
@@ -71,6 +73,53 @@ const MainBarClassroom = () => {
       { key: "Draft", label: "Draft" },
     ];
 
+  const filteredAssignments = useMemo(() => {
+    return assignments.filter((a) => {
+      if (isStudent) {
+        const isPast = new Date(a.dueAt) < new Date();
+        if (activeTab === "Upcoming") return !isPast;
+        if (activeTab === "Past Due") return isPast;
+        if (activeTab === "Completed") return false; // TODO
+        return true;
+      }
+
+      if (activeTab === "Active") return a.isPublished;
+      if (activeTab === "Draft") return !a.isPublished;
+      return true;
+    });
+  }, [assignments, activeTab, isStudent]);
+
+  const openDialog = (key: DialogKey) =>
+    setDialogs((prev) => ({ ...prev, [key]: true }));
+
+  const closeDialog = (key: DialogKey) =>
+    setDialogs((prev) => ({ ...prev, [key]: false }));
+
+  const {
+    contextMenu,
+    contextMenuItems,
+    handleAssignmentContextMenu,
+    closeContextMenu,
+  } = useAssignmentContextMenu({
+    classroomId,
+    isStudent,
+    navigate,
+    publishAssignment,
+    onRequestDelete: (assignment) => setAssignmentToDelete(assignment),
+  });
+
+  useEffect(() => {
+    setActiveTab(isStudent ? "Upcoming" : "All");
+  }, [classroomId, isStudent]);
+
+
+  useEffect(() => {
+    if (classroom === undefined) return;
+    if (!classroom) navigate("/");
+  }, [classroom, navigate]);
+
+  if (!classroom) return null;
+
   return (
     <>
       <Panel className="h-full w-full">
@@ -78,27 +127,31 @@ const MainBarClassroom = () => {
           topLeft={
             <>
               <div className="flex items-center justify-center min-w-11 min-h-11 bg-[hsl(var(--primary))] rounded-lg text-white font-bold text-lg">
-                {classroom?.name?.substring(0, 2).toUpperCase()}
+                {getInitials(classroom.name?.toUpperCase() || "C")}
               </div>
-              <h2 className="typo-title truncate">{classroom?.name}</h2>
+              <h2 className="typo-title truncate">{classroom.name}</h2>
             </>
           }
           topRight={
             <>
-              {classroom && (
-                <SettingsMenu
-                  classroomId={classroomId}
-                  classroom={classroom}
-                  onEdit={(id) => {
-                    setSelectedClass({ id, name: classroom.name });
-                    openDialog("edit");
-                  }}
-                  onDelete={() => openDialog("delete")}
-                  onLeave={() => openDialog("leave")}
-                />
-              )}
+              <SettingsMenu
+                classroomId={classroomId}
+                classroom={classroom}
+                onEdit={(id) => {
+                  setSelectedClass({ id, name: classroom.name });
+                  openDialog("edit");
+                }}
+                onDelete={() => openDialog("delete")}
+                onLeave={() => openDialog("leave")}
+              />
+
               {!isStudent && (
-                <Button variant="ghost" size="icon" onClick={() => openDialog("create")}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => openDialog("create")}
+                  animated
+                >
                   <Plus className="w-5 h-5 text-[hsl(var(--primary))]" />
                 </Button>
               )}
@@ -112,37 +165,80 @@ const MainBarClassroom = () => {
               >
                 <GraduationCap className="w-4 h-4" />
                 <span>
-                  {members.length ?? 0} Member{members.length > 1 ? "s" : ""}
+                  {isMembersLoading ? "Loading..." : `${members.length} Member${members.length > 1 ? "s" : ""}`}
                 </span>
               </div>
             )
           }
-          tabs={<MenuTabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />}
+          tabs={
+            <MenuTabs
+              tabs={tabs}
+              activeTab={activeTab}
+              onChange={setActiveTab}
+            />
+          }
         />
 
         <PanelContent className="flex flex-col gap-2 p-4">
           {isLoading ? (
-            <p>Loading assignments...</p>
-          ) : filteredAssignments.length === 0 ? (
-            <p>No assignments found</p>
+            <ListSkeleton />
+          ): filteredAssignments.length === 0 ? (
+            <AssignementEmptyState onCreate={() => openDialog("create")} />
           ) : (
-            filteredAssignments
-              .slice()
-              .sort((a, b) => a.id - b.id)
-              .map((a) => (
-                <AssignmentCard
-                  key={a.id}
-                  assignment={a}
-                  isSelect={a.id === assignmentId}
-                  onClick={() => navigate(`/classrooms/${classroomId}/assignments/${a.id}`)}
-                  totalStudent={67}
-                />
-              ))
+            filteredAssignments.map((a) => (
+              <AssignmentCard
+                key={a.id}
+                assignment={a}
+                isSelect={a.id === assignmentId}
+                onClick={() =>
+                  navigate(`/classrooms/${classroomId}/assignments/${a.id}`)
+                }
+                onContextMenu={handleAssignmentContextMenu}
+                totalStudent={totalStudents}
+                classroomId={classroomId}
+              />
+            ))
           )}
         </PanelContent>
       </Panel>
 
-      {/* Dialogs */}
+      {/* Context Menu */}
+      {contextMenu && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          items={contextMenuItems}
+          onClose={closeContextMenu}
+        />
+      )}
+
+      {/* Delete Assignment Confirm */}
+      <ConfirmDialog
+        open={!!assignmentToDelete}
+        onOpenChange={(open) => {
+          if (!open) setAssignmentToDelete(null);
+        }}
+        title="Delete Assignment"
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={() => {
+          if (!assignmentToDelete) return;
+
+          deleteAssignment({
+            classroomId,
+            assignmentId: assignmentToDelete.id,
+          });
+
+          setAssignmentToDelete(null);
+        }}
+      >
+        <p>
+          Are you sure you want to delete{" "}
+          <strong>{assignmentToDelete?.title}</strong>?
+        </p>
+      </ConfirmDialog>
+
+      {/* Delete Classroom Confirm */}
       <ConfirmDialog
         open={dialogs.delete}
         onOpenChange={() => closeDialog("delete")}
@@ -150,13 +246,14 @@ const MainBarClassroom = () => {
         confirmText="Delete"
         cancelText="Cancel"
         onConfirm={() => {
-          if (classroomId) deleteClassroom(classroomId);
+          deleteClassroom(classroomId);
           closeDialog("delete");
         }}
       >
         <p>This action cannot be undone.</p>
       </ConfirmDialog>
 
+      {/* Leave Classroom Confirm */}
       <ConfirmDialog
         open={dialogs.leave}
         onOpenChange={() => closeDialog("leave")}
@@ -170,22 +267,25 @@ const MainBarClassroom = () => {
         <p>Are you sure you want to leave this classroom?</p>
       </ConfirmDialog>
 
+      {/* Edit Classroom */}
       <EditClassDialog
         open={dialogs.edit}
         onClose={() => closeDialog("edit")}
         initialName={selectedClass?.name || ""}
-        onConfirm={(name) =>
-          selectedClass && editClassroom(selectedClass.id, name)
-        }
+        onConfirm={(name) => {
+          if (!selectedClass) return;
+          editClassroom(selectedClass.id, name);
+        }}
       />
 
-      {classroomId && (
-        <CreateAssignmentDialog
-          open={dialogs.create}
-          onOpenChange={(open) => setDialogs((prev) => ({ ...prev, create: open }))}
-          classroomId={classroomId}
-        />
-      )}
+      {/* Create Assignment */}
+      <CreateAssignmentDialog
+        open={dialogs.create}
+        onOpenChange={(open) =>
+          setDialogs((prev) => ({ ...prev, create: open }))
+        }
+        classroomId={classroomId}
+      />
     </>
   );
 };

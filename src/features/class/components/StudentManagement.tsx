@@ -37,7 +37,7 @@ export default function StudentManagement() {
   };
 
   const exportStudents = () => {
-    const csv = ["Student,Email", ...members.map(m => `${m.name},${m.id}@student.cadt.com`)].join("\n");
+    const csv = ["Student,Email", ...members.map(m => `${m.name},${m.userId}@student.cadt.com`)].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

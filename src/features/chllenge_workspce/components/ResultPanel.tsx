@@ -10,8 +10,10 @@ import CustomRunner from "./CustomRunner"
 import { useWorkspaceStore } from "../stores/useWorkspaceStore"
 import { useRunTestCode, useRunCode, useJobStatus } from "../hooks/useCodeRunnerQuery"
 import type { AssignmentChallenge } from "@/features/assignment/apis/assignment.api"
+import { LoadingButton } from "@/shared/components/ui/loadingButton"
 
 type Tab = "tests" | "custom"
+export type RunState = "loading" | "idle";
 
 export default function ResultPanel({ currentChallenge }: { currentChallenge: AssignmentChallenge }) {
     const [activeTab, setActiveTab] = useState<Tab>("tests")
@@ -24,15 +26,13 @@ export default function ResultPanel({ currentChallenge }: { currentChallenge: As
     const runTestCodeMutation = useRunTestCode()
     const runCodeMutation = useRunCode()
     const jobQuery = useJobStatus(jobId)
+    const [runState, setRunState] = useState<RunState>("idle");
 
     const handleRun = async () => {
         let challengeId = currentChallenge.originalChallenge_id;
         let language = currentChallenge.language;
 
-        console.log(`challengeid: ${challengeId}, language: ${language}`);
-        console.log(`job status: ${jobQuery.data?.state}`)
-        console.log(`job result: ${jobQuery.data?.result?.results}`)
-
+        
         if (activeTab === "tests") {
             const res = await runTestCodeMutation.mutateAsync({
                 challengeId,
@@ -47,12 +47,9 @@ export default function ResultPanel({ currentChallenge }: { currentChallenge: As
             })
             setJobId(res.jobId)
         }
-    }
 
-    useEffect(() => {
-        console.log(`job status: ${jobQuery.data?.state}`)
-        console.log(`job result: ${jobQuery.data?.result?.results}`)
-    }, [true])
+        setRunState("loading");
+    }
     
     useEffect(() => {
         if (jobQuery.data?.state === "completed" && jobQuery.data.result?.results) {
@@ -66,12 +63,18 @@ export default function ResultPanel({ currentChallenge }: { currentChallenge: As
 
             setResults(newResults);
         }
+
+        if (jobQuery.data?.state === "completed") setRunState("idle")
     }, [jobQuery.data]);
+    
+    const isRunning = runState === "loading"
+    const isError = jobQuery.data?.state === "failed";
 
     const tabs: TabItem<Tab>[] = [
         { key: "tests", label: "Tests Result" },
         { key: "custom", label: "Custom" }
     ]
+
 
     return (
         <Panel className="transition-all duration-300">
@@ -89,21 +92,24 @@ export default function ResultPanel({ currentChallenge }: { currentChallenge: As
                     </div>
                 }
                 topRight={
-                    <Button
+                    <LoadingButton
                         size="sm"
+                        spinnerSize={"sm"}
                         variant="outline"
+                        isLoading={isRunning}
+                        loadingText="Running…"
                         onClick={handleRun}
-                        className="text-[hsl(var(--primary))]"
+                        className="text-[hsl(var(--primary))] flex items-center gap-2"
                     >
                         <WrapIcon icon={Play} /> Run
-                    </Button>
+                    </LoadingButton>
                 }
                 tabs={
                     <MenuTabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
                 }
             />
             <PanelContent>
-                {activeTab === "tests" && <TestResults results={results} />}
+                {activeTab === "tests" && <TestResults results={results} isError={isError} isRunning={isRunning} />}
                 {/* {activeTab === "custom" && <CustomRunner jobId={jobId} />} */}
             </PanelContent>
         </Panel>
