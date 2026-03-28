@@ -18,12 +18,20 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src")
     }
   },
-  server: {                         
+  server: {
     host: true,
     port: 5173,
+    hmr: {
+      host: 'localhost',   
+      port: 5173,
+    },
+    watch: {
+      usePolling: true,    
+      interval: 300,
+    },
     proxy: {
       '/api': {
-        target: 'http://app:3000',
+        target: process.env.BACKEND_URL || 'http://localhost:3000',  // dynamic target
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       }
@@ -33,8 +41,6 @@ export default defineConfig({
     projects: [{
       extends: true,
       plugins: [
-      // The plugin will run tests for the stories defined in your Storybook config
-      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
       storybookTest({
         configDir: path.join(dirname, '.storybook')
       })],
@@ -53,8 +59,6 @@ export default defineConfig({
     }, {
       extends: true,
       plugins: [
-      // The plugin will run tests for the stories defined in your Storybook config
-      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
       storybookTest({
         configDir: path.join(dirname, '.storybook')
       })],
