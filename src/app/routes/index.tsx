@@ -23,6 +23,7 @@ import HeaderSkeleton from "@/shared/components/loading-skeleton/HeaderSkeleton"
 import PanelSkeleton from "@/shared/components/loading-skeleton/PanelSkeleton";
 import SkeletonBox from "@/shared/components/loading-skeleton/SkeletonBox";
 import ListSkeleton from "@/shared/components/loading-skeleton/ListSkeleton";
+import TeacherSubmissionViewPage from "@/features/assignment/pages/TeacherSubmissionViewPage";
 
 const router = createBrowserRouter([
   { path: "*", element: <NotFoundPage />},
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
   {
     path: "classrooms/:classroomId/assignments/:assignmentId/workspace",
     element: <ChallengeWorkspace />
+  },
+  {
+    path: "classrooms/:classroomId/assignments/:assignmentId/submissions/:submissionId/review",
+    element: <TeacherSubmissionViewPage />,
   },
   {
     path: "/showroom",

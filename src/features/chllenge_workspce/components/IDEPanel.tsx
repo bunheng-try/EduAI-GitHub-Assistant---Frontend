@@ -10,15 +10,14 @@ import { WrapIcon } from "@/shared/components/ui/wrapIcon";
 interface IDEPanelProps {
     challengeId?: number;
     language?: string;
+    readOnly?: boolean;
 }
 
-const IDEPanel: React.FC<IDEPanelProps> = ({ challengeId, language = "c" }) => {
+const IDEPanel: React.FC<IDEPanelProps> = ({ challengeId, language = "c", readOnly = false }) => {
     const code = useWorkspaceStore((s) => s.codes[challengeId!] ?? "");
-
     const setCode = useWorkspaceStore((s) => s.setCode);
     const resetCode = useWorkspaceStore((s) => s.resetCode);
-    const dirtySet = new Set(useWorkspaceStore.getState().dirtyChallenges);
-    const isDirty = dirtySet.has(challengeId!);
+    const isDirty = new Set(useWorkspaceStore.getState().dirtyChallenges).has(challengeId!);
 
     const [line, setLine] = useState(1);
     const [column, setColumn] = useState(1);
@@ -47,16 +46,22 @@ const IDEPanel: React.FC<IDEPanelProps> = ({ challengeId, language = "c" }) => {
                     </div>
                 }
                 topRight={
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="flex items-center gap-1 text-[hsl(var(--muted-foreground))]"
-                        onClick={() => resetCode(challengeId!)}
-                        disabled={!isDirty}
-                    >
-                        <WrapIcon icon={RefreshCw} />
-                        Reset
-                    </Button>
+                    readOnly ? (
+                        <span className="typo-caption text-[hsl(var(--muted-foreground))] px-2 py-1">
+                            Read-only
+                        </span>
+                    ) : (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="flex items-center gap-1 text-[hsl(var(--muted-foreground))]"
+                            onClick={() => resetCode(challengeId!)}
+                            disabled={!isDirty}
+                        >
+                            <WrapIcon icon={RefreshCw} />
+                            Reset
+                        </Button>
+                    )
                 }
             />
 
@@ -66,11 +71,13 @@ const IDEPanel: React.FC<IDEPanelProps> = ({ challengeId, language = "c" }) => {
                     defaultLanguage={language}
                     theme="vs-dark"
                     value={code}
-                    onChange={(value) => setCode(challengeId!, value || "")}
+                    onChange={readOnly ? undefined : (value) => setCode(challengeId!, value || "")}
                     options={{
                         fontSize: 14,
                         minimap: { enabled: false },
                         automaticLayout: true,
+                        readOnly,
+                        domReadOnly: readOnly,
                     }}
                     onMount={handleEditorMount}
                 />

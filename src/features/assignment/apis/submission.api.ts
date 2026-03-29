@@ -4,12 +4,19 @@ export interface SubmissionCode {
     code: string;
 }
 
+export type SubmissionStatus =
+    | "DRAFT"
+    | "SUBMITTED"
+    | "GRADING"
+    | "GRADED"
+    | "EVALUATED";
+
 export interface Submission {
     id: number;
     assignmentId: number;
     userId: number;
 
-    status: "DRAFT" | "SUBMITTED";
+    status: SubmissionStatus;
 
     totalScore?: number;
     submittedAt?: string;
@@ -26,6 +33,11 @@ export interface CreateSubmissionDto {
 
 export interface UpdateSubmissionDto {
     codes: SubmissionCode[];
+}
+
+export interface GradeSubmissionDto {
+    totalScore: number;
+    feedback?: string;
 }
 
 //Joined with student name
@@ -63,4 +75,9 @@ export const submissionsApi = {
             `/classrooms/${classroomId}/assignments/${assignmentId}/submissions/${submissionId}/turn-in`,
             undefined
         ),
+    grade: (classroomId: number, assignmentId: number, submissionId: number, dto: GradeSubmissionDto) =>
+        httpClient.patch<Submission, GradeSubmissionDto>(
+            `/classrooms/${classroomId}/assignments/${assignmentId}/submissions/${submissionId}/grade`,
+            dto
+        ), 
 };
