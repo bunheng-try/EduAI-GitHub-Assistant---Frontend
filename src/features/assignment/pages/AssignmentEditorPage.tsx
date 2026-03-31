@@ -117,6 +117,8 @@ const AssignmentEditor = () => {
     setHasUnsavedChanges(false);
   };
 
+  console.log('Draft', draft)
+
   return (
     <>
     <Panel>

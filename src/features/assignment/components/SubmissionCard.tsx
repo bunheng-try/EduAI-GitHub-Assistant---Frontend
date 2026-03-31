@@ -4,13 +4,16 @@ import { Check, Clock, AlertTriangle } from "lucide-react";
 import type {  } from "@/shared/types/types";
 import { getInitials } from "@/shared/utils/strings";
 import type { SubmissionWithStudentName } from "../apis/submission.api";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface SubmissionCardProps {
   submission: SubmissionWithStudentName;
 }
 
 export const SubmissionCard = ({ submission }: SubmissionCardProps) => {
-  const { name, submittedAt, status, totalScore, createdAt } = submission;
+  const { name, submittedAt, status, totalScore, createdAt, id, assignmentId } = submission;
+  const { classId } = useParams();
+  const navigate = useNavigate();
 
   const formattedDate = new Date(submittedAt ?? createdAt).toLocaleString("en-GB", {
     day: "2-digit",
@@ -48,8 +51,13 @@ export const SubmissionCard = ({ submission }: SubmissionCardProps) => {
 
   const config = getStatus();
 
+  const handleClick = () => {
+    navigate(`/classrooms/${classId}/assignments/${assignmentId}/submissions/${id}/review`);
+  };
+
+
   return (
-    <Card >
+    <Card onClick={handleClick} className="cursor-pointer">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[var(--spacing-md)]">
           <div className="w-10 h-10 rounded-full bg-[hsl(var(--surface-muted))] flex items-center justify-center font-medium">
