@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AddChallengeLibraryModal } from "../components/AddChallengeLibraryModal";
 import { SectionContainer } from "@/shared/components/design/SectionContainer";
 import { Button } from "@/shared/components/ui/button";
@@ -23,7 +23,14 @@ const ChallengeTab = ({
   isAdding = false,
 }: ChallengeTabProps) => {
   const [libraryOpen, setLibraryOpen] = useState(false);
-  const { data: libraryChallenges } = useChallenges();
+  const { data: libraryChallenges = [] } = useChallenges();
+
+  const availableLibraryChallenges = useMemo(() => {
+    const existingIds = new Set(challenges.map((c) => c.id));
+    return libraryChallenges.filter((c) => !existingIds.has(c.id));
+  }, [libraryChallenges, challenges]);
+
+
   return (
     <SectionContainer title="Challenges">
       <div className="flex justify-between items-center mb-4">
@@ -53,7 +60,7 @@ const ChallengeTab = ({
           onAddSelected(selected);
           setLibraryOpen(false);
         }}
-        libraryChallenges={libraryChallenges!}
+        libraryChallenges={availableLibraryChallenges!}
       />
     </SectionContainer>
   );

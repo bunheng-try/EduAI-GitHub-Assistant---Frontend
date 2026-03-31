@@ -44,7 +44,7 @@ const AssignmentHeader = ({ classroomId, isDirty, assignment, updateField, save,
 
 
   const handlePublish = () => {
-    if (!assignment.assignmentChallenges || assignment.assignmentChallenges.length === 0) {
+    if (!assignment.codingChallenges || assignment.codingChallenges.length === 0) {
       setOpenErrorDialog(true);
       return;
     }

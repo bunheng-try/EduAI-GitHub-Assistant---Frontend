@@ -76,10 +76,10 @@ const MainBarClassroom = ({ classroom }:MainBarClassroomProp) => {
   const filteredAssignments = useMemo(() => {
     return assignments.filter((a) => {
       if (isStudent) {
-        const isPast = new Date(a.dueAt) < new Date();
+        const isPast = new Date(a.dueAt) < new Date() && a.submissionStatus !== "NOT SUBMITTED";
         if (activeTab === "Upcoming") return !isPast;
         if (activeTab === "Past Due") return isPast;
-        if (activeTab === "Completed") return false; // TODO
+        if (activeTab === "Completed") return a.submissionStatus !== "NOT SUBMITTED";
         return true;
       }
 

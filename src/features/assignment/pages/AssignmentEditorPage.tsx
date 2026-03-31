@@ -53,7 +53,7 @@ const AssignmentEditor = () => {
     hasUnsaved: hasUnsavedChallenge,
     save: saveChallenge,
     cancel: cancelChallenge,
-  } = useChallengesDirty(assignmentId, classroomId, draft?.assignmentChallenges || []);
+  } = useChallengesDirty(assignmentId, classroomId, draft?.codingChallenges || []);
 
   const { data: submissions = [], isLoading: isSubmissionsLoading, isError: isSubmissionsError } =
     useSubmissions(classroomId, assignmentId);
@@ -73,11 +73,7 @@ const AssignmentEditor = () => {
   
 
   useEffect(() => {
-    console.log("Submissions:", submissions);
-    console.log("Submission userIds:", submissions.map(s => s.userId));
-
-    console.log("Members:", members);
-    console.log("Member ids:", members.map(m => m.userId));
+    
   }, [submissions, members, isSubmissionsLoading, isMembersLoading])
 
   const setHasUnsavedChanges = useUnsavedChangesStore(
