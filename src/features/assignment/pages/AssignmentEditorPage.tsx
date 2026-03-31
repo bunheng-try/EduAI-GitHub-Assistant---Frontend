@@ -132,7 +132,7 @@ const AssignmentEditor = () => {
 
       <PanelContent>
         {activeTab === "challenge" && (
-          <ChallengeTab challenges={challengeDraft} onAddSelected={addChallenge} />
+          <ChallengeTab challenges={challengeDraft} onAddSelected={addChallenge} classroomId={classroomId} assignmentId={assignmentId} />
         )}
 
         {isAdmin && activeTab === "settings" && (

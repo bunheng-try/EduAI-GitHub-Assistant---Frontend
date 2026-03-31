@@ -88,5 +88,9 @@ export const assignmentsApi = {
             `/classrooms/${classroomId}/assignments/${assignmentId}/challenges`,
             { challengeIds }
         ),
+    removeChallenge: (classroomId: number, assignmentId: number, challengeId: number) =>
+        httpClient.delete<void>(
+            `/classrooms/${classroomId}/assignments/${assignmentId}/challenges/${challengeId}`
+        ),
 };
 
