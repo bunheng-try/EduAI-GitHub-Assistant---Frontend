@@ -10,6 +10,7 @@ import { useCreateSubmission } from "../hooks/useSubmissionQuery";
 import { useAuthStore } from "@/app/store/autStore";
 import PanelSkeleton from "@/shared/components/loading-skeleton/PanelSkeleton";
 import { CheckCircle2, Clock, Trophy } from "lucide-react";
+import { useEffect } from "react";
 
 const StudentAssignmentPage = () => {
   const { classId, assignmentId } = useParams();
@@ -51,16 +52,28 @@ const StudentAssignmentPage = () => {
     try {
       if (hasSubmission) {
         navigate(`/classrooms/${classId}/assignments/${assignmentId}/workspace`);
+        console.log("resume")
+        console.log("status: ", status)
+
         return;
       }
       await createDraftMutation.mutateAsync({ content: "" });
       navigate(`/classrooms/${classId}/assignments/${assignmentId}/workspace`);
+      console.log("start")
+
     } catch (err: any) {
       if (err?.statusCode === 409) {
         navigate(`/classrooms/${classId}/assignments/${assignmentId}/workspace`);
       }
     }
+
+    console.log("status: ", status)
+
   };
+
+  useEffect(() => {
+    console.log("status: ", status)
+  })
 
   const handleViewResult = () => {
     if (!mySubmission) return;

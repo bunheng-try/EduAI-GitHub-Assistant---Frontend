@@ -48,8 +48,8 @@ export default function TestResults({ results, isError, isRunning }: TestResults
                 <TestCase
                     key={index}
                     input={t.input}
-                    expected={t.expected}
-                    output={t.output}
+                    expected={t.expectedOutput}
+                    output={t.actualOutput}
                     passed={t.passed}
                     isHidden={t.isHidden}
                 />

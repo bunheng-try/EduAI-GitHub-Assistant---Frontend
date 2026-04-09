@@ -24,7 +24,7 @@ export interface Assignment {
 }
 
 export interface AssignmentChallenge extends Challenge {
-    originalChallenge_id: number;
+    originalChallengeId: number;
 }
 
 export interface CreateAssignmentDto {

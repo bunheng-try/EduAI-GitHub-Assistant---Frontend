@@ -33,7 +33,7 @@ export default function ResultPanel({ currentChallenge }: { currentChallenge: As
     const jobQuery = useJobStatus(jobId)
 
     const handleRun = async () => {
-        const challengeId = currentChallenge.originalChallenge_id
+        const challengeId = currentChallenge.originalChallengeId
         const language = currentChallenge.language
 
         if (activeTab === "tests") {
