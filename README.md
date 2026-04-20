@@ -1,7 +1,7 @@
-# EduAI GitHub Assistant - Frontend
+# CODIFY - Frontend
 
-EduAI GitHub Assistant – Frontend
-This repository contains the full frontend system for the EGA (EduAI GitHub Assistant) platform.
+CODIFY – Frontend
+This repository contains the full frontend system for the CODIFY platform.
 It is built with React, Vite, and TypeScript and follows a Feature-Based MVVM architecture.
 The project includes modular routing, a shared UI library, global state management, and strongly typed API integrations.
 
